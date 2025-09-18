@@ -1,0 +1,574 @@
+﻿@model HVAC.Models.EnquiryVM
+
+@{
+
+
+    ViewBag.pTitle = "Enquiry";
+    ViewBag.pageTitle = "HVAC";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section styles{
+    <link href="~/assets/libs/select2/css/select2.min.css" rel="stylesheet" type="text/css" />
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <!-- Select2 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
+    <!-- Select2 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+}
+
+<style>
+    /*  .modal{
+        z-index:1000;
+    }*/
+
+</style>
+
+<script>
+
+    function ShowJobHandOver() {
+        if ($('#EnquiryStatusID option:selected').text() == 'Quoted') {
+
+
+            Swal.fire({ title: "Are you sure?", text: "Do you want to Confirm the Job?", icon: "warning", showCancelButton: !0, confirmButtonColor: "#34c38f", cancelButtonColor: "#f46a6a", confirmButtonText: "Yes, Confirm it!" }).then(
+                function (t) {
+                    if (t.value) {
+                        $.ajax({
+                            type: "POST",
+                            url: '/Enquiry/ConfirmJob',
+                            datatype: "html",
+                            data: {
+                                'id': $('#EnquiryID').val()
+                            },
+                            success: function (response) {
+                                if (response.status == "OK") {
+                                    Swal.fire("Job Confirm!", response.message, "success");
+                                    window.location.reload();
+                                }
+                                else {
+                                    Swal.fire("Delete Status!", response.message, "error");
+                                }
+                            }
+                        });
+                    }
+                });
+        }
+        else {
+            alert('Enquiry Status  should be Quoted!');
+        }
+    }
+
+    function getQuotationdetail() {
+
+        $.ajax({
+            url: '/JobEnquiry/GetQuotationDetail',
+            datatype: "json",
+            data: {
+                term: $('#QuotationNumber').val()
+            },
+            success: function (data) {
+                debugger;
+                // $('#ClientID').val(0);
+                if (data.length > 0) {
+
+                    $.each(data, function (index, val) {
+                        debugger;
+                        if (val.CustomerName == $('#QuotationNumber').val()) {
+                            $("#QuotationNumber").val(val.QuotationNumber);
+
+                            //           $('#ClientID').val(val.CustomerID);
+                            //$('#QuotationDate').val(val.QuotationDate);
+                            $('#QuotationAmount').val(val.QuotationValue);
+                            $('#QuoteStatus').val(val.Validity);
+                            $('#QuoteVersion').val(val.Version);
+
+                        }
+
+                    })
+                }
+            }
+        })
+    }
+
+    $(document).ready(function () {
+
+
+        if ($('#SecuredQuoteCount').val() > 0 && $('#JobHandOverID').val() == 0) {
+            $('#btnconfirmjob').removeClass('d-none');
+        }
+
+        $("#ContractorName").autocomplete({
+            source: function (request, response) {
+                $.ajax({
+                    url: '/Enquiries/GetSupplierName',
+                    datatype: "json",
+                    data: {
+                        term: request.term
+                    },
+                    success: function (data) {
+                        response($.map(data, function (val, item) {
+                            return {
+                                label: val.SupplierName,
+                                value: val.SupplierName,
+                                SupplierID: val.SupplierID,
+                                Phone: val.mobileno,
+                                Email: val.Email,
+                                Address1: val.Address1,
+                                CityName: val.CityName,
+                                CountryName: val.CountryName
+
+                            }
+                        }))
+                    }
+                })
+            },
+            minLength: 1,
+            autoFocus: false,
+            focus: function (e, ui) {
+                e.preventDefault();
+                $("#ContractorName").val(ui.item.label);
+
+                $('#ContractorID').val(ui.item.SupplierID);
+                $('#ContractorcontactNo').val(ui.item.mobileno);
+                $('#ContractorEmail').val(ui.item.Email);
+                $('#ContractorAddress').val(ui.item.Address1);
+                $('#ContractorCity').val(ui.item.CityName);
+                $('#ContractorCountry').val(ui.item.CountryName);
+
+            },
+            select: function (e, ui) {
+                e.preventDefault();
+                $("#ContractorName").val(ui.item.label);
+
+                $('#ContractorID').val(ui.item.SupplierID);
+                $('#ContractorcontactNo').val(ui.item.mobileno);
+                $('#ContractorEmail').val(ui.item.Email);
+                $('#ContractorAddress').val(ui.item.Address1);
+                $('#ContractorCity').val(ui.item.CityName);
+                $('#ContractorCountry').val(ui.item.CountryName);
+            },
+
+        });
+
+        $('#ContractorName').change(function () {
+            //if ($('#PaymentModeId').val() == '5') {
+            getsupplierdetail();
+            //}
+
+        })
+
+
+
+
+    });
+
+
+</script>
+
+
+
+@using (Html.BeginForm("Create", "Enquiry", FormMethod.Post, new { enctype = "multipart/form-data", @class = "needs-validation ", @novalidate = "novalidate" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+
+
+    <div class="card">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="mb-2">
+                        <button type="button" id="btnconfirmjob" class="btn btn-sm btn-success waves-effect waves-light text-md-end mt-1 mb-1 d-none" onclick="ShowJobHandOver()">Confirm Job</button>
+
+                        @{
+                            if (Model.ProjectNumber != "" && Model.ProjectNumber != null)
+                            {
+                                <a target="_blank" href="/JobHandover/Create?id=@Model.JobHandOverID" id="h2jobcode" style="color:blue" class="ml-10">Project No. @Model.ProjectNumber</a>
+                            }
+                            else
+                            {
+
+                            }
+                        }
+                        <div id="validations" style="color: red; margin-left: 7px; display: none">* Please fill mandatory fields</div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6 text-md-end">
+                        <div class="mb-2">
+                            <div class="d-flex gap-2" style="float:right">
+                                <div class="btn-group">
+                                    @{
+                                        if (Model.EnquiryID == 0)
+                                        {
+                                            <button type="button" disabled class="btn btn-primary">Status : @Model.EnquiryStatus</button>
+                                            <button type="button" disabled class="btn btn-primary dropdown-toggle dropdown-toggle-split show" data-bs-toggle="dropdown" aria-expanded="true">
+                                                <i class="mdi mdi-chevron-down"></i>
+                                            </button>
+                                        }
+                                        else
+                                        {
+                                            <button type="button" class="btn btn-primary" id="btnStatus">Status : @Model.EnquiryStatus</button>
+                                            <button type="button" class="btn btn-primary dropdown-toggle dropdown-toggle-split show" data-bs-toggle="dropdown" aria-expanded="true">
+                                                <i class="mdi mdi-chevron-down"></i>
+                                            </button>
+                                            <div class="dropdown-menu" data-popper-placement="bottom-start" style="position: absolute; inset: 0px auto auto 0px; margin: 0px; transform: translate3d(75px, 38.5px, 0px);">
+                                                @foreach (var item in @ViewBag.EnquiryStatus1 as List<SelectListItem>)
+                                                {
+                                                    <a class="dropdown-item status-item" href="#" data-id="@item.Value">@item.Text</a>
+                                                }
+
+                                            </div>
+                                        }
+                                    }
+
+
+                                </div><!-- /btn-group -->
+                                <input type="submit" value="Save" class="btn btn-success" id="btnsave" />
+                                <a href='@Url.Action("Index", "Enquiry", new { id = 0 })' class="btn btn-secondary" data-placement="right">Cancel</a>
+
+                            </div>
+
+
+                        </div>
+                    </div>
+                </div>
+            <div class="row">
+                <div class="col-md-9">
+
+
+
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="mb-2">
+                                <label class="col-form-label">Enquiry No.</label>
+                                @{
+                                    if (ViewBag.EnquiryAuto == true)
+                                    {
+                                        @Html.TextBoxFor(mode => mode.EnquiryNo, new { @class = "form-control", @readonly = "readonly", @required = "required" })
+                                    }
+                                    else
+                                    {
+                                        @Html.TextBoxFor(mode => mode.EnquiryNo, new { @class = "form-control", @required = "required", @tabindex = 2 })
+                                    }
+
+                                }
+
+                                @*@Html.DropDownListFor(model => model.EnquiryStatusID, new SelectList(@ViewBag.EnquiryStatus, "EnqStatusID", "EnqStatusName"), "Select", new { @class = "form-select", @required = "true", tabindex = "17" })*@
+
+                                @Html.HiddenFor(mode => mode.EnquiryStatusID, new { @class = "form-control" })
+                                @Html.HiddenFor(mode => mode.EnquiryID, new { @class = "form-control" }) @*Enquiryid*@
+                                @Html.HiddenFor(model => model.JobHandOverID, new { @class = "form-control txttarget" })
+                                @Html.HiddenFor(model => model.SecuredQuoteCount, new { @class = "form-control txttarget" })
+
+
+                            </div>
+                        </div>
+
+
+                        <div class="col-md-3">
+
+
+
+                            <label class="col-form-label">Enquiry Date</label>
+                            <div class="docs-datepicker">
+                                <div class="input-group">
+                                    <input type="text" class="form-control docs-date" name="EnquiryDate" id="EnquiryDate" tabindex=2 value="@Model.EnquiryDate.ToShortDateString()"
+                                           placeholder="Pick a Enquiry Date" autocomplete="off">
+                                    <button type="button"
+                                            class="btn btn-secondary docs-datepicker-trigger">
+                                        <i class="mdi mdi-calendar" aria-hidden="true"></i>
+                                    </button>
+                                </div>
+                                <div class="docs-datepicker-container"></div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+
+
+
+                            <label class="col-form-label">Due Date</label>
+
+                            <label class="col-form-label text-right" id="lblDueDays" style="font-size:11px;color:red">Due Days : @Model.DueDays</label>
+
+                            <div class="docs-datepicker">
+                                <div class="input-group">
+                                    <input type="text" class="form-control docs-date" name="EnquiryDueDate" id="EnquiryDueDate" tabindex=3 value="@Model.DueDate.ToShortDateString()"
+                                           placeholder="Pick a Due Date" autocomplete="off">
+                                    <button type="button"
+                                            class="btn btn-secondary docs-datepicker-trigger">
+                                        <i class="mdi mdi-calendar" aria-hidden="true"></i>
+                                    </button>
+                                </div>
+                                <div class="docs-datepicker-container"></div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="mb-2">
+                                <label class="col-form-label">Enquiry Stage</label>
+                                @Html.HiddenFor(mode => mode.DueDays, new { @class = "form-control", @readonly = "readonly", @required = "required" })
+                                @Html.DropDownListFor(model => model.EnquiryStageID, new SelectList(@ViewBag.EnquiryStages, "EnqStageID", "EnqStageName"), "Select", new { @class = "form-select select2", @required = "true", @tabindex = "4" })
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="row">
+
+                                <div class="col-md-9">
+                                    <div class="mb-2">
+                                        <label class="col-form-label">Project Name</label>
+                                        @Html.TextBoxFor(model => model.ProjectName, new { @class = "form-control", @required = "required", tabindex = "5", @placeholder = "Enter Project Name" })
+                                        @*@Html.DropDownListFor(model => model.ProjectName, new SelectList(@ViewBag.ProjectMasters, "ProjectName", "ProjectName"), "Select", new { @class = "form-select" })*@
+
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="mb-2">
+                                        <label class="col-form-label">Prefix</label>
+                                        @Html.TextBoxFor(model => model.ProjectPrefix, new { @class = "form-select", @required = "required", tabindex = "6", @placeholder = "Enter Prefix" })
+                                        @*@Html.DropDownListFor(model => model.ProjectName, new SelectList(@ViewBag.ProjectMasters, "ProjectName", "ProjectName"), "Select", new { @class = "form-select" })*@
+
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div class="row">
+
+                                <div class="col-md-12">
+                                    <div class="mb-2">
+                                        <label class="col-form-label">Project Details</label>
+                                        @Html.TextAreaFor(model => model.ProjectDescription, new { @id = "ProjectDescription", @class = "form-control", @rows = "5", tabindex = "6" })
+                                        @*@Html.TextBoxFor(model => model.ProjectDescription, new { @class = "form-select", @required = "required" @rows = "5" })*@
+                                        @*@Html.DropDownListFor(model => model.ProjectName, new SelectList(@ViewBag.ProjectMasters, "ProjectName", "ProjectName"), "Select", new { @class = "form-select" })*@
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="row">
+
+                            </div>
+                            <div class="row">
+
+                                <div class="col-md-12">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="mb-2">
+                                                <label class="col-form-label">Enquiry Type</label>
+                                                @Html.DropDownListFor(model => model.EnquiryTypeID, new SelectList(@ViewBag.EnquiryType, "ID", "EnquiryTypeName"), "Select", new { @class = "form-select", @tabindex = "8" })
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="mb-2">
+                                                <label class="col-form-label">Entity Type</label>
+                                                @*@Html.DropDownListFor(model => model.EntityType, new SelectList(@ViewBag.EntityTypes, "EntityTypeName", "EntityTypeName"), "Select", new { @class = "form-select" })*@
+
+                                                @Html.HiddenFor(model => model.EntityTypeIDs)
+                                                <select id="drpEntityTypeIDs" name="drpEntityTypeIDs" class="select2 form-control select2-multiple" tabindex="9" required="required"
+                                                        data-placeholder="Choose Entity...">
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="mb-2">
+                                        @Html.HiddenFor(model => model.AssignedEmployees)
+                                        <label class="col-form-label">Project Location</label>
+                                        @Html.TextBoxFor(mode => mode.CityName, new { @class = "form-select", @required = "required", tabindex = "10" })
+                                        @Html.HiddenFor(mode => mode.CityID)
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-2">
+                                        <label class="col-form-label">Country</label>
+                                        @Html.TextBoxFor(mode => mode.CountryName, new { @class = "form-select", @required = "required", tabindex = "11" })
+                                        @Html.HiddenFor(mode => mode.CountryID)
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <label class="col-form-label">Client</label>
+                                @Html.HiddenFor(model => model.AssignedEmployees)
+                                @{
+                                    if (Model.ClientID > 0)
+                                    {
+                                        <input type="text" class="form-control" value="@Model.ClientName" readonly />
+                                    }
+                                    else
+                                    {
+                                        <select id="drpClientID" tabindex="12" class="form-select enquiry-client" style="width:100%"></select>
+                                    }
+                                }
+                            </div>
+                            @*<div class="col-md-12">
+                                    <div class="mb-2">
+                                        <label class="col-form-label">Assigned To</label>
+                                        @Html.HiddenFor(model => model.AssignedEmployees)
+                                        <select id="drpAssignedEmployees" class="select2 form-control select2-multiple" tabindex="7"
+                                                multiple="multiple" data-placeholder="Choose Employee...">
+                                        </select>
+                                    </div>
+                                </div>*@
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-3" style="border-left:1px solid #dedede">
+
+                    <div class="col-md-12">
+                        <div class="mb-2">
+                            <label class="col-form-label">Priority</label>
+                            @Html.DropDownListFor(model => model.PriorityID, new SelectList(@ViewBag.Priorities, "PriorityID", "PriorityName"), "Select", new { @class = "form-select", @required = "true", tabindex = "13" })
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="mb-2">
+                            <label class="col-form-label">Building Type</label>
+                            @Html.DropDownListFor(model => model.BuildingTypeID, new SelectList(@ViewBag.BuildingTypes, "BldgTypeID", "BldgTypeName"), "Select", new { @class = "form-select", @required = "true", tabindex = "14" })
+
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="mb-2">
+                            <label class="col-form-label">Verticals</label>
+                            @Html.DropDownListFor(model => model.VerticalsID, new SelectList(@ViewBag.Verticals, "VerticalID", "VerticalName"), "Select", new { @class = "form-select", @required = "true", tabindex = "15" })
+
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="mb-2">
+                            <label class="col-form-label">Enquiry Source</label>
+                            @Html.DropDownListFor(model => model.EnquirySourceID, new SelectList(@ViewBag.EnquirySources, "EnquirySourceID", "EnquirySourceName"), "Select", new { @class = "form-select", @required = "true", tabindex = "16" })
+
+                        </div>
+                    </div>
+
+
+
+
+
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    if (Model.EnquiryID > 0)
+    {
+        <div class="row">
+            <div class="col-xl-3 col-lg-6 col-md-3" id="divclient">
+                @{Html.RenderPartial("ClientList", Model);}
+            </div>
+            <div class="col-xl-3 col-lg-6 col-md-3" id="divengineer">
+                @{Html.RenderPartial("AssignedEmployees", Model);}
+            </div>
+            <div class="col-xl-3 col-lg-6 col-md-3" id="divequipment">
+                @{Html.RenderPartial("EquipmentList", Model);}
+            </div>
+            <div class="col-xl-3 col-lg-6 col-md-3">
+                @{Html.RenderPartial("ClientView", Model);}
+            </div>
+
+        </div>
+    }
+
+
+
+}
+@*@Html.Partial("~/Views/Shared/_CustomerModal.cshtml")*@
+@Html.Partial("~/Views/Shared/_DocumentModal.cshtml")
+@Html.Partial("~/Views/Shared/_EquipmentModal.cshtml")
+
+<!-- Confirmation Modal -->
+<div class="modal fade" id="statusConfirmModal" tabindex="-1" aria-labelledby="statusConfirmLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="statusConfirmLabel">Confirm Status Reason</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>x`
+            <div class="modal-body">
+                <div class="row">
+                    <input type="hidden" id="hdnstatuschange" statusid="0" statusname="" />
+                    <label class="col-form-label">Enter the Reason</label>
+                    <textarea id="StatusRemarks" cols="50" rows="2" class="form-control" placeholder="Add your notes"></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" id="confirmStatusBtn">Yes, Update</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="customerpopup" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content" style="border-radius:5px;width:800px">
+            <div class="modal-body">
+                <div class="" id="customerContainer">
+
+                </div>
+            </div>
+            <div class="modal-footer" style="padding-top: 5px">
+                <span class="error text-left" id="spancusterror"></span>
+                <button type="button" class="btn btn-primary" onclick="AddClient()" id="btnaddclient">Add Client</button>
+                <button type="button" class="btn btn-primary hide" onclick="SaveClientEntry()" id="btnsaveclient">Save & Add Client</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="engineerpopup" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content" style="border-radius:5px;width:800px">
+            <div class="modal-header">
+                <h4 class="modal-title">
+                    Add Engineer
+                </h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+
+            <div class="modal-body">
+                <div class="" id="engineerContainer">
+                    <div class="col-md-12">
+                        <div class="mb-2">
+                            <label class="col-form-label">Select Employee Name</label>
+
+                            <select id="drpAssignedEmployees" class="select2 form-control" tabindex="7" width="200px"
+                                    data-placeholder="Choose Employee...">
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" style="padding-top: 5px">
+                <span class="error text-left" id="spanengineererror"></span>
+                <button type="button" class="btn btn-primary" id="btnSaveEngineer" onclick="SaveEngineerEntry()">Save</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+@section scripts{
+    <script src="~/assets/libs/select2/js/select2.min.js"></script>
+    <script src="~/Scripts/JS/EnquiryCreate.js"></script>
+    <script src="~/Scripts/JS/EnquiryDocument.js"></script>
+    <script src="~/Scripts/JS/EnquiryEquipment.js"></script>
+
+}
+
+

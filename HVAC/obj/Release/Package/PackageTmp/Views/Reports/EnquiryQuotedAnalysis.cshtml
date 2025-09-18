@@ -1,0 +1,149 @@
+﻿@model HVAC.Models.AnalysisReportModel
+@{
+    ViewBag.Title = "Enquiry vs Quoted";
+    ViewBag.pTitle = "Analysis";
+    ViewBag.pageTitle = "HVAC Reports";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section scripts{
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/highcharts-3d.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
+    <script src="https://code.highcharts.com/modules/export-data.js"></script>
+
+}
+<script>
+    function printChart() {
+        var chartContainer = document.getElementById('lineChartContainer');
+        var printWindow = window.open('', '', 'height=600,width=800');
+
+        printWindow.document.write('<html><head><title>'  + $('#reporttitle').html() + '</title>');
+        printWindow.document.write('<link rel="stylesheet" href="https://code.highcharts.com/css/highcharts.css" />');
+        printWindow.document.write('</head><body>');
+        printWindow.document.write(chartContainer.innerHTML);
+        printWindow.document.write('</body></html>');
+
+        printWindow.document.close();
+        printWindow.focus();
+
+        // Delay to allow rendering
+        setTimeout(function () {
+            printWindow.print();
+            printWindow.close();
+        }, 500);
+    }
+    document.addEventListener('DOMContentLoaded', function () {
+        Highcharts.chart('lineChartContainer', {
+            chart: {
+                type: 'line',
+                backgroundColor: {
+                    linearGradient: [0, 0, 500, 500],
+                    stops: [
+                        [0, '#6dd5ed'],
+                        [1, '#2193b0']
+                    ]
+                }
+            },
+            title: {
+                text: ''
+            },
+            xAxis: {
+                categories: @Html.Raw(Json.Encode(Model.Months)), //['JANUARY', 'FEBRUARY', 'MARCH'],
+                labels: {
+                    style: {
+                        fontWeight: 'bold',
+                        textTransform: 'uppercase'
+                    }
+                }
+            },
+            yAxis: {
+                min: 0,
+                max: 150,
+                title: {
+                    text: ''
+                }
+            },
+            legend: {
+                align: 'right',
+                verticalAlign: 'top',
+                layout: 'vertical',
+                backgroundColor: 'rgba(255,255,255,0.6)'
+            },
+            plotOptions: {
+                line: {
+                    dataLabels: {
+                        enabled: true
+                    },
+                    marker: {
+                        symbol: 'diamond',
+                        radius: 6
+                    }
+                }
+            },
+            series: [{
+                name: 'Enq Rcd',
+                data: @Html.Raw(Json.Encode(Model.EnqRcd)),
+                color: '#3366cc'
+            }, {
+                name: 'Enq Qtd',
+                data: @Html.Raw(Json.Encode(Model.EnqQtd)),
+                color: '#ff6600'
+            }]
+        });
+
+    });
+
+      function loadAvailableYears() {
+        $.getJSON('@Url.Action("GetAvailableYears", "Reports")', function (years) {
+            let dropdown = $('#yearDropdown');
+            dropdown.empty();
+
+            $.each(years, function (index, year) {
+                dropdown.append($('<option></option>').attr('value', year).text(year));
+            });
+
+            // Auto-load the chart for the first year
+            if (years.length > 0) {
+                $('#yearDropdown').val(years[0]);
+                loadChart(years[0]);
+            }
+        });
+    }
+
+</script>
+@using (Html.BeginForm("EnquiryQuotedAnalysis", "Reports", FormMethod.Post, new { @id = "customerledger" }))
+{
+    @Html.AntiForgeryToken()
+
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    <div class="card">
+        <div class="card-body">
+            <div class="row">
+
+                <div class="col-md-2">
+                    <lable class="col-form-label">Select Year</lable>
+                    @Html.DropDownList("year", new SelectList(Model.Years, Model.SelectedYear),
+                   "Select Year", new { @class = "form-select", onchange = "this.form.submit();" })
+                </div>
+                <div class="col-md-10 text-md-end">
+
+                    @*<a href="/Reports/EnquiryQuotedAnalysisPrintPdf?year=@Model.SelectedYear"  class="btn btn-warning btn_top">Download PDF</a>*@
+                    <input type="button" class="btn btn-warning btn_top" onclick="printChart()" value="Print Chart" />
+
+                </div>
+            </div>
+            <div class="row">
+                <div class="mt-2" >
+                    <h3 id="reporttitle">Enquiry Quoted Analysis @Model.SelectedYear</h3>
+                </div>
+            </div>
+            <div class="row">
+                <div class="mt-2">
+                    <div id="lineChartContainer" style="height: 500px; width: 100%;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+}

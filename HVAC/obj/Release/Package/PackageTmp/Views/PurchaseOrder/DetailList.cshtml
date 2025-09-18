@@ -1,0 +1,180 @@
+﻿@model HVAC.Models.PurchaseOrderSaveRequest
+@{
+    var i = 0;
+    var _decimal = @Session["Decimal"].ToString();
+    Layout = null;
+}
+
+
+<table class="table  tblfont table-bordered table-striped mb-0" id="PurchaseOrderEquipmentTables" style="width: 100% !important;">
+
+    <thead class="table-light" style="text-align:center">
+        <tr>
+            <th width="25%">Project</th>
+            <th width="20%">Equipment</th>
+            <th width="20%">Model</th>
+            <th width="5%">Unit</th>
+            <th width="10%">Qty</th>
+            <th width="10%">Rate</th>
+            <th width="10%">Amount</th>
+            <th width="5%">Action</th>
+        </tr>
+    </thead>
+    <tbody style="text-align:center">
+        @foreach (var item1 in Model.Details)
+        {
+
+            <tr id="quodtr_@i" >
+                @*<td id="row_@i">@(i+1)</td>*@
+                <td style="text-align:left">
+                    @Html.HiddenFor(modelitem => item1.PurchaseOrderDetailID, new { @id = "QPurchaseOrderDetailID_" + @i, @class = "form-control", @readonly = "readonly" })
+                    @Html.HiddenFor(modelitem => item1.EquipmentID, new { @id = "QEquipmentID_" + @i, @class = "form-control", @readonly = "readonly" })
+                    @Html.HiddenFor(modelitem => item1.EquipmentTypeID, new { @id = "QEquipmentTypeID_" + @i, @class = "form-control", @readonly = "readonly" })
+
+                    @Html.HiddenFor(modelitem => item1.Deleted, new { @id = "QDeleted_" + @i })
+                    @*@Html.HiddenFor(modelitem => item1.Roworder, new { @id = "QRoworder_" + @i })*@
+                    @Html.HiddenFor(modelitem => item1.ItemUnitID, new { @id = "QUnitID_" + @i })
+                    @Html.HiddenFor(modelitem => item1.JobHandOverID, new { @id = "QJobHandOverID_" + @i })
+                    @Html.HiddenFor(modelitem => item1.ProjectNo, new { @id = "QProjectNo_" + @i })
+                    @Html.HiddenFor(modelitem => item1.QuotationID, new { @id = "QQuotationID_" + @i })
+                    @Html.HiddenFor(modelitem => item1.MRequestID, new { @id = "QMRequestID_" + @i })
+                    @Html.HiddenFor(modelitem => item1.EstimationID, new { @id = "QEstimationID_" + @i })
+                    @Html.HiddenFor(modelitem => item1.EstimationNo, new { @id = "QEstimationNo_" + @i })
+
+                    @item1.ProjectNo
+                    @{
+                        if (item1.EstimationNo != null)
+                        {
+                            if (item1.EstimationID != null && item1.EstimationID != 0)
+                            {
+                                <a target="_blank" style="color:blue" href="/Estimation/Create?id=@item1.EstimationID">@item1.EstimationNo</a>
+                            }
+                            else
+                            { <span style="color:pink">@item1.EstimationNo</span>
+                        }
+
+                    }
+                    }
+
+                </td>
+                <td style="text-align:left">
+                    @Html.HiddenFor(modelitem => item1.Description, new { @id = "QtxtDescription_" + @i, @class = " form-control-sm", @style = "width:200px" })
+                    @item1.Description
+
+                </td>
+                <td class="editable" style="text-align:left">
+                    @Html.HiddenFor(modelitem => item1.Model, new { @id = "QtxtModel_" + @i, @class = "form-control-sm" })
+
+                    <span id="QspanModel_@i">@item1.Model</span>
+
+                </td>
+                <td>
+
+                    @item1.UnitName
+                    @Html.HiddenFor(modelitem => item1.UnitName, new { @id = "QUnitName_" + @i, @class = "form-control" })
+                </td>
+
+                <td style="text-align:right" class="editable">
+                    @Html.HiddenFor(modelitem => item1.Quantity, new { @id = "QtxtQty_" + @i, @class = "textright form-control-sm", @onchange = "calculatevalue(" + @i + ")", @style = "width:100px" })
+
+
+                    <span id="QspanQty_@i" style="color:dodgerblue">@HVAC.Models.CommonFunctions.GetBranchFormatNumber(item1.Quantity, "2")</span>
+
+                </td>
+
+                <td style="text-align:right" class="editable">
+                    @Html.HiddenFor(modelitem => item1.Rate, new { @Value = Convert.ToDecimal(item1.Rate).ToString("N2"), @id = "QtxtUnitRate_" + @i, @class = "textrightamount form-control-sm", @style = "width:100px", @onchange = "calculatevalue(" + @i + ")" })
+
+                    <span id="QspanRate_@i" style="color:dodgerblue">@HVAC.Models.CommonFunctions.GetBranchFormatNumber(item1.Rate, "3")</span>
+                </td>
+                <td style="text-align:right">
+                    @Html.HiddenFor(modelitem => item1.Amount, new { @Value = Convert.ToDecimal(item1.Amount).ToString("N3"), @id = "QtxtAmount_" + @i, @class = "textrightamount form-control-sm", @style = "width:100px", @readonly = "readonly" })
+                    <span id="QspanAmount_@i" style="color:dodgerblue">@HVAC.Models.CommonFunctions.GetBranchFormatNumber(item1.Amount, "3")</span>
+
+                </td>
+
+                <td>
+                    <a onclick="EditDetailEntry('@i')" href="javascript:void(0);" title="Edit Item" class="edit-btn text-success"><i class="mdi mdi-pencil font-size-18"></i></a>
+                    <a onclick="SaveDetailEntry('@i')" href="javascript:void(0);" style="display:none" title="Save Item" class="text-success save-btn"><i class="mdi mdi-content-save-edit font-size-18"></i></a>
+                    <a onclick="DeleteQuotationDetailEntry('@i')" href="javascript:void(0);" title="Delete Item" class="text-danger"><i class="mdi mdi-delete font-size-18"></i></a>
+
+
+                </td>
+            </tr>
+            i++;
+        }
+    </tbody>
+
+    <tfoot>
+        <tr>
+            <td colspan="5" style="font-weight:bold;text-align:right">Gross Total</td>
+            <td></td>
+            <td style="text-align:right">
+                <span id="spanPurchaseGrossAmount" style="font-weight:bold;text-align:right"></span>
+            </td>
+        </tr>
+        
+        <tr>
+            <td colspan="5" style="font-weight:bold;text-align:right">Gross Total + Freight + Origin=Sub Total 1</td>
+            <td></td>
+            <td style="text-align:right">
+                <span id="spanSubTotal1" style="font-weight:bold;text-align:right"></span>
+            </td>
+        </tr>        
+        <tr>
+            <td colspan="5" style="font-weight:bold;text-align:right">Sub Total 1 + Finance Charges=Total PO Value</td>
+            <td></td>
+            <td style="text-align:right">
+                <span id="spanSubTotal2" style="font-weight:bold;text-align:right"></span>                
+            </td>
+        </tr>      
+      
+        <tr>
+            <td colspan="5" style="font-weight:bold;text-align:right">PO With VAT</td>
+            <td></td>
+            <td style="text-align:right">
+                <span id="spanPOValue" style="font-weight:bold;text-align:right"></span>
+            </td>
+        </tr>
+    </tfoot>
+
+</table>
+
+<script>
+    $(document).ready(function () {
+        $('.edit-btn').on('click', function () {
+            var $row = $(this).closest('tr');
+
+            $row.find('.editable').each(function () {
+                var _text = $(this).find('input');
+                var _span = $(this).find('span');
+                $(_text).attr('type', 'text');
+                $(_span).css('display', 'none');
+
+            });
+
+            $row.find('.edit-btn').hide();
+            $row.find('.save-btn').show();
+            $row.find('.editable input:first').focus().select();
+        });
+
+        $('.save-btn').on('click', function () {
+            var $row = $(this).closest('tr');
+
+            $row.find('.editable').each(function () {
+                var inputVal = $(this).find('input').val();
+                var _text = $(this).find('input');
+                var _span = $(this).find('span');
+                $(_text).attr('type', 'hidden');
+                $(_span).html(inputVal);
+                $(_span).css('display', 'block');
+
+            });
+
+            $row.find('.save-btn').hide();
+            $row.find('.edit-btn').show();
+
+            // You can add AJAX here to save the changes to the server
+        });
+    });
+</script>

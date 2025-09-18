@@ -1,0 +1,96 @@
+﻿@model HVAC.Models.CityVM
+
+@{
+    ViewBag.Title = "City Master - Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $(":text").css({ "border-radius": "5px" });
+        $("select").css({ "border-radius": "5px" });
+
+        $("#City").focus();
+
+
+        $("#btnsave").click(function () {
+            var city = $("#City").val();
+            var citycode = $("#CityCode").val();
+            var cou = $("#CountryID option:selected").val();
+
+
+
+            if (city == "") {
+                $("#validations").show();
+                return false;
+            }
+            else if (citycode == "") {
+                $("#validations").show();
+                return false;
+            }
+            else if (cou == "") {
+                $("#validations").show();
+                return false;
+            }
+            else {
+                $("#validations").hide();
+                return true;
+            }
+        });
+
+
+    });
+</script>
+@using (Html.BeginForm("Create", "CityMaster", FormMethod.Post, new { @class = "needs-validation ", @novalidate = "novalidate" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+    <div id="validations" style="color:red;margin-left:7px;display:none">* Please fill mandatory fields</div>
+    <fieldset>
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+
+
+                    <div class="col-md-3">
+                        <label class="headinglabel required">City</label>
+                        @Html.TextBoxFor(model => model.City, new { @class = "form-control txttarget" })
+                        @Html.ValidationMessageFor(model => model.City)
+
+                    </div>
+
+                    <div class="col-md-3">
+                        <label class="headinglabel required">City Code</label>
+                        @Html.TextBoxFor(model => model.CityCode, new { @class = "form-control text-right" })
+                        @Html.ValidationMessageFor(model => model.CityCode)
+
+                    </div>
+
+                    <div class="col-md-3">
+                        <label class="headinglabel required">Country</label>
+                        @Html.DropDownListFor(model => model.CountryID, new SelectList(@ViewBag.country, "CountryID", "CountryName"), "Select", new { @class = "form-control" });
+
+                    </div>
+
+                    <div class="col-md-3 checkboxdesign" style="padding-top:22px">
+
+                        @Html.CheckBoxFor(model => model.IsHub)&nbsp;&nbsp;<label class="headinglabel">Is Hub</label>
+                        @Html.ValidationMessageFor(model => model.IsHub)
+
+                    </div>
+                </div>
+
+
+                <div class="col-md-12 text-md-end">
+                    <input type="submit" value="Save" class="btn btn-success" id="btnsave" />
+
+                    <a href='@Url.Action("Index", "CityMaster", new { id = 0 })' class="btn btn-secondary" data-toggle="tooltip" data-placement="right" title="Click here">Cancel</a>
+
+                </div>
+
+            </div>
+            </div>
+        
+    </fieldset>
+}
+

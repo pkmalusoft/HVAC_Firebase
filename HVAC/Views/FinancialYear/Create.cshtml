@@ -1,0 +1,216 @@
+﻿@model HVAC.Models.AcFinancialYear   
+@{
+   
+    ViewBag.pTitle = "Financial Year";
+    ViewBag.pageTitle = "Courier Setup";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    .searchdiv {
+        background-color: #fff;
+        width: 100%;
+        margin: 0 auto;
+        max-width: 500px;
+        padding: 20px;
+        margin-top: 50px;
+        border-radius: 10px;
+        box-shadow: 0 9px 23px rgba(0, 0, 0, 0.09), 0 5px 5px rgba(0, 0, 0, 0.06) !important;
+    }
+
+    .headinglabel {
+        font-family: Calibri;
+        font-size: 16px;
+        color: #2b2929 !important;
+    }
+</style>
+<script type="text/javascript">
+    function CurrentStatusChange() {
+        var sl = $("#dd_CurrentStatus").val();
+        $("#CurrentStatus").val(sl);
+    }
+    $(document).ready(function () {
+
+        $(":text").css("border-radius", "5px");
+        $("select").css("border-radius", "5px");
+        $("#Period").focus();
+         @*var startdate = '@Session["FyearFrom"].ToString()';
+        var enddate = '@Session["FyearTo"].ToString()';
+        var sd = new Date(startdate.split('-')[1] + '-' + startdate.split('-')[0] + '-' + startdate.split('-')[2]);
+        var ed = new Date(enddate.split('-')[1] + '-' + enddate.split('-')[0] + '-' + enddate.split('-')[2]);*@
+
+        $('#AcFYearFrom').datepicker({
+            dateFormat: 'dd-mm-yy',
+            //minDate: sd,
+            //maxDate: ed
+            //onChangeMonthYear: function (dateText) {
+            //    console.log("Selected date: " + dateText + "; input's current value: " + this.value);
+            //},
+            //onSelect: function (dateText) { //working
+            //    console.log("Selected date: " + dateText + "; input's current value: " + this.value);
+            //}
+        });
+
+        $('#AcFYearTo').datepicker({
+            dateFormat: 'dd-mm-yy',
+            //minDate: sd,
+            //maxDate: ed
+            //onChangeMonthYear: function (dateText) {
+            //    console.log("Selected date: " + dateText + "; input's current value: " + this.value);
+            //},
+            //onSelect: function (dateText) { //working
+            //    console.log("Selected date: " + dateText + "; input's current value: " + this.value);
+            //}
+        });
+
+        var cs = $("#CurrentStatus").val();
+        if (cs) {
+            $("#dd_CurrentStatus").val('1');
+        } else {
+            $("#dd_CurrentStatus").val('0');
+        }
+        $("#btnsave").click(function () {
+
+            $('#btnsave').attr('disabled', 'disabled');
+            var obj = {
+                AcFinancialYearID: $('#AcFinancialYearID').val(),
+                AcFYearFrom: $('#AcFYearFrom').val(),
+                AcFYearTo: $('#AcFYearTo').val(),
+                ReferenceName: $('#ReferenceName').val(),               
+                CurrentFinancialYear: $('#CurrentFinancialYear').val()
+
+            }
+            $.ajax({
+                type: "POST",
+                url: '/FinancialYear/SaveFinancialYear/',
+                datatype: "json",
+                data: { model: obj },
+                success: function (response) {
+                    debugger;
+                    if (response.status == "OK") {
+                        Swal.fire("Save Status!", response.message, "success");
+                        //$('#divothermenu').removeClass('hide');
+                        $('#btnsave').removeAttr('disabled');
+                        var t = document.getElementsByClassName("needs-validation");
+                        $(t).removeClass('was-validated');
+                        setTimeout(function () {
+                            window.location.href = '/FinancialYear/Create?id=0'
+                        }, 350)
+
+                        //window.location.reload();
+
+                    }
+                    else {
+                        $('#btnsave').removeAttr('disabled');
+                        Swal.fire("Save Status!", response.message, "warning");
+                        //window.location.reload();
+                    }
+
+
+                }
+            });
+
+
+
+        });
+    });
+</script>
+
+ 
+
+<section class="content">
+    @if (TempData["ErrorMsg"] != null)
+    {
+        <script type="text/javascript">
+                      $(document).ready(function () {
+                          $.notify("@TempData["ErrorMsg"]", "error");
+                });
+        </script>
+    }
+    @using (Html.BeginForm("Create", "FinancialYear", FormMethod.Post, new { @class = "needs-validation ", @novalidate = "novalidate" }))
+    {
+       
+           @Html.AntiForgeryToken()
+
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            <div class="searchdiv sm-width">
+                <div id="validations" style="color:red;margin-left:7px;display:none">* Please fill mandatory fields</div>
+                <fieldset>
+                    <div class="row no-margin">
+                        <div class="col-md-12">
+                            @Html.HiddenFor(model => model.AcFinancialYearID)
+                            <label class="headinglabel required">Reference Name</label>
+                            @Html.TextBoxFor(model => model.ReferenceName, new { @class = "form-control", @required = true })
+                            @Html.ValidationMessageFor(model => model.ReferenceName, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="row no-margin">
+                        <div class="col-md-6">
+                            <label class="headinglabel required">Start Date</label>
+                            <div class="docs-datepicker">
+                                <div class="input-group">
+                                    <input type="text" class="form-control docs-date" name="AcFYearFrom" id="AcFYearFrom" required value="@Model.AcFYearFrom.ToShortDateString()"
+                                           placeholder="Pick a Invoice Date" autocomplete="off">
+                                    <button type="button"
+                                            class="btn btn-secondary docs-datepicker-trigger"
+                                            disabled>
+                                        <i class="mdi mdi-calendar" aria-hidden="true"></i>
+                                    </button>
+                                </div>
+                                <div class="docs-datepicker-container"></div>
+                            </div>
+                            @*@Html.TextBoxFor(model => model.AcFYearFrom, new { @class = "form-control", @required = true })*@
+                            @Html.ValidationMessageFor(model => model.AcFYearFrom, "", new { @class = "text-danger" })
+                        </div>
+                        <div class="col-md-6">
+                            <label class="headinglabel required">End Date</label>
+                            <div class="docs-datepicker">
+                                <div class="input-group">
+                                    <input type="text" class="form-control docs-date" name="AcFYearTo" id="AcFYearTo" required value="@Model.AcFYearTo.ToShortDateString()"
+                                           placeholder="Pick a Invoice Date" autocomplete="off">
+                                    <button type="button"
+                                            class="btn btn-secondary docs-datepicker-trigger"
+                                            disabled>
+                                        <i class="mdi mdi-calendar" aria-hidden="true"></i>
+                                    </button>
+                                </div>
+                                <div class="docs-datepicker-container"></div>
+                            </div>
+
+                            @Html.ValidationMessageFor(model => model.AcFYearTo, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    @*<div class="row no-margin">
+                            <div class="col-md-6">
+                                <label class="headinglabel required">Period End Date</label>
+                                @Html.TextBoxFor(model => model.EndDate, new { @class = "form-control", @required = true })
+                                @Html.ValidationMessageFor(model => model.EndDate, "", new { @class = "text-danger" })
+                            </div>
+                        </div>*@
+
+                    <div class="row no-margin">
+                        <div class="col-md-6">
+                            <label class="headinglabel required">Current Financial Year</label>
+                            <select id="dd_CurrentStatus" class="form-control" onchange="CurrentStatusChange()">
+                                <option value="0">No</option>
+                                <option value="1">Yes</option>
+                            </select>
+                            @Html.HiddenFor(model => model.CurrentFinancialYear)
+                        </div>
+                    </div>
+
+                    <div class="row no-margin" style="padding-top:10px">
+                        <div class="col-md-12 text-md-end">
+                            <input type="submit" value="Save" class="btn btn-success btnwidth" data-toggle="tooltip" title="Save" id="btnsave" />
+
+                            <a href='@Url.Action("Index", "FinancialYear", new { id = 0 })' class="btn btn-dark btnwidth" data-toggle="tooltip" data-placement="right" title="" style="margin-left:5px;">Cancel</a>
+
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+        }
+
+    </section>

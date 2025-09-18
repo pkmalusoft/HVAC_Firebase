@@ -1,0 +1,146 @@
+﻿@model HVAC.Models.CurrencyRateVM
+
+@{
+    ViewBag.Title = "Edit";
+    ViewBag.pTitle = "Currency Rate";
+    ViewBag.pageTitle = "Setup";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+
+    .searchdiv {
+        background-color: #fff;
+        width: 100%;
+        margin: 0 auto;
+        max-width: 600px;
+        padding: 20px;
+        margin-top: 50px;
+        border-radius: 10px;
+        box-shadow: 0 9px 23px rgba(0, 0, 0, 0.09), 0 5px 5px rgba(0, 0, 0, 0.06) !important;
+    }
+</style>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        $(":text").css({ "border-radius": "5px" });
+        $("select").css({ "border-radius": "5px" });
+
+        $("#CurrencyName").focus();
+
+        var isexist = 0;
+
+
+
+        $("#btnsave").click(function () {
+            var curr = $("#CurrencyName").val();
+            var sym = $("#Symbol").val();
+            var noof = $("#NoOfDecimals").val();
+            var mon = $("#MonetaryUnit").val();
+            var cou = $("#CountryID option:selected").val();
+
+
+            if (curr == "") {
+                $("#validations").show();
+                return false;
+            }
+            else if (sym == "") {
+                $("#validations").show();
+                return false;
+            }
+            else if (noof == "") {
+                $("#validations").show();
+                return false;
+            }
+            else if (mon == "") {
+                $("#validations").show();
+                return false;
+            }
+            else if (cou == "") {
+                $("#validations").show();
+                return false;
+            }
+            else if (isexist == 1 && $("#StatusBaseCurrency").is(':checked')) {
+                $("#alert2").show();
+                return false;
+            }
+            else {
+                $("#validations").hide();
+                return true;
+            }
+        });
+
+    });
+
+</script>
+
+@using (Html.BeginForm("Edit", "ExchangeRate", FormMethod.Post, new { @class = "needs-validation ", @novalidate = "novalidate", @id = "quickAWB" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+    <div id="validations" style="color:red;margin-left:7px;display:none">* Please fill mandatory fields</div>
+    <div id="alert2" style="color:red;display:none;margin-left:10px;">*Can not Create Base Currency. It is Already Exist</div>
+
+
+    <div class="searchdiv">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="mb-2">
+                    <label class="col-form-label required">Branch Currency</label>
+                    @Html.HiddenFor(mode => Model.CurrencyRateID)
+                    @Html.DropDownListFor(model => model.BranchCurrencyID, new SelectList(@ViewBag.currency, "CurrencyID", "CurrencyName"), "Select", new { @class = "form-select",@required="required" })
+                    @Html.ValidationMessageFor(model => model.BranchCurrencyID)
+
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="mb-2">
+                    <label class="col-form-label required">Trans Currency</label>
+                    @Html.DropDownListFor(model => model.TransactionCurrencyID, new SelectList(@ViewBag.currency, "CurrencyID", "CurrencyName"), "Select", new { @class = "form-select", @required = "required" })
+                    @Html.ValidationMessageFor(model => model.TransactionCurrencyID)
+
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="mb-2">
+                    <label class="col-form-label required">Trans Date</label>
+
+                    <div class="docs-datepicker">
+                        <div class="input-group">
+                            <input type="text" class="form-control docs-date" name="TransDate" id="TransDate" value="@Convert.ToDateTime(@Model.TransDate).ToShortDateString()" required
+                                   placeholder="Pick a From Date" autocomplete="off">
+                            <button type="button"
+                                    class="btn btn-secondary docs-datepicker-trigger"
+                                    disabled>
+                                <i class="mdi mdi-calendar" aria-hidden="true"></i>
+                            </button>
+                        </div>
+                        <div class="docs-datepicker-container"></div>
+                    </div>
+                    @Html.ValidationMessageFor(model => model.TransDate)
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="mb-2">
+                    <label class="col-form-label required">Currency Rate</label>
+                    @Html.TextBoxFor(model => model.CurrencyRate1, new { @class = "form-control textright3", @required = "required" })
+                    @Html.ValidationMessageFor(model => model.CurrencyRate1)
+
+                </div>
+            </div>
+
+        </div>
+
+
+
+
+        <div class="col-md-12 text-md-end  mt-2">
+            <input type="submit" value="Update" class="btn btn-success" data-toggle="tooltip" title="Click here" id="btnsave" />
+
+            <a href='@Url.Action("Index", "ExchangeRate", new { id = 0 })' class="btn btn-secondary" data-toggle="tooltip" data-placement="right" title="Click here">Cancel</a>
+
+        </div>
+    </div>
+
+}

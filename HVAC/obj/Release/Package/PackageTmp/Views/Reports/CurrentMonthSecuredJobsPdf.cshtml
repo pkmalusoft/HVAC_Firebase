@@ -1,0 +1,100 @@
+﻿@model HVAC.Models.CurrentMonthSecuredJobsViewModel
+@{
+    ViewBag.Title = "Monthly Secured Jobs";
+    Layout = null;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title style="color:black">Monthly Secured Jobs - PDF</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 12px;
+        }
+
+        h2 {
+            text-align: center;
+            color: #333;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            border: 1px solid #999;
+            padding: 6px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+        }
+
+        .category-header {
+            background: #d9edf7;
+            font-weight: bold;
+        }
+
+        .category-total {
+            background: #fff3cd;
+            font-weight: bold;
+            color: #c00;
+        }
+
+        .grand-total {
+            background: #d4edda;
+            font-weight: bold;
+            font-size: 14px;
+            color: #155724;
+        }
+
+        .text-end {
+            text-align: right;
+        }
+    </style>
+</head>
+<body>
+    <h2>Monthly Secured Jobs</h2>
+
+    <table>
+        <thead>
+            <tr>
+                <th style="width:50px;">Sl No</th>
+                <th>Project Title</th>
+                <th class="text-end">Value in OMR</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (dynamic group in Model.Groups)
+            {<!-- Category Header -->
+                <tr style="background: #004c99; color: #fff; font-weight:bold;">
+                    <td colspan="3">@group.Category</td>
+                </tr> int i = 1;
+                                foreach (dynamic job in group.Jobs)
+                                {
+                <tr style="background: #e8f5e9;">
+                    <td>@i</td>
+                    <td>@job.ProjectTitle</td>
+                    <td style="text-align:right;">@job.ValueInOMR.ToString("N3")</td>
+                </tr> i++;
+                                } <!-- Category Total -->
+                                <tr style="background: #ffebf0; font-weight:bold; color:deeppink;">
+                                    <td colspan="2" style="text-align:right;">TOTAL</td>
+                                    <td style="text-align:right;">@group.CategoryTotal.ToString("N3")</td>
+                                </tr>            }
+            <!-- GRAND TOTAL -->
+            <tr class="grand-total">
+                <td colspan="2" class="text-end">GRAND TOTAL</td>
+                <td class="text-end">@Model.GrandTotal.ToString("N3")</td>
+            </tr>
+
+        </tbody>
+    </table>
+</body>
+</html>

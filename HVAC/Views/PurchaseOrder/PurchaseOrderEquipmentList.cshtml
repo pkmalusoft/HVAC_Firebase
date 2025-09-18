@@ -1,0 +1,81 @@
+﻿@model HVAC.Models.PurchaseOrderVM
+@{
+    var i = 0;
+    var _decimal = @Session["Decimal"].ToString();
+    Layout = null;
+}
+
+
+<script type="text/javascript">
+    //$(document).ready(function () {
+    //    checkdeletedentry();
+    //    setTimeout(function () {
+    //        setUOMcombo();
+    //    }, 100)
+       
+    //});
+
+
+</script>
+<div class="table-responsive">
+    <table class="table table-datatable dataTable tblfont table-bordered table-striped mb-0" id="PurchaseOrderEquipmentTables" style="width: 100% !important;">
+
+        <thead class="table-light" style="text-align:center">
+            <tr>
+                <th width="20%">SLno</th>
+                <th width="35%">Equipment</th>
+                <th width="15%">Qty</th>
+                <th width="5%">UnitPrice</th>
+                <th width="5%">Value</th>
+                <th width="5%">JobNumber</th>
+                <th width="5%">Regrigerant</th>
+                <th width="5%">CompressorWarranty</th>
+                <th>Action</th>
+
+            </tr>
+        </thead>
+        
+
+
+
+    </table>
+
+</div>
+<script>
+    $(document).ready(function () {
+        $('.edit-btn').on('click', function () {
+            var $row = $(this).closest('tr');
+
+            $row.find('.editable').each(function () {
+                var _text = $(this).find('input');
+                var _span = $(this).find('span');
+                $(_text).attr('type', 'text');
+                $(_span).css('display', 'none');
+
+            });
+
+            $row.find('.edit-btn').hide();
+            $row.find('.save-btn').show();
+            $row.find('.editable input:first').focus().select();
+        });
+
+        $('.save-btn').on('click', function () {
+            var $row = $(this).closest('tr');
+
+            $row.find('.editable').each(function () {
+                var inputVal = $(this).find('input').val();
+                var _text = $(this).find('input');
+                var _span = $(this).find('span');
+                $(_text).attr('type', 'hidden');
+                $(_span).html(inputVal);
+                $(_span).css('display', 'block');
+
+            });
+
+            $row.find('.save-btn').hide();
+            $row.find('.edit-btn').show();
+
+            // You can add AJAX here to save the changes to the server
+        });
+    });
+</script>

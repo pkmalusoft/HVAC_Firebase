@@ -1,0 +1,94 @@
+﻿@model HVAC.Models.EnquiryVM
+@{
+    Layout = null;
+    var i = 0;
+}
+<style>
+    ul.ui-front {
+        z-index: 1100;
+    }
+</style>
+<script type="text/javascript">
+    $(document).ready(function () {
+      
+    });
+
+</script>
+<div class="row no-margin" style="padding-top:0px">
+    <div class="col-md-12 tblbackground">
+        <table class="table table-datatable dataTable tblfont table-bordered table-striped mb-0" id="ContainerTables">
+            <thead class="table-light">
+                <tr>
+                    <th>S.No</th>
+                    <th>Quotation No.</th>
+                     
+                    <th>Quotation Date</th>
+                    <th>Value</th>
+                    <th>Quotation To</th>
+                    <th>Status</th>
+                    
+
+                </tr>
+            </thead>
+            <tbody id="tbodyclient">
+
+                @foreach (var item in Model.QuotationDetails)
+                {
+                <tr id="trclient_@i">
+                    <td id="row_@i">
+                        @(i + 1)
+                        @Html.HiddenFor(model => model.QuotationDetails[i].ClientID, new { @Value = @item.ClientID, @id = "hdnClientId_" + @i })
+                        @Html.HiddenFor(model => model.QuotationDetails[i].QuotationID, new { @Value = @item.QuotationID, @id = "hdnEnquiryQuotationID_" + @i })
+                    </td>
+                    <td>                    
+                       
+                        @{ 
+                            if (item.Version != 0)
+                            { 
+                             <a href="/Quotation/Create?id=@item.QuotationID">
+                                 @item.QuotationNo "/" +  item.Version </a>
+                            }
+                        else{
+                            <a href="/Quotation/Create?id=@item.QuotationID">
+                                @item.QuotationNo
+                            </a>
+                            }
+                      }                                                    
+                    </td>
+                    
+                    <td>
+                        @item.QuotationDate.Value.ToShortDateString()
+                    </td>
+                    <td style="text-align:right">
+                        
+                        @HVAC.Models.CommonFunctions.GetBranchFormatNumber(@item.QuotationValue, "3")
+                    </td>
+                    <td>
+                        <span class="overlay-wrapper ">@item.QuoteClientDetail</span>
+                    </td>
+                    <td>
+                        @item.EmployeeName <br />
+
+                        @{
+                            if (item.QuotationStatus == "Secured")
+                            {
+                                <span class="badge bg-success">@item.QuotationStatus</span>
+                            }
+                            else if (item.QuotationStatus == "Lost")
+                            {
+                                <span class="badge bg-danger">@item.QuotationStatus</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-warning">@item.QuotationStatus</span>
+                            }
+                        }
+
+                    </td>
+                </tr>
+                    i++;
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

@@ -1,0 +1,202 @@
+﻿@model HVAC.Models.PurchaseOrderVM
+@{
+    var i = 0;
+    var _decimal = @Session["Decimal"].ToString();
+    Layout = null;
+}
+
+<style>
+    .clsfinance{
+        background-color:#faf2ca;
+        color:blue;
+        font-weight:bold;
+    }
+    .clsexworks {
+        
+        color: black;
+        font-weight: bold;
+    }
+    .clsSoharomr{
+      /*  background-color:#d4ca98;*/
+        color:dodgerblue;
+        font-weight:bold;
+    }
+
+    .clsSohar {
+        /*background-color: #d4ca98;*/
+        color: black;
+        font-weight: bold;
+    }
+
+    .clslandingomr {
+        /*background-color: #dbbe1c;*/
+        color: dodgerblue;
+        font-weight: bold;
+    }
+    .clsselling {
+        background-color: green;
+        color: white;
+        font-weight: bold;
+    }
+    .clsgross {
+        color: black;
+        font-weight: bold;
+    }
+    .clslanding {
+        background-color: #fce14f;
+        color: black;
+        font-weight: bold;
+    }
+</style>
+
+
+<div class="table-responsive">
+    
+    
+    <table class="table table-datatable dataTable tblfont table-bordered table-striped mb-0" id="EstimationDetailTable" style="width: 100% !important;">
+
+        <thead class="table-light">
+            <tr>
+                <th width="20%">Estimation No.</th>
+                <th width="35%">Equipment</th>
+                <th width="15%">Model/Unit</th>
+                <th width="5%">Unit Type</th>
+               
+                <th width="5%">Qty</th>
+
+                <th width="5%">Rate</th>
+                <th id="thfvalue">Value</th>
+                @*<th id="thlvalue">OMR</th>*@
+                <th>Action</th>
+
+            </tr>
+        </thead>
+        <tbody class="" style="text-align:center">
+
+
+            @foreach (var item1 in Model.Details)
+            {
+
+
+                <tr id="quodtr_@i">
+                    @*<td id="row_@i">@(i+1)</td>*@
+                    <td>
+                        @Html.HiddenFor(modelitem => item1.EstimationID, new { @id = "eEstimationID_" + @i, @class = "form-control", @readonly = "readonly" })
+                        @Html.HiddenFor(modelitem => item1.EstimationNo, new { @id = "eEstimationNo_" + @i, @class = "form-control", @readonly = "readonly" })
+                        @Html.HiddenFor(modelitem => item1.EquipmentID, new { @id = "eEquipmentID_" + @i, @class = "form-control", @readonly = "readonly" })
+                        @Html.HiddenFor(modelitem => item1.QuotationID, new { @id = "eQuotationID_" + @i, @class = "form-control", @readonly = "readonly" })
+                        @Html.HiddenFor(modelitem => item1.EquipmentTypeID, new { @id = "eEquipmentTypeID_" + @i, @class = "form-control", @readonly = "readonly" })
+                        @Html.HiddenFor(modelitem => item1.JobHandOverID, new { @id = "eJobHandOverID_" + @i, @class = "form-control", @readonly = "readonly" })
+
+                         @Html.HiddenFor(modelitem => item1.ProjectNo, new { @id = "eProjectNo_" + @i, @class = "form-control", @readonly = "readonly" })
+                        @Html.HiddenFor(modelitem => item1.ItemUnitID, new { @id = "eUnitID_" + @i })
+                        @*@Html.HiddenFor(modelitem => item1.CurrencyCode, new { @id = "eCurrencyName_" + @i })*@
+                        @*@Html.HiddenFor(modelitem => item1.ExchangeRate, new { @id = "etxtExRate_" + @i })*@
+                        @*@Html.HiddenFor(modelitem => item1.RowType, new { @id = "eRowType_" + @i })*@
+
+                        @Html.HiddenFor(modelitem => item1.Description, new { @id = "etxtDescription_" + @i, @class = " form-control-sm", @style = "width:200px" })
+                        @Html.HiddenFor(modelitem => item1.Model, new { @id = "etxtModel_" + @i, @class = "form-control-sm" })
+
+                        @item1.EstimationNo
+
+                    </td>
+                    <td>
+                        @Html.HiddenFor(modelitem => item1.Description, new { @id = "etxtDescription_" + @i, @class = " form-control-sm", @style = "width:200px" })
+                        @item1.Description
+                        
+                    </td>
+                    <td>
+                        @item1.Model
+                    </td>
+                    <td>
+
+                        @item1.UnitName
+                        @Html.HiddenFor(modelitem => item1.UnitName, new { @id = "eUnitName_" + @i, @class = "form-control" })
+                    </td>
+                     
+                    <td style="text-align:right">
+                        @Html.HiddenFor(modelitem => item1.Quantity, new { @id = "etxtQty_" + @i, @class = "textright form-control-sm", @onchange = "calculatevalue(" + @i + ")", @style = "width:100px" })
+                        @item1.Quantity
+
+                    </td>
+
+                    <td style="text-align:right">
+                        @Html.HiddenFor(modelitem => item1.Rate, new { @Value = Convert.ToDecimal(@item1.Rate).ToString("N3"), @id = "etxtRate_" + @i, @class = "textrightamount form-control-sm", @style = "width:100px", @readonly = "readonly" })
+                        <span style="color:dodgerblue">@HVAC.Models.CommonFunctions.GetBranchFormatNumber(item1.Rate, "3")</span>
+                        
+                    </td>
+                    <td style="text-align:right">
+                        
+                        @Html.HiddenFor(modelitem => item1.Amount, new { @Value = Convert.ToDecimal(@item1.Amount).ToString("N3"), @id = "etxtLValue_" + @i, @class = "textrightamount    form-control-sm", @style = "width:100px", @readonly = "readonly" })
+                        
+                            
+                        <span style="color:dodgerblue">@HVAC.Models.CommonFunctions.GetBranchFormatNumber(item1.Amount, "3")</span>
+                            
+                            
+                        
+
+
+                    </td>
+                   
+                    <td>                    
+                        <input type="checkbox" id="chkEstimationItem_@i"   />
+                    </td>
+                </tr>
+                i++;
+            }
+        </tbody>
+        <tfoot>
+            <!--<tr>
+                <td width="10%"></td>
+                <td width="30%"></td>
+                <td width="15%"><span id="spanlandingcost1" style="color: blue; font-weight: bold"></span></td>
+                <td width="5%"></td>
+                <td width="5%"></td>-->
+            @*<td width="5%" colspan="2">Total</td>*@
+            <!--<td style="text-align:right;">-->
+            @*<span id="spanFCvalue" style="color: blue; margin-right: 10px; font-weight: bold"></span>
+                <span id="spanLCvalue" style="color: blue; margin-right: 10px; font-weight: bold"></span>*@
+            <!--</td>
+                <td style="text-align:right;"></td>
+                <td></td>
+            </tr>-->
+            <tr id="trmargin" class="d-xl-none">
+                <td width="10%"></td>
+                <td width="30%"></td>
+                <td width="15%"></td>
+                <td width="5%"></td>
+
+
+                <td width="5%" colspan="2"><span id="spanmarginpercent" style="color:blue"></span></td>
+                <td style="text-align:right;"></td>
+                <td style="text-align:right"><span id="spanMargin" style="color:blue;margin-right:10px;font-weight:bold"></span> </td>
+                <td></td>
+            </tr>
+            <tr id="trselling" class="d-xl-none clsselling">
+                <td width="10%"></td>
+                <td width="30%"></td>
+                <td width="15%"></td>
+                <td width="5%"></td>
+
+
+                <td width="5%" colspan="2">Selling Value</td>
+                <td style="text-align:right;"></td>
+                <td style="text-align:right"><span id="spanSellingValue" style="color: white; margin-right: 10px; font-weight: bold"></span> </td>
+                <td></td>
+            </tr>
+        </tfoot>
+
+    </table>
+
+</div>
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+
+
+    });
+  
+    
+</script>

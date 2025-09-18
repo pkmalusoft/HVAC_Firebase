@@ -1,0 +1,34 @@
+﻿@model HVAC.Models.QuotationVM
+@{
+    ViewBag.Title = "Print";
+    ViewBag.pTitle = "Client PO";
+    ViewBag.pageTitle = "HVAC";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    int i = 0;
+    var _decimal = @Session["Decimal"].ToString();
+}
+@using (Html.BeginForm("ReportPrint", "InwardPO", FormMethod.Post, new { @id = "customerledger" }))
+{
+    @Html.AntiForgeryToken()
+
+
+    <div class="row " style="padding-top:10px">
+        <div class="col-md-3">
+            <label class="col-form-label">Select Quotation To</label>
+            @Html.DropDownListFor(model => model.ClientID, new SelectList(ViewBag.Client, "ClientID", "ClientName"), "Select", new { @class = "form-select", @required = "required", @id = "EnquiryID", @svalue = Model.ClientID })
+            @Html.HiddenFor(model => model.QuotationID, new { @id = "QuotationID" })
+        </div>
+        <div class="col-md-9 text-md-end">
+
+            <button type="submit" class="btn btn-warning waves-effect waves-light filter btn_top reload" id="btnreport">
+                <i class="bx bx-printer mt-1" style="font-size: 21px;"></i> Print
+            </button>
+            @*@Html.ActionLink("ReportPrint", "Quotation", new { id = Model.QuotationID, ClientId = Model.ClientID }, new { @class = "btn btn-warning btnwidth float-right" })*@
+
+            <a href='/Quotation/Index' title="Back to Quotation Page" style="margin-top:30px" class="pull-right btn btn-secondary">Cancel</a>
+        </div>
+    </div>
+    <div class="row no-margin" style="padding-top:10px" id="divreportframe">
+        @{ Html.RenderAction("ReportFrame", "Quotation");}
+    </div>
+}

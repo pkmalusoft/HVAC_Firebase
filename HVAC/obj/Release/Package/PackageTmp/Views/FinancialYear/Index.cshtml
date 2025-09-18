@@ -1,0 +1,144 @@
+﻿@model IEnumerable<HVAC.Models.AcFinancialYear>
+
+@{
+    ViewBag.Title = "List";
+    ViewBag.pTitle = "Financial Year";
+    ViewBag.pageTitle = "Courier Setup";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    tfoot {
+        display: table-header-group;
+    }
+</style>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#dataTables-example tfoot th').each(function () {
+            var title = $(this).text();
+            $(this).html('<input type="text" />');
+        });
+
+
+        var table = $('#dataTables-example').DataTable({ "sPaginationType": "full_numbers" });
+
+        table.columns().every(function () {
+            var that = this;
+
+            $('input', this.footer()).on('keyup change', function () {
+                if (that.search() !== this.value) {
+                    that
+                        .search(this.value)
+                        .draw();
+                }
+            });
+        });
+
+    });
+
+
+</script>
+ 
+<div class="col-md-12">
+    <p class="indexbtnpadding text-right create_right">
+        @Html.ActionLink("Create New", "Create", null, new { @class = "btn btn-primary btnwidth" })
+    </p>
+</div>
+<div class="clearfix"></div>
+
+<div class="card">
+    <div class="card-body">
+        @if (TempData["SuccessMsg"] != null)
+        {
+            <script type="text/javascript">
+                      $(document).ready(function () {
+                          $.notify("@TempData["SuccessMsg"]", "success");
+                });
+            </script>
+        }
+        <div class="table-responsive tblbackground" style="padding:15px">
+            <table class="table table-responsive table-bordered tblfont" id="datatable">
+                <thead>
+                    <tr>
+                        <th>
+                            @Html.DisplayNameFor(model => model.ReferenceName)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.AcFYearFrom)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.AcFYearTo)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.CurrentFinancialYear)
+                        </th>
+                        
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.ReferenceName)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.AcFYearFrom)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.AcFYearTo)
+                            </td>
+                            <td>
+                                @if (item.CurrentFinancialYear)
+                                {
+                                    @Html.DisplayName("YES")
+                                }
+                                else
+                                {
+                                    @Html.DisplayName("NO")
+                                }
+                            </td>
+                           
+                          
+                            <td>
+                                <a class="text-success" href="@Url.Action("Create", new { id = item.AcFinancialYearID })"><i class="mdi mdi-pencil font-size-18"></i></a>
+                                <a class="text-danger" href="#" onclick="Delete(ID=@item.AcFinancialYearID)"><i class="mdi mdi-delete font-size-18" ></i></a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+
+
+    function Delete(ID) {
+        Swal.fire({ title: "Are you sure?", text: "Do you want to delete this?", icon: "warning", showCancelButton: !0, confirmButtonColor: "#34c38f", cancelButtonColor: "#f46a6a", confirmButtonText: "Yes, delete it!" }).then(
+            function (t) {
+                if (t.value) {
+                    $.ajax({
+                        type: "POST",
+                        url: '/FinancialYear/DeleteConfirmed',
+                        datatype: "html",
+                        data: {
+                            'id': ID
+                        },
+                        success: function (response) {
+                            if (response.status == "OK") {
+                                Swal.fire("Delete Status!", response.message, "success");
+                                window.location.reload();
+                            }
+                            else {
+                                Swal.fire("Delete Status!", response.message, "error");
+                            }
+                        }
+                    });
+                }
+            });
+    }
+</script>

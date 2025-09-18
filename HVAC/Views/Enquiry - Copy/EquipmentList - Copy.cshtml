@@ -1,0 +1,81 @@
+﻿@model HVAC.Models.EnquiryVM
+    @{
+        var i = 0;
+        var _decimal = @Session["Decimal"].ToString();
+    }
+    
+ 
+<div class= "row no-margin" style="padding-top:0px">
+    <div class="col-md-12 tblbackground">
+        <input type="hidden" id="hdnStatus" value="@Model.Status" />
+        <table class="table table-datatable Datatable table-bordered tblfont table-striped" id="CargodataTables" >
+            <thead class="table-light">
+                <tr>
+                    <th>S.No</th>
+                    <th>Brand</th>
+                    <th>Product Type</th>                    
+
+                    @*<th>Model</th>*@
+
+                    @*<th>Qty</th>
+                    <th>Rate</th>
+                    <th>Amount</th>
+                    <th>Tag</th>*@
+                    <th>Engineer</th>
+                    <th></th>
+
+                </tr>
+            </thead>
+            <tbody>
+           
+                @foreach (var item in Model.EquipmentDetails)
+                {
+                <tr id="doctr_@i">
+                    <td id="row_@i">@(i+1)</td>
+                    <td>
+
+                        @item.Brand
+
+                    </td>
+                    <td>
+                        @item.EquipmentName <br />@item.ProductFamilyName
+                        @Html.HiddenFor(model => model.EquipmentDetails[i].ID, new { @Value = @item.ID, @id = "hdnEquipmentId_" + @i })
+                    </td>
+                   
+                    @*<td>
+                        @item.Model
+                    </td>*@
+                    @*<td>
+                        @item.Quantity
+                    </td>
+                    <td>
+                        @item.UnitRate
+                    </td>
+                    <td>
+                        @item.Amount
+                    </td>*@
+                    <!--<td>-->
+                        @*<a target="_blank" href="/UploadDocuments/@item.Filename" title="Edit Cargo"><i class="fa fa-file"></i></a>*@
+                        <!--<a href="JavaScript:void(0)" onclick="" ; title="Equipment Tag"><i class="mdi mdi-dots-grid font-size-18 "></i></a>
+                    </td>-->
+                    <td>
+                        @item.CreatedBy <br />
+                        @item.CreatedDate
+                    </td>
+                    <td style="width:101px; font-size:13px;">
+                        <a class="text-danger" onclick="DeleteEquipment('@item.ID','@i')" href="javascript:void(0);" title="Delete Equipment"><i class="mdi mdi-delete font-size-18"></i></a>
+                        @*<a class="text-success" onclick="EditEquipment('@item.ID','@i')" href="javascript:void(0);" title="Edit Equipment"><i class="mdi mdi-pencil font-size-18"></i></a>
+        <a class="text-danger" onclick="DeleteEquipment('@item.ID','@i')" href="javascript:void(0);" title="Delete Equipment"><i class="mdi mdi-delete font-size-18"></i></a>*@
+
+                    </td>
+
+                </tr>
+                    i++;
+                }
+
+            </tbody>
+        </table>
+    </div>
+</div>
+
+

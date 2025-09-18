@@ -1,0 +1,113 @@
+﻿@model HVAC.Models.DocumentMasterVM
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+    ul.ui-front {
+        z-index: 1100;
+    }
+</style>
+<script>
+    $(document).ready(function () {
+
+    });
+</script>
+@{
+    ViewBag.Title = "Attachments";
+    ViewBag.pTitle = "Document";
+    ViewBag.pageTitle = "Employee Master";
+}
+
+
+
+
+@using (Html.BeginForm("Document", "EmployeeMaster", FormMethod.Post, new { @class = "needs-validation ", @novalidate = "novalidate" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true, "", new { @class = "needs-validation" })
+
+
+
+    <div class="row">
+        <div class="col-xl-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-7">
+                            <h4 class="card-title mb-3 mt-3">Document of Employees</h4>
+                        </div>
+                        <div class="col-md-5 text-right">
+
+                            @if (Model.AcJournalID > 0)
+                            {
+
+                                <button type="submit" id="btnSaveDocuments" class="btn btn-success">Save</button>
+
+                            }
+                            else
+                            {
+                                <button type="submit" class="btn btn-success" id="btnSaveDocuments" disabled>Save</button>
+                            }
+                            <a href='@Url.Action("Index", "BranchMaster")' class="btn btn-secondary">Cancel</a>
+                             
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <label>Branch Name</label>
+                            <b style="color:blue">@Model.BranchName</b>
+                        </div>                        
+                        <div cass="col-md-6"></div>
+
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="mb-2">
+                                @Html.HiddenFor(model => model.DocumentID)
+                                @Html.HiddenFor(model => model.Filename)
+                                @Html.HiddenFor(model => model.BranchID)
+                                @Html.HiddenFor(model => model.AcJournalID)
+                                @Html.HiddenFor(model => model.CompanyID)
+                                @Html.HiddenFor(model => model.EmployeeID)
+
+                                <label class="col-form-label">Document Type</label>
+                                @Html.DropDownListFor(model => model.DocumentTypeID, new SelectList(ViewBag.DocumentTypes, "DocumentTypeID", "DocumentTypeName"), "Select", new { @class = "form-select", @required = "required" })
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="mb-2">
+                                <label class="col-form-label">Document Title</label>
+                                @Html.TextBoxFor(model => model.DocumentTitle, new { @class = "form-control", @autocomplete = "off",@required="required" })
+                                @Html.ValidationMessageFor(model => model.DocumentTitle)
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="mb-2">
+
+                                <div class="input-group gap-2">
+                                    <label class="col-form-label">Select File</label>
+                                    <label class="color_red mt-2" id="lbfileuploadstatus"></label>
+                                </div>
+                                <input type="file" id="FileUpload1" class="form-control">
+                                <input type="button" id="btnUpload" value="Upload Files" style="display:none" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row" id="DocumentContainer">
+                        @{Html.RenderPartial("DocumentList", Model);}
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+}
+@section scripts{
+
+
+    <script src="~/Scripts/JS/EmployeeDocument.js"></script>
+
+}
+

@@ -1,0 +1,312 @@
+﻿@model HVAC.Models.MaterialRequestSearch
+
+@{
+    ViewBag.Title = "List";
+    ViewBag.pTitle = "Material Request";
+    ViewBag.pageTitle = "HVAC";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        $('#dataTables-example tfoot th').each(function () {
+            var title = $(this).text();
+            $(this).html('<input type="text" style="width:100%" />');
+        });
+
+
+        var table = $('#dataTables-example').DataTable();
+
+        table.columns().every(function () {
+            var that = this;
+
+            $('input', this.footer()).on('keyup change', function () {
+                if (that.search() !== this.value) {
+                    that
+                        .search(this.value)
+                        .draw();
+                }
+            });
+        });
+
+    });
+
+
+</script>
+
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <div class="card">
+        <div class="card-body">
+            <div class="row">
+
+
+                <div class="col-md-2">
+                    <label for="FromDate" class="col-form-label">From Date</label>
+                    @*@Html.TextBoxFor(mode => mode.FromDate, new { @class = "form-control text-right color_blue_border" })*@
+                    <div class="docs-datepicker">
+                        <div class="input-group">
+                            <input type="text" class="form-control form-control-sm docs-date" name="FromDate" id="FromDate1"
+                                   placeholder="Pick a From Date" autocomplete="off" value="@Model.FromDate.ToShortDateString()" tabindex="1" />
+                            <button type="button"
+                                    class="btn btn-secondary docs-datepicker-trigger"
+                                    disabled>
+                                <i class="mdi mdi-calendar" aria-hidden="true"></i>
+                            </button>
+                        </div>
+                        <div class="docs-datepicker-container"></div>
+                    </div>
+                </div>
+
+                <div class="col-md-2">
+                    <label for="ToDate" class="col-form-label">To Date</label>
+                    @*@Html.TextBoxFor(mode => mode.ToDate, new { @class = "form-control text-right color_blue_border" })*@
+                    <div class="docs-datepicker">
+                        <div class="input-group">
+                            <input type="text" class="form-control form-control-sm docs-date" name="ToDate" id="ToDate1" data-date-format="dd/MM/yyyy" data-date-autoclose="true" data-provide="datepicker"
+                                   placeholder="Pick a To date" autocomplete="off" value="@Model.ToDate.ToShortDateString()" tabindex="2">
+                            <button type="button"
+                                    class="btn btn-secondary docs-datepicker-trigger"
+                                    disabled>
+                                <i class="mdi mdi-calendar" aria-hidden="true"></i>
+                            </button>
+                        </div>
+                        <div class="docs-datepicker-container"></div>
+                    </div>
+                </div>
+                <div class=" col-md-2">
+                    <div class="mb-2">
+                        <label class="col-form-label">Status</label>
+                        <select id="drpStatus" name="Status" class="form-select">
+                            <option value="IssueRequestPending">Issue Request Pending</option>
+                            <option value="PORequestPending">PO Request Pending</option>
+                            <option value="PO Pending">PO Pending</option>
+                            <option value="Issue Pending">Issue Pending</option>
+                            <option value="All">All</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-1">
+                    <div class="mb-2">
+                        <button type="submit" class="btn btn-sm btn-success" style="margin-top:35px" tabindex="5">
+                            <i class="mdi mdi-refresh" style="font-size: 18px;"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="col-md-5 text-md-end">
+                    <a class="btn btn-success waves-effect waves-light text-md-end btn_top" id="btnsave" onclick="ConfirmApprovalStatus()" href="javascript:void(0)"><i class="mdi mdi-plus me-1"></i>Approve</a>
+                </div>
+                @*<div class="col-md-2 text-md-end">
+                    <a class="btn btn-primary waves-effect waves-light text-md-end btn_top" href="/PurchaseOrder/Create"><i class="mdi mdi-plus me-1"></i> New Purchase Order</a>
+                </div>
+                <div class="col-md-2 text-md-end">
+                    <a class="btn btn-primary waves-effect waves-light text-md-end btn_top" href="/MaterialIssue/Create"><i class="mdi mdi-plus me-1"></i> New Material Issue</a>
+                </div>*@
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+
+
+    <div class="card">
+        <div class="card-body">
+
+            <table class="align-middle table-nowrap dt-responsive nowrap w-100 table-check dataTable no-footer dtr-inline mt-4 border-top table table-hover" id="equipmentTable" style="width:100%">
+                <thead class="table-light">
+                    <tr>
+                        <th>
+                            MR Date
+
+                        </th>
+                        <th>MR No.</th>
+                        <th>
+                            Project no.
+                        </th>
+                        <th>
+                            Requested By
+                        </th>
+                        <th>
+                            Product
+                        </th>
+                        <th>
+                            Model
+                        </th>
+                        <th>Req.Qty</th>
+                        <th>Stock Status</th>
+                        <th>Stock Qty</th>
+                        <th>Approve PO</th>
+                        <th>Approve Issue</th>
+                    </tr>
+                </thead>
+
+
+                <tbody>
+                    @if (Model.EquipmentDetails != null)
+                    {
+                        foreach (var item in Model.EquipmentDetails)
+                        {
+                    <tr>
+                        <td>
+                            @HVAC.Models.CommonFunctions.GetShortDateFormat(item.MRDate)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.MRNo)
+                        </td>
+
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ProjectNo)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.RequestedByName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.EquipmentType)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Model)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Quantity)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.StockStatus)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Stock)
+                        </td> 
+                        <td>
+                            @{
+                                if (item.ReadytoPO)
+                                {
+                                    <input type="checkbox" checked id="chkpo_@item.MRequestDetailID" onchange="UpdatePOStatus(@item.MRequestDetailID)" />
+                                }
+                                else
+                                {
+                                    <input type="checkbox" id="chkpo_@item.MRequestDetailID" MRequestID="@item.MRequestID" onchange="UpdatePOStatus(@item.MRequestDetailID)" />
+                                }
+                            }
+                        </td>
+                        <td>
+                            @{
+                                if (item.ReadytoIssue)
+                                {
+                                    <input type="checkbox" checked id="chk_@item.MRequestDetailID" onchange="UpdatePOStatus(@item.MRequestDetailID)" />
+                                }
+                                else
+                                {
+                                    <input type="checkbox" id="chk_@item.MRequestDetailID" onchange="UpdatePOStatus(@item.MRequestDetailID)" />
+                                }
+                            }
+
+                        </td>
+                    </tr>
+                        }
+                    }
+                </tbody>
+
+            </table>
+        </div>
+    </div>
+}
+
+
+@section scripts{
+<script type="text/javascript">
+    debugger;
+    function ConfirmApprovalStatus() {
+        debugger;
+        var itemcount = $('#equipmentTable > tbody > tr').length;
+        if (itemcount == 0) {
+            return false;
+        }
+        var materialRequestDetails = [];
+        var idtext = 'chkpo_'
+        $('[id^=' + idtext + ']').each(function (index, item) {
+            if ($(item).prop('checked')) {
+                var requestdetaild = $(item).attr('id').split('_')[1];
+                var mrequestid = $(item).attr('mrequestid');
+                var detail = {
+                    MaterialRequestDetailID: requestdetaild,
+                    MRequestID: mrequestid
+                }
+                materialRequestDetails.push(detail);
+            }
+        });
+
+        // Disable save button
+        $('#btnsave').attr('disabled', 'disabled');
+
+        $.ajax({
+            type: "POST",
+            url: '/MaterialRequest/ConfirmIssueStatus/',
+            datatype: "json",
+            data: { status: $('#drpStatus').val(), Details: JSON.stringify(materialRequestDetails) },
+            success: function (response) {
+                if (response.status == "ok") {
+                    Swal.fire("Save Status!", response.message, "success");
+                    setTimeout(function () {
+                        window.location.href = "/MaterialRequest/Index";
+                    }, 1000);
+                }
+                else {
+                    $('#btnsave').removeAttr('disabled');
+                    Swal.fire("Save Status!", response.message, "warning");
+                }
+            },
+            error: function (xhr, status, error) {
+                $('#btnsave').removeAttr('disabled');
+                Swal.fire('Error', 'Failed to save material request!', 'error');
+            }
+        });
+    }
+    function UpdatePOStatus(ID) {
+        var _status = $('#chkpo_' + ID).prop('checked');
+                    $.ajax({
+                        type: "POST",
+                        url: '/MaterialRequest/UpdatePOStatus',
+                        datatype: "html",
+                        data: {
+                            'id': ID, Status: _status
+                        },
+                        success: function (response) {
+                            if (response.status == "OK") {
+                                 
+                            }
+                            else {
+                                Swal.fire("Delete Status!", response.message, "error");
+                            }
+                        }
+                    });
+                }
+
+    function UpdateIssueStatus(ID) {
+        //issue status
+        var _status = $('#chk_' + ID).prop('checked');
+        $.ajax({
+            type: "POST",
+            url: '/MaterialRequest/UpdateIssueStatus',
+            datatype: "html",
+            data: {
+                'id': ID, Status: _status
+            },
+            success: function (response) {
+                if (response.status == "OK") {
+                   
+                }
+                else {
+                    Swal.fire("Delete Status!", response.message, "error");
+                }
+            }
+        });
+    }
+
+    
+</script>
+    }

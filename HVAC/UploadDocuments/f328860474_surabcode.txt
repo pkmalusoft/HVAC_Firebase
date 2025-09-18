@@ -1,0 +1,83 @@
+@inject IStringLocalizer<NavMenu> L
+
+<PersonCard
+    Style="background-color: var(--mud-palette-drawer-background);color: var(--mud-palette-drawer-text); margin-bottom:0px!important" />
+<MudNavMenu>
+    <MudText Typo="Typo.subtitle2" Color="Color.Primary" Class="ml-4 my-3">@L["Start"]</MudText>
+    <MudNavLink Href="/" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Home">@L["Home"]</MudNavLink>
+    @* <MudNavLink Href="https://fullstackhero.net/basics/getting-started/" Match="NavLinkMatch.All" Target="_blank"
+        Icon="@Icons.Material.Filled.RocketLaunch">@L["Getting Started"]</MudNavLink>
+    @if (_canViewHangfire)
+    {
+        <MudNavLink Href="@_hangfireUrl" Match="NavLinkMatch.All" Target="_blank" Icon="@Icons.Material.Filled.Work">@L["Hangfire"]</MudNavLink>
+    } *@     
+    @* <MudNavLink Href="/audit-logs" Icon="@Icons.Material.Filled.SecurityUpdateGood">@L["Logs"]</MudNavLink> *@
+    @* @if (_canViewProducts || _canViewBrands)
+    { *@
+        <MudText Typo="Typo.subtitle2" Color="Color.Primary" Class="ml-4 my-3">@L["Management"]</MudText>
+        <MudNavGroup Title="@L["Master"]" Expanded Icon="@Icons.Filled.AddBox">
+            @* @if (_canViewProducts)
+            { *@
+                <MudNavLink Href="/master/subject" Icon="@Icons.Filled.Subtitles" Class="fsh-nav-child">
+                    @L["Subject"]
+                </MudNavLink>
+            @* } *@
+            
+            @* @if (_canViewCourses)
+            { *@
+                <MudNavLink Href="/master/course" Icon="@Icons.Filled.InsertChartOutlined" Class="fsh-nav-child">
+                    @L["Courses"]
+                </MudNavLink>
+            @* } *@
+
+        @* @if (_canViewBrands)
+            { *@
+        <MudNavLink Href="/master/topic" Icon="@Icons.Filled.Topic" Class="fsh-nav-child">
+            @L["Topic"]
+        </MudNavLink>
+        @* } *@
+        @* @if (_canViewBrands)
+            { *@
+        <MudNavLink Href="/master/question" Icon="@Icons.Filled.QuestionAnswer" Class="fsh-nav-child">
+            @L["Question"]
+        </MudNavLink>
+        @* } *@
+        </MudNavGroup>
+        @* <MudNavGroup Title="@L["Catalog"]" Expanded Icon="@Icons.Filled.AddBox">
+            @if (_canViewProducts)
+            {
+                <MudNavLink Href="/catalog/products" Icon="@Icons.Filled.ShoppingBag" Class="fsh-nav-child">
+                    @L["Products"]
+                </MudNavLink>
+            }
+            @if (_canViewBrands)
+            {
+                <MudNavLink Href="/catalog/brands" Icon="@Icons.Filled.ShoppingBag" Class="fsh-nav-child">
+                    @L["Brands"]
+                </MudNavLink>
+            }
+            @if (_canViewCourses)
+            {
+                <MudNavLink Href="/catalog/courses" Icon="@Icons.Filled.ShoppingBag" Class="fsh-nav-child">
+                    @L["Courses"]
+                </MudNavLink>
+            }
+        </MudNavGroup> *@
+    @* } *@
+    @if (CanViewAdministrationGroup)
+    {
+        <MudText Typo="Typo.subtitle2" Color="Color.Primary" Class="ml-4 my-3">@L["Administration"]</MudText>
+        @if (_canViewUsers)
+        {
+            <MudNavLink Match="NavLinkMatch.Prefix" Href="/users" Icon="@Icons.Material.Filled.PeopleAlt">@L["Users"]</MudNavLink>
+        }
+        @if (_canViewRoles)
+        {
+            <MudNavLink Href="/roles" Icon="@Icons.Material.Filled.EmojiPeople">@L["Roles"]</MudNavLink>
+        }
+        @if(_canViewTenants)
+        {
+            <MudNavLink Href="/tenants" Icon="@Icons.Filled.GroupWork" Disabled="!_canViewTenants">@L["Tenants"]</MudNavLink>
+        }
+    }
+</MudNavMenu>

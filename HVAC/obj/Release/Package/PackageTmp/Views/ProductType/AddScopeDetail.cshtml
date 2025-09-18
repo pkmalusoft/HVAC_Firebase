@@ -1,0 +1,123 @@
+﻿@model HVAC.Models.EquipmentScopeofworkVM
+@{
+    var i = 0;
+    var _decimal = @Session["Decimal"].ToString();
+    Layout = null;
+}
+
+
+@using (Html.BeginForm("AddScopeDetail", "Quotations", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(m => m.ID, new { @id = "scopeofworkid" })
+    @Html.HiddenFor(m => m.EquipmentTypeID, new { @id = "EquipmentTypeID1" })
+    <div class="row">        
+        <div class="col-md-2">
+            <div class="mb-2">
+                <label class="col-form-label">Model</label>
+                <div class="input-group">
+
+                    <input type="text" id="txtModel1" value="@Model.Model" class="form-control" placeholder="Enter Model" />
+
+                </div>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="mb-2">
+                <label class="col-form-label">Order No.</label>
+                <div class="input-group">
+
+                    <input type="text" id="txtOrderNo1" value="@Model.OrderNo" class="form-control" placeholder="Enter Order No." />
+
+                </div>
+            </div>
+        </div>
+        @*<div class="col-md-5">
+            <div class="row">
+                <h5>Resposibility</h5>
+                <div class="col-md-6">
+                    <div class="mb-2">
+                        <div class="input-group">
+
+                            @Html.CheckBox("ChkResAirmech", new { @name = "ChkResAirmech", @id = "ChkResAirmech" }) &nbsp
+                            <label class="col-form-label">Airmech</label>
+
+
+
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="mb-2">
+
+                        <div class="input-group">
+
+
+                            @Html.CheckBox("ChkResClient", new { @name = "ChkResClient", @id = "ChkResClient" }) &nbsp
+                            <label class="col-form-label">Client</label>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>*@
+    </div>
+    <div class="row">
+        <div class="mb-2">
+            <label class="form-label">Description</label>
+
+
+            @Html.TextAreaFor(m => m.Description, new
+            {
+                @class = "form-control",
+                rows = "5",
+                id = "txtDescription1"
+
+            })
+        </div>
+        @*<small class="text-muted d-block mt-1">
+                Allowed: &lt;b&gt; &lt;i&gt; &lt;u&gt; &lt;br/&gt;
+            </small>*@
+
+        @*<div class="mt-3">
+                <div class="text-muted small mb-1">Live Preview</div>
+                <div id="remarksPreview" class="p-2 border rounded bg-light"></div>
+            </div>*@
+    </div>
+
+
+}
+
+<script src="~/assets/libs/tinymce/tinymce.min.js"></script>*
+
+
+
+<script type="text/javascript">
+
+
+    tinymce.init({
+        selector: "textarea#txtDescription1",
+        height: 300,
+        plugins: [
+            "advlist autolink link image lists charmap print preview hr anchor pagebreak spellchecker",
+            "searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking",
+            "save table contextmenu directionality emoticons template paste textcolor",
+        ],
+        toolbar: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | l      ink image | print preview media fullpage | forecolor backcolor emoticons",
+        style_formats: [
+            { title: "Bold text", inline: "b" },
+            { title: "Red text", inline: "span", styles: { color: "#ff0000" } },
+            { title: "Red header", block: "h1", styles: { color: "#ff0000" } },
+            { title: "Example 1", inline: "span", classes: "example1" },
+            { title: "Example 2", inline: "span", classes: "example2" },
+            { title: "Table styles" },
+            { title: "Table row 1", selector: "tr", classes: "tablerow1" },
+        ],
+    });
+
+
+</script>
+
+<script>
+
+</script>

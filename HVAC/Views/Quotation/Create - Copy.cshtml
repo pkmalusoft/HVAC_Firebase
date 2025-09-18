@@ -1,0 +1,618 @@
+﻿@model HVAC.Models.QuotationVM
+@{
+
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+    ul.ui-front {
+        z-index: 1100;
+    }
+
+    .disabled-link {
+        pointer-events: none;
+        background-color: #dedede;
+    }
+</style>
+
+@{
+
+    ViewBag.pTitle = "Quotation";
+    ViewBag.pageTitle = "Enquiry";
+}
+@section styles{
+    <link href="~/assets/libs/select2/css/select2.min.css" rel="stylesheet" type="text/css" />
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <!-- Select2 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
+    <!-- Select2 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+    <style>
+        .select2-container .select2-selection--multiple .select2-selection__choice {
+            padding: 0 10px;
+    </style>
+    }
+}
+
+<script>
+
+
+    $(document).ready(function () {
+
+        if ($('#hdnQuotationMode').val() == 'Revision') {
+            var _enquiryid = $('#EnquiryID').attr('svalue');
+            $('#EnquiryID').val(_enquiryid).trigger('change');
+            $('#QuotationID').val(0);
+        }
+
+    });
+
+</script>
+
+@using (Html.BeginForm("Create", "Quotation", FormMethod.Post, new { @class = "needs-validation ", @novalidate = "novalidate" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true, "", new { @class = "needs-validation" })
+
+
+
+    <div class="card">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-8">
+                    <b>Quotation No.</b>
+                    <span type="button" class="text-primary mb-2 me-2 font-size-13" style="font-weight:bold;line-height: 2.0; padding: 6px">@Model.QuotationNo</span>
+
+                    <b>Enquiry No.</b>
+                    <span type="button" class="text-primary mb-2 me-2 font-size-13" style="font-weight: bold; line-height: 2.0; padding: 6px ">@Model.EnquiryNo</span>
+                    <b>Project</b>
+                    <span type="button" class="text-primary mb-2 me-2 font-size-13 text_over " style="font-weight: bold; line-height: 2.0; padding: 6px ">@Model.ProjectName</span>
+                </div>
+                <div class="col-md-4">
+
+
+                    <div class="text-right ">
+
+                        <input type="submit" value="Save" class="btn btn-success" id="btnSaveQuotation" />
+                        <a href='@Url.Action("Index", "Quotation", new { id = 0 })' class="btn btn-secondary" data-placement="right">Cancel</a>
+                        <div id="divothermenu2" class="btn-group">
+                            @*<button type="submit" class="btn btn-primary">Menu</button>*@
+                            <span class="btn btn-primary"><i class="bx bx-cog bx-spin me-2"></i>Sub Menu</span>
+                            <button type="button" class="btn btn-primary dropdown-toggle-split border_right" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="mdi mdi-chevron-down"></i>
+                            </button>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item" target="_blank" href="javascript:void(0)" onclick="ShowQuotationPrint()">Quotation Print</a>
+                                <a class="dropdown-item" target="_blank" href="/Enquiry/Create?id=@Model.EnquiryID">Goto Enquiry</a>
+                                <a class="dropdown-item" target="_blank" href="/Enquiry/GotoQuotation?EnquiryNo=@Model.EnquiryNo">Goto Quotation</a>
+                            </div>
+                        </div>
+
+
+                    </div><!-- /btn-group -->
+                </div>
+
+
+
+            </div>
+
+
+            <div class="row">
+                <div class="col-md-2">
+                    <div class="mb-2">
+                        <label class="col-form-label">Quotation Date</label>
+                        <div class="docs-datepicker">
+                            <div class="input-group">
+                                <input type="text" class="form-control docs-date" name="QuotationDate" id="QuotationDate" tabindex="1" required value="@Convert.ToDateTime(@Model.QuotationDate).ToShortDateString()"
+                                       placeholder="Pick a From Date" autocomplete="off">
+                                <button type="button"
+                                        class="btn btn-secondary docs-datepicker-trigger"
+                                        disabled>
+                                    <i class="mdi mdi-calendar" aria-hidden="true"></i>
+                                </button>
+                            </div>
+                            <div class="docs-datepicker-container"></div>
+                        </div>
+                        <div class="invalid-feedback">
+                            Please enter quoation date
+                        </div>
+
+                        @*<input type="text" name="" class="form-control" id="QuotationDate" />*@
+
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="mb-2">
+
+                        <input type="hidden" id="hdnQuotationMode" value="@ViewBag.QuotationMode" />
+                        @Html.HiddenFor(mode => mode.QuotationID, new { @class = "form-control" })
+                        @Html.HiddenFor(mode => mode.EnquiryID, new { @class = "form-control" })
+                        @Html.HiddenFor(mode => mode.ClientID, new { @class = "form-control" })
+                        @Html.HiddenFor(mode => mode.QuotationTo, new { @class = "form-control" })
+                        @Html.HiddenFor(mode => mode.QuotationValue, new { @id = "QuotationValue" })
+                        @Html.HiddenFor(mode => mode.GrossAmount, new { @id = "QuotationGross" })
+                        @Html.HiddenFor(mode => mode.VATAmount, new { @id = "VATAmount" })
+
+
+                        @*@Html.DropDownListFor(model => model.EnquiryID, new SelectList(ViewBag.Enquiry, "EnquiryID", "EnquiryNo"), "Select", new { @class = "form-select", @required = "required", @id = "EnquiryID", @svalue = Model.EnquiryID })*@
+
+                        <label class="col-form-label required">Engineer</label>
+                        @Html.DropDownListFor(mode => mode.EngineerID, new SelectList(ViewBag.EmployeeMaster, "EmployeeID", "EmployeeName"), "Select Engineer", new { @class = "form-select", @id = "QEngineerID", @required = "required", @tabindex = "2" })
+                        @*@Html.DropDownList("QCurrencyId", new SelectList(ViewBag.Curency, "CurrencyID", "CurrencyName"), "Select Currency", new { @class = "form-control", @id = "QCurrencyId" })*@
+                        @Html.HiddenFor(mode => mode.QuotationNo, new { @class = "form-select", @required = "required" })
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="mb-2">
+                        <label class="col-form-label required">Project Reference</label>
+                        @Html.TextBoxFor(mode => mode.ProjectRef, new { @class = "form-control", @required = "required", @tabindex = "3" })
+
+                    </div>
+                </div>
+                <div class="col-md-1">
+                    <div class="mb-2">
+                        <label class="col-form-label required">Version</label>
+                        @Html.TextBoxFor(mode => mode.Version, new { @id = "Version", @class = "form-control", @required = "required", @readonly = "readonly" })
+                    </div>
+                </div>
+                <div class="col-md-1">
+                    <div class="mb-2">
+                        <label class="col-form-label required">Currency</label>
+                        @Html.HiddenFor(mode => mode.Salutation, new { @id = "QtxtSalutation", @class = "form-control", @rows = "1" })
+                        @Html.DropDownListFor(mode => mode.CurrencyId, new SelectList(ViewBag.Currency, "CurrencyID", "CurrencyName"), "Select Currency", new { @class = "form-select", @id = "QCurrencyId", @required = "required", @tabindex = "4" })
+                        @*@Html.DropDownList("QCurrencyId", new SelectList(ViewBag.Curency, "CurrencyID", "CurrencyName"), "Select Currency", new { @class = "form-control", @id = "QCurrencyId" })*@
+
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="mb-2">
+                        <label class="col-form-label required">Status</label>
+
+                        @Html.DropDownListFor(model => model.QuotationStatusID, new SelectList(@ViewBag.QuotationStatus, "ID", "Status"), "Select", new { @class = "form-select", @tabindex = "5" })
+
+
+                    </div>
+                </div>
+                @*<div class="col-md-5 float-right">
+                        <div class="input-group gap-2 mt-1">
+                            <a class="btn  btn-sm btn-success btn_top" id="btnrefresh" onclick="showquotationdetails()" href="javascript:void(0)"><i class="mdi mdi-refresh font-size-18"></i></a>
+                            <a class="btn btn-sm btn-primary btn_top " href="javascript:void(0)" title="Copy New Quotation to the selected Enquiry" id="btnNewQuotation"><i class="mdi mdi mdi-plus font-size-18"></i>Create New</a>
+                            <a class="btn btn-sm btn-primary disabled-link btn_top " href="javascript:void(0)" title="Copy New Revision of Quotation to the selected Quotation" id="btnRevisionQuotation"><i class="mdi mdi mdi-plus-box font-size-18"></i>Create Revision</a>
+
+                            <a class=" btn btn-sm btn-danger disabled-link btn_top" href="javascript:void(0)" id="btnDelete" onclick="DeleteQuotationEntry()"><i class="mdi mdi-delete font-size-18"></i></a>
+                            <a class="btn  btn-sm btn-warning disabled-link btn_top" id="btnprint" target="_blank" href="javascript:void(0)"><i class="mdi mdi-printer font-size-18"></i></a>
+
+                        </div>
+
+                    </div>*@
+            </div>
+
+
+
+
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="flexTitle">
+                        <label class="col-form-label">Quotation To</label>
+                        <div class="checkboxdesign no-padding text-right" style="float:right">
+
+                            @{
+                                if (Model.QuotationID > 0)
+                                {
+                                    <a id="btnshowcontact" href="javascript:void(0)" class="btn btn-sm btn-pink">Show Contact</a>
+                                }
+                            }
+
+                        </div>
+                    </div>
+
+                    @*<select id="drpClientId" class="form-select" multiple="multiple"></select>*@
+                    @*@Html.TextBoxFor(mode => mode.ClientDetail, new { @class = "form-control", @required = "required", @readonly = "readonly" })*@
+                    <select id="drpQuotationTo" class="select2 form-control select2-multiple" tabindex="6" style="width:470px"
+                            multiple="multiple" data-placeholder="Choose Quotation To...">
+                    </select>
+                </div>
+
+
+
+
+                <div class="col-md-4">
+                    <div class="mb-2">
+                        <label class="col-form-label required">Subject</label>
+                        @Html.TextAreaFor(mode => mode.SubjectText, new { @id = "QtxtSubject", @class = "form-control", @rows = "1", @tabindex = "7" })
+
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="mb-2">
+                        <label class="col-form-label required">Validity</label>
+                        @Html.TextAreaFor(mode => mode.Validity, new { @id = "QtxtValidity", @class = "form-control", @rows = "1", @tabindex = "8" })
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="mb-2">
+                        <label class="col-form-label required">Delivery Terms</label>
+                        @Html.TextAreaFor(mode => mode.DeliveryTerms, new { @id = "QtxtDeliveryTerms", @class = "form-control", @rows = "1", @tabindex = "9" })
+                    </div>
+                </div>
+
+
+                <div class="col-md-4">
+                    <div class="mb-2">
+                        <label class="col-form-label required">Payment Terms</label>
+                        @*@Html.TextBoxFor(mode => mode.PaymentTerms, new { @id = "QuotationPayment", @class = "form-control", @value = Model.PaymentTerms })*@
+                        @Html.DropDownListFor(model => model.PaymentTerms, new SelectList(@ViewBag.PaymentTerms, "Description", "Description"), "Select", new { @class = "form-select", @id = "QuotationPayment", @svalue = Model.PaymentTerms, @tabindex = "10" })
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="mb-2">
+                        <div class="dropdown" style="position: relative;margin-top:30px">
+                            <button type="button" class="btn btn-sm btn-pink" onclick="toggleDropdown()">Select Terms and Conditions</button>
+                            <div id="drptxtTerms" style="z-index:99999;display: none; position: absolute; background-color: white; border: 1px solid #ccc; padding: 10px;">
+                                @for (int i = 0; i < Model.QuotationTerms.Count; i++)
+                                {
+                                    if (Model.TermsandConditions != null)
+                                    {
+                                        <label>
+                                            <input type="checkbox" name="SelectedItems" class="item-checkbox"
+                                                   value="@Model.QuotationTerms[i].ID"
+                                                   @(Model.TermsandConditions.Contains(Model.QuotationTerms[i].ID.ToString()) ? "checked" : "") />
+                                            @Model.QuotationTerms[i].Description
+                                        </label><br />
+                                    }
+                                }
+                            </div>
+                        </div>
+
+                        @Html.HiddenFor(mode => mode.TermsandConditions, new { @id = "QtxtTerms", @class = "form-control", @value = Model.TermsandConditions, @rows = "5" })
+                    </div>
+
+
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <div class="row">
+                <ul class="nav nav-tabs nav-tabs-custom nav-justified" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <a class="nav-link active" data-bs-toggle="tab" href="#home1" role="tab" aria-selected="true">
+                            <span class="d-block d-sm-none"><i class="fas fa-home"></i></span>
+                            <span class="d-none d-sm-block">Equipments</span>
+                        </a>
+                    </li>
+                    @{
+                        if (Model.QuotationID > 0)
+                        {
+                            <li class="nav-item" role="presentation">
+                                <a class="nav-link" data-bs-toggle="tab" href="#profile1" role="tab" aria-selected="false" tabindex="-1">
+                                    <span class="d-block d-sm-none"><i class="far fa-user"></i></span>
+                                    <span class="d-none d-sm-block">Scope of Work</span>
+                                </a>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <a class="nav-link" data-bs-toggle="tab" href="#messages1" role="tab" aria-selected="false" tabindex="-1">
+                                    <span class="d-block d-sm-none"><i class="far fa-envelope"></i></span>
+                                    <span class="d-none d-sm-block">Warranty</span>
+                                </a>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <a class="nav-link" data-bs-toggle="tab" href="#settings1" role="tab" aria-selected="false" tabindex="-1">
+                                    <span class="d-block d-sm-none"><i class="fas fa-cog"></i></span>
+                                    <span class="d-none d-sm-block">Exclusions</span>
+                                </a>
+                            </li>
+                        }
+                    }
+                </ul>
+                @*Tab pane*@
+                <div class="tab-content p-3 text-muted">
+                    <div class="tab-pane active" id="home1" role="tabpanel">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-check form-switch mb-3">
+                                    <input class="form-check-input" type="checkbox" id="flexSwitchCheckChecked" checked="">
+                                    <label class="form-check-label" id="lblflexSwitch" for="flexSwitchCheckChecked">Quotation by Estimation</label>
+                                </div>
+                                <div class="row" id="divestimationqutation">
+                                    <div class="col-md-4">
+                                        <label class="col-form-label required">Select Estimation</label>
+                                        <div class="input-group gap-3">
+                                            <select id="drpEstimation" class="form-select estimation-select"></select>
+                                            <button type="button" class="btn btn-primary waves-effect waves-light filter" id="btnaddestimation" title="Insert into Grid">
+                                                <i class="dripicons-enter mt-1" style="font-size: 18px;"></i>
+                                            </button>
+                                            <button type="button" class="btn btn-pink waves-effect waves-light filter" id="btnviewestimation" title="Goto Estimation">
+                                                <i class="mdi mdi-eye mt-1" style="font-size: 18px;"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row d-xl-none" id="divdirectquotation">
+                                    <div class="col-md-2">
+                                        <label class="col-form-label">Category</label>
+                                        @Html.DropDownList("QEstimationCategoryID", new SelectList(ViewBag.EstimationCategory, "ID", "CategoryName"), "Select", new { @class = "form-select", @id = "QEstimationCategoryID" })
+                                    </div>
+                                    <div class="col-md-2">
+                                        <label class="col-form-label required">Equipment/Description</label>
+                                        @*@Html.DropDownList("QEquipmentID", new SelectList(ViewBag.Equipment, "ID", "Text"), "Select", new { @class = "form-select", @id = "QEquipmentID" })*@
+                                        <select id="drpEquipment" style="width:200px" class="form-select equipment-select"></select>
+                                        @*<input type="text" class="form-control d-xl-none" id="QtxtEquipmentType" value="" placeholder="Enter Description" />*@
+                                        <input type="hidden" class="form-select" value="" placeholder="Item Description" id="QEquipmentTypeID" />
+                                        @*<input type="hidden" class="form-select" value="" placeholder="Item Description" id="QEquipmentID" />*@
+                                    </div>
+                                    <div class="col-md-2">
+                                        <label class="col-form-label required">Model/Unit</label>
+                                        <input type="text" class="form-select" id="QtxtModel" value="" placeholder="Select Model" />
+                                        <input type="text" class="form-control d-xl-none" id="QtxtModel1" value="" placeholder="Select Model" />
+                                    </div>
+                                    <div class="col-md-1">
+                                        <label class="col-form-label" id="lblQty">Qty</label>
+                                        <input type="text" id="QtxtQty" value="1" class="form-control textright" onchange="calculatevalue1()" placeholder="Enter Qty" />
+                                    </div>
+                                    <div class="col-md-1">
+                                        <label class="col-form-label">Unit Type</label>
+                                        @Html.DropDownList("QUnitID", new SelectList(ViewBag.Unit, "ItemUnitID", "ItemUnit1"), "Select", new { @class = "form-select", @id = "QUnitID" })
+                                    </div>
+
+                                    <div class="col-md-3">
+                                        <div class="row">
+                                            <div class="col-md-5">
+                                                <label class="col-form-label">Rate</label>
+                                                <input type="text" id="QtxtRate" value="" class="form-control textrightamount" onchange="calculatevalue1()" placeholder="Enter Rate" />
+                                            </div>
+                                            <div class="col-md-5">
+                                                <label class="col-form-label">Value</label>
+                                                <input type="hidden" id="QtxtExRate" value="" readonly class="textrightamount form-control" placeholder="Value" />
+                                                <input type="text" id="QtxtValue" value="" readonly class="textrightamount form-control" placeholder="Value" />
+                                                <input type="hidden" id="QtxtFValue" value="" readonly class="textrightamount form-control" placeholder="Value" />
+                                                <input type="hidden" id="QtxtLValue" value="" readonly class="textright form-control" placeholder="Value" />
+                                            </div>
+                                            <div class="col-md-2">
+
+                                                <button type="button" class="btn btn-success waves-effect waves-light filter" style="margin-top:37px;" id="btnaddclient" title="Insert into Grid" onclick="AddDetail(this)">
+                                                    <i class="dripicons-enter" style="font-size: 18px;"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+
+
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12" id="QuotationDetailContainer">
+                                @{Html.RenderPartial("QuotationDetailList", Model);}
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane" id="profile1" role="tabpanel">
+                        <div class="row">
+
+
+                            <div class="col-md-2">
+                                <label class="col-form-label required">Equipment</label>
+                                <select id="drpEquipment1" style="width:200px" class="form-select equipment-select"></select>
+
+                            </div>
+                            <div class="col-md-2">
+                                <label class="col-form-label">Model</label>
+                                <div class="input-group">
+
+                                    <input type="text" id="txtModel" class="form-control" placeholder="Enter Model" />
+                                    <button type="button" class="btn btn-primary waves-effect waves-light filter" style="" id="btnaddmasteritem1" title="Insert into Grid" onclick="AddMasterDetail1(this)">
+                                        <i class="dripicons-enter" style="font-size: 18px;"></i>
+                                    </button>
+                                </div>
+
+                            </div>
+                            <div class="col-md-5">
+                                <label class="col-form-label required">Description</label>
+                                <textarea rows="1" cols="50" class="form-control" id="txtDescription1" placeholder="Enter Description"></textarea>
+                            </div>
+                            <div class="col-md-1">
+
+                                <button type="button" class="btn btn-success waves-effect waves-light filter" style="margin-top:37px;" id="btnadditem1" title="Insert into Grid" onclick="AddDetail1(this)">
+                                    <i class="dripicons-enter" style="font-size: 18px;"></i>
+                                </button>
+                            </div>
+                            <div class="col-md-1">
+                                <input type="button" value="Save Scope of Work" class="btn btn-sm btn-success" style="margin-top:30px" id="btnsave1" onclick="SaveScopeItem(this)" />
+
+                            </div>
+
+                        </div>
+                        <div class="row" id="DetailContainer1">
+                            @{Html.RenderPartial("ScopeDetailList", Model);}
+                        </div>
+                    </div>
+                    <div class="tab-pane" id="messages1" role="tabpanel">
+                        <div class="row">
+
+
+                            <div class="col-md-2">
+                                <label class="col-form-label required">Equipment</label>
+                                <select id="drpEquipment2" class="equipment-select form-select" style="width:200px"></select>
+
+                            </div>
+                            <div class="col-md-2">
+                                <label class="col-form-label">Type</label>
+                                <div class="input-group">
+                                    <select id="drpwarrantytype" class="form-select">
+                                        <option value="Unit Warranty">Unit Warranty</option>
+                                        <option value="Compressor Warranty">Compressor Warranty</option>
+                                    </select>
+                                    @*<button type="button" class="btn btn-primary waves-effect waves-light filter" id="btnmasteradditem2" title="Insert into Grid" onclick="AddMasterDetail2(this)">
+                                            <i class="dripicons-enter" style="font-size: 18px;"></i>
+                                        </button>*@
+                                </div>
+                            </div>
+                            <div class="col-md-5">
+                                <label class="col-form-label required">Enter Warranty Description</label>
+                                <textarea rows="1" cols="50" type="text" class="form-control" id="txtDescription2" value="" placeholder="Enter Description"></textarea>
+                            </div>
+                            <div class="col-md-1">
+                                <button type="button" class="btn btn-success waves-effect waves-light filter" style="margin-top:37px;" id="btnadditem2" title="Insert into Grid" onclick="AddDetail2(this)">
+                                    <i class="dripicons-enter" style="font-size: 18px;"></i>
+                                </button>
+                            </div>
+                            <div class="col-md-2">
+                                <input type="button" value="Save Warranty" class="btn btn-success" style="margin-top:30px" id="btnsave2" onclick="SaveWarrantyItem(this)" />
+                            </div>
+
+                        </div>
+                        <div class="row" id="DetailContainer2">
+                            @{Html.RenderPartial("WarrantyDetailList", Model);}
+                        </div>
+
+                    </div>
+                    <div class="tab-pane" id="settings1" role="tabpanel">
+                        <div class="row">
+
+                            <div class="col-md-2">
+                                <label class="col-form-label required">Equipment</label>
+                                <select id="drpEquipment3" class="equipment-select form-select" style="width:200px"></select>
+
+                            </div>
+
+                            <div class="col-md-7">
+                                <label class="col-form-label required">Description</label>
+                                <textarea type="text" rows="1" cols="50" class="form-control" id="txtDescription3" value="" placeholder="Enter Description"></textarea>
+                            </div>
+                            <div class="col-md-1">
+
+                                <button type="button" class="btn btn-success waves-effect waves-light filter" style="margin-top:37px;" id="btnadditem3" title="Insert into Grid" onclick="AddDetail3(this)">
+                                    <i class="dripicons-enter" style="font-size: 18px;"></i>
+                                </button>
+                            </div>
+                            <div class="col-md-2">
+                                <input type="button" value="Save Exclusions" class="btn btn-success" style="margin-top:30px" id="btnsave3" onclick="SaveExclusionItem(this)" />
+
+                            </div>
+
+                        </div>
+                        <div class="row" id="DetailContainer3">
+                            @{Html.RenderPartial("ExclusionDetailList", Model);}
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+}
+
+<div class="modal fade bs-example-modal-xl" id="estimationdetailpopup" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="divEstimationNo">
+                    Estimation Detail
+                </h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body">
+                <div class="container-fluid" id="estimationdetailContainer">
+
+                </div>
+            </div>
+            <div class="modal-footer" style="padding-top: 5px">
+                <span class="error text-left" id="spanequiperror"></span>
+                <button type="button" class="btn btn-primary" id="btnAddEstimationDetail" onclick="SaveEstimationDetailEntry()">Add Items</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="marginpopup" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content" style="border-radius:5px;width:300px">
+            <div class="modal-header">
+                <h4 class="modal-title">
+                    Margin Calculate
+                </h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body">
+                <div class="container-fluid" id="financeContainer">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="mb-2">
+                                <label class="col-form-label required">Quotation To</label>
+                                    
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+            <div class="modal-footer" style="padding-top: 5px">
+                <span class="error text-left" id="spanmarginerror"></span>
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="ApplyMargin()">Apply Margin</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade bs-example-modal-xl" id="contactpopup" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">
+                    Quotation Contact
+                </h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body">
+                <div class="container-fluid" id="quotationcontactContainer">
+
+                </div>
+            </div>
+            <div class="modal-footer" style="padding-top: 5px">
+                <span class="error text-left" id="spancontacterror"></span>
+                <button type="button" class="btn btn-primary" id="btnSaveContactDetail" onclick="SaveContacts()">Save Contacts</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+
+</script>
+@section scripts{
+    @*<script src="~/assets/js/app.js"></script>*@
+    <!--tinymce js-->
+    @*<script src="~/assets/libs/tinymce/tinymce.min.js"></script>*@
+    <script src="~/assets/libs/select2/js/select2.min.js"></script>
+    <!-- init js -->
+    @*<script src="~/assets/js/pages/form-editor.init.js"></script>*@
+    <script src="~/Scripts/JS/Quotation.js?v=2"></script>
+    <script src="~/Scripts/JS/QuotationDetails.js"></script>
+    @*<script src="~/assets/libs/parsleyjs/parsley.min.js"></script>
+        <script src="~/assets/js/pages/form-validation.init.js"></script>*@
+
+
+
+
+
+}
+@*<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>*@
+
+

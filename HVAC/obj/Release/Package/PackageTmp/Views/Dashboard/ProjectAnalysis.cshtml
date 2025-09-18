@@ -1,0 +1,30 @@
+﻿@model HVAC.Models.FinancialsChartViewModel
+
+<div class="d-flex justify-content-between align-items-center mb-2">
+    <h4 id="chartTitle" class="fw-bold mb-0">
+        Financials by Enquiry Type (@Model.SelectedMonthName @Model.SelectedYear)
+    </h4>
+
+    <div class="d-flex">
+        <select id="monthDropdown" class="form-select form-select-sm w-auto me-2">
+            @foreach (var m in Model.Months)
+            {
+                <option value="@m.Value" @(m.Value == Model.SelectedMonth.ToString() ? "selected" : "")>
+                    @m.Text
+                </option>
+            }
+        </select>
+
+        <select id="yearDropdown" class="form-select form-select-sm w-auto">
+            @foreach (var y in Model.Years)
+            {
+                <option value="@y.Value" @(y.Value == Model.SelectedYear.ToString() ? "selected" : "")>
+                    @y.Text
+                </option>
+            }
+        </select>
+    </div>
+</div>
+
+<div id="orderChart" style="height: 400px;"></div>
+

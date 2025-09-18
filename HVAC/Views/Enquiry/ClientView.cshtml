@@ -1,0 +1,81 @@
+﻿@model HVAC.Models.EnquiryVM
+@{
+    Layout = null;
+    var i = 0;
+}
+
+    <div class="card">
+        <div class="card-header bg-transparent border-bottom">
+            <div class="d-flex flex-wrap align-items-start">
+                @*<div class="me-2">
+                    <h5 class="card-title mt-1 mb-0">Updations</h5>
+                </div>*@
+                <ul class="nav nav-tabs nav-tabs-custom card-header-tabs ms-auto" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <a class="nav-link active" data-bs-toggle="tab" href="#enquiry-document" role="tab" aria-selected="true">
+                            Document
+                        </a>
+                    </li>
+                    @*<li class="nav-item" role="presentation">
+                        <a class="nav-link" data-bs-toggle="tab" href="#enquiry-quotation" role="tab" aria-selected="false" tabindex="-1">
+                            Quotation
+                        </a>
+                    </li>*@                    
+                    <li class="nav-item" role="presentation">
+                        <a class="nav-link" data-bs-toggle="tab" href="#enquiry-log" role="tab" aria-selected="true">
+                            History
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+        </div>
+
+        <div class="card-body">
+
+            <div data-simplebar="init" style="max-height: 295px;" class="simplebar-scrollable-y">
+                <div class="simplebar-wrapper" style="margin: 0px;">
+                    <div class="simplebar-height-auto-observer-wrapper"><div class="simplebar-height-auto-observer"></div></div><div class="simplebar-mask">
+                        <div class="simplebar-offset" style="right: 0px; bottom: 0px;">
+                            <div class="simplebar-content-wrapper" tabindex="0" role="region" aria-label="scrollable content" style="height: auto; overflow: hidden scroll;">
+                                <div class="simplebar-content" style="padding: 0px;">
+                                    <!-- Tab panes -->
+                                    <div class="tab-content">
+                                        
+                                        <!-- end tab pane -->
+
+                                        <div class="tab-pane active show" id="enquiry-document" role="tabpanel">
+
+                                            
+                                         
+                                            @*<div class="col-md-12 text-md-end">
+            <a class=" font-size-14 text-primary" href="#" role="button" title="New Document" onclick="ShowDocumentEntry()" aria-expanded="false">
+                <i class="dripicons-plus mt-1 text-primary" style="font-size: 22px;"></i>
+            </a>
+        </div>*@
+                                            @*<div class="input-group gap-2 m-2">
+                                                <button type="button" class="btn btn-primary waves-effect waves-light filter btn_top" id="btnaddclient" title="Insert into Grid" onclick="AddClient()">
+                                                    <i class="dripicons-enter mt-1" style="font-size: 18px;"></i>
+                                                </button>
+                                            </div>*@
+                                        </div>
+                                        <!-- end tab pane -->
+                                        <div class="tab-pane" id="enquiry-log" role="tabpanel"  >
+
+                                           
+                                                @{Html.RenderPartial("AuditLogList", Model);}
+
+
+                                          
+                                        </div>
+                                    </div>
+                                    <!-- end tab content -->
+                                </div>
+                            </div>
+                        </div>
+                    </div><div class="simplebar-placeholder" style="width: 698px; height: 323px;"></div>
+                </div><div class="simplebar-track simplebar-horizontal" style="visibility: hidden;"><div class="simplebar-scrollbar" style="width: 0px; display: none;"></div></div><div class="simplebar-track simplebar-vertical" style="visibility: visible;"><div class="simplebar-scrollbar" style="height: 269px; transform: translate3d(0px, 0px, 0px); display: block;"></div></div>
+            </div>
+        </div>
+    </div>
+ 

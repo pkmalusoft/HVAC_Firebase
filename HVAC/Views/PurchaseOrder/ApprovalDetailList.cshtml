@@ -1,0 +1,110 @@
+﻿@model HVAC.Models.PurchaseOrderSaveRequest
+@{
+    var i = 0;
+    var _decimal = @Session["Decimal"].ToString();
+    Layout = null;
+}
+
+<style>
+    .clsfinance{
+        background-color:#faf2ca;
+        color:blue;
+        font-weight:bold;
+    }
+    .clsexworks {
+        
+        color: black;
+        font-weight: bold;
+    }
+    .clsSoharomr{
+      /*  background-color:#d4ca98;*/
+        color:dodgerblue;
+        font-weight:bold;
+    }
+
+    .clsSohar {
+        /*background-color: #d4ca98;*/
+        color: black;
+        font-weight: bold;
+    }
+
+    .clslandingomr {
+        /*background-color: #dbbe1c;*/
+        color: dodgerblue;
+        font-weight: bold;
+    }
+    .clsselling {
+        background-color: green;
+        color: white;
+        font-weight: bold;
+    }
+    .clsgross {
+        color: black;
+        font-weight: bold;
+    }
+    .clslanding {
+        background-color: #fce14f;
+        color: black;
+        font-weight: bold;
+    }
+</style>
+
+
+    
+    
+    <table class="table table-bordered" id="approvalTable" style="width: 100% !important;">
+
+        <thead class="table-light">
+            <tr>
+                <th width="50%">Name</th>
+                <th width="45%">Approve as</th>
+                <th width="5%">Action</th>
+
+            </tr>
+        </thead>
+        <tbody class="" style="text-align:center">
+
+
+            @foreach (var item1 in Model.ApproveDetails)
+            {
+
+
+                <tr id="quodtr_@i">
+                    @*<td id="row_@i">@(i+1)</td>*@
+                    <td>
+                        @Html.HiddenFor(modelitem => item1.POApprovalID, new { @id = "ePOApprovalID_" + @i, @class = "form-control", @readonly = "readonly" })
+                        @Html.HiddenFor(modelitem => item1.EmployeeID, new { @id = "eEmployeeID_" + @i, @class = "form-control", @readonly = "readonly" })
+                        @Html.HiddenFor(modelitem => item1.Type, new { @id = "eType_" + @i, @class = "form-control", @readonly = "readonly" })
+                        
+
+                        @item1.EmployeeName
+
+                    </td>
+                    <td>
+                        
+                        @item1.Type
+                        
+                    </td>                                        
+                    
+                    <td>
+                        <a onclick="DeleteApprovalEntry(@item1.POApprovalID)" href="javascript:void(0);" title="Delete Item" class="text-danger"><i class="mdi mdi-delete font-size-18"></i></a>
+                    </td>
+                </tr>
+                i++;
+            }
+        </tbody>
+      
+    </table>
+
+ 
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+
+
+    });
+  
+    
+</script>

@@ -1,0 +1,241 @@
+
+        #region "YearEndProcess"
+        public string SaveLog()
+        {
+            YearEndProcessSearch model = (YearEndProcessSearch)Session["YearEndProcessSearch"];
+            string ProcessType = model.ProcessType;
+            int yearid = Convert.ToInt32(Session["fyearid"].ToString());
+            int branchid = Convert.ToInt32(Session["CurrentBranchID"]);
+            int userid = Convert.ToInt32(Session["UserID"]);
+            string username = "";
+
+            AcYearEndProcessLog log = new AcYearEndProcessLog();
+            try
+            {
+                var emp = db.EmployeeMasters.Where(u => u.UserID == userid).First();
+                if (emp != null)
+                {
+                    username = emp.EmployeeName;
+                }
+
+                log.AcFinancialYearId = yearid;
+
+                log.CreatedBy = userid;
+                log.CreatedDate = CommonFunctions.GetCurrentDateTime();
+                log.ProcessType = ProcessType;
+                string processtype1 = "";
+
+                if (ProcessType == "Y")
+                    processtype1 = "Year End Process";
+                else if (ProcessType == "A")
+                    processtype1 = "Account Head Year End Closing Transferred";
+                else if (ProcessType == "C")
+                    processtype1 = "Customer Year End Closing Transferred";
+                else if (ProcessType == "S")
+                    processtype1 = "Supplier Year End Closing Transferred";
+
+                log.Remarks = processtype1 + " Processed for " + model.CurrentYear + " User : " + username + " On " + Convert.ToDateTime(log.CreatedDate).ToString("dd/MM/yyyy HH:mm");
+                log.BranchId = branchid;
+                db.AcYearEndProcessLogs.Add(log);
+                db.SaveChanges();
+                return "OK";
+            }
+            catch (Exception ex)
+            {
+                return ex.Message;
+            }
+        }
+        public ActionResult AcYearEndProcessSearch()
+        {
+
+            YearEndProcessSearch datePicker = (YearEndProcessSearch)Session["YearEndProcessSearch"];
+            int yearid = Convert.ToInt32(Session["fyearid"].ToString());
+            if (datePicker == null)
+            {
+                datePicker = new YearEndProcessSearch();
+                datePicker.CurrentFinancialYearId = yearid;
+                datePicker.CurrentStartDate = Convert.ToDateTime(Session["FyearFrom"]).ToString("dd-MM-yyyy");
+                datePicker.CurrentEndDate = Convert.ToDateTime(Session["FyearTo"]).ToString("dd-MM-yyyy");
+                datePicker.CurrentYear = Convert.ToDateTime(Session["FyearFrom"]).ToString("yyyy");// + "-" + Convert.ToDateTime(Session["FyearTo"]).ToString("yyyy"); ;
+                datePicker.ProcessType = "Y";
+
+                AcYearEndProcessLog log = db.AcYearEndProcessLogs.Where(cc => cc.ProcessType == "Y" && cc.AcFinancialYearId == yearid).OrderByDescending(cc => cc.CreatedDate).FirstOrDefault();
+                if (log != null)
+                    datePicker.Remarks = log.Remarks;
+                else
+                    datePicker.Remarks = "Not Processed";
+
+                DateTime yearlastdate = Convert.ToDateTime(Session["FyearTo"]);
+                var nextyear = (from c in db.AcFinancialYears where c.AcFYearFrom > yearlastdate select c).FirstOrDefault();
+                if (nextyear != null)
+                {
+                    datePicker.NextFinancialYearId = nextyear.AcFinancialYearID;
+                    datePicker.NextYearStartDate = Convert.ToDateTime(nextyear.AcFYearFrom).ToString("dd-MM-yyyy");
+                    datePicker.NextYearEndDate = Convert.ToDateTime(nextyear.AcFYearTo).ToString("dd-MM-yyyy");
+                    datePicker.NextYear = Convert.ToDateTime(nextyear.AcFYearFrom).ToString("yyyy");// + "-" +  Convert.ToDateTime(nextyear.AcFYearTo).ToString("yyyy");
+                    datePicker.Debit = 0;
+                    datePicker.Credit = 0;
+                }
+                else
+                {
+                    var nextyeartstartdate = Convert.ToDateTime(Session["FyearFrom"]).AddYears(1);
+                    var nextyearenddate = Convert.ToDateTime(Session["FyearTo"]).AddYears(1);
+                    datePicker.NextFinancialYearId = 0;
+                    datePicker.NextYearStartDate = Convert.ToDateTime(nextyeartstartdate).ToString("dd-MM-yyyy");
+                    datePicker.NextYearEndDate = Convert.ToDateTime(nextyearenddate).ToString("dd-MM-yyyy");
+                    datePicker.NextYear = Convert.ToDateTime(datePicker.NextYearStartDate).ToString("yyyy");// + "-" + Convert.ToDateTime(datePicker.NextYearEndDate).ToString("yyyy");
+
+                }
+            }
+            Session["YearEndProcessSearch"] = datePicker;
+
+            return View(datePicker);
+
+        }
+        [HttpPost]
+        public ActionResult AcYearEndProcessSearch(YearEndProcessSearch model)
+        {
+            int yearid = Convert.ToInt32(Session["fyearid"].ToString());
+
+            YearEndProcessSearch datePicker = (YearEndProcessSearch)Session["YearEndProcessSearch"];
+
+            AcYearEndProcessLog log = db.AcYearEndProcessLogs.Where(cc => cc.ProcessType == model.ProcessType && cc.AcFinancialYearId == yearid).OrderByDescending(cc => cc.CreatedDate).FirstOrDefault();
+            if (log != null)
+                model.Remarks = log.Remarks;
+            else
+                model.Remarks = "Not Processed";
+
+            string Comments = "";
+            if (model.ProcessType == "Y")
+                Comments = "This process will add closing year end voucher for Income and Expense head!";
+            else if (model.ProcessType == "A")
+                Comments = "This process will copy closing current year Account Head to Next Financial Year!";
+            else if (model.ProcessType == "C")
+                Comments = "This process will copy closing of Customer Invoices to Next Financial Year!";
+            else if (model.ProcessType == "S")
+                Comments = "This process will copy closing of Supplier Invoices to Next Financial Year!";
+
+            model.Comments = Comments;
+
+            datePicker = model;
+            Session["YearEndProcessSearch"] = datePicker;
+            return RedirectToAction("AcYearEndProcess", "Accounts");
+
+        }
+        public ActionResult AcYearEndProcess()
+        {
+            int yearid = Convert.ToInt32(Session["fyearid"].ToString());
+            var BranchId = Convert.ToInt32(Session["CurrentBranchID"]);
+            int userid = Convert.ToInt32(Session["UserID"]);
+
+            YearEndProcessSearch model = (YearEndProcessSearch)Session["YearEndProcessSearch"];
+            if (model == null)
+            {
+                model = new YearEndProcessSearch();
+            }
+            if (model.OpeningDetails == null)
+            {
+                model.OpeningDetails = new List<YearEndProcessAccounts>();
+                model.IncomeExpDetails = new List<YearEndProcessIncomeExpense>();
+                model.PLDetails = new List<YearEndProcessPL>();
+            }
+
+            if (model.ProcessType == "A" || model.ProcessType == "Account Opening")
+            {
+                List<YearEndProcessAccounts> list = AccountsDAO.GetYearEndAccountOpening(userid, yearid, BranchId, 0);
+                model.OpeningDetails = list;
+            }
+
+            if (model.ProcessType == "Y" || model.ProcessType == "Year End Process")
+            {
+                YearEndProcessSearch model1 = AccountsDAO.GetYearEndProcess(yearid, BranchId, 0);
+                model.OpeningDetails = new List<YearEndProcessAccounts>();
+                model.IncomeExpDetails = model1.IncomeExpDetails;
+                model.PLDetails = model1.PLDetails;
+            }
+            if (model.ProcessType == "C" || model.ProcessType == "Customer")
+            {
+                YearEndProcessSearch model1 = AccountsDAO.GetYearEndProcessCustomerInv("C", yearid, BranchId, 0);
+                model.CustomerInvDetails = new List<YearEndProcessCustomer>();
+                model.CustomerInvDetails = model1.CustomerInvDetails;
+                model.PLDetails = model1.PLDetails;
+            }
+            if (model.ProcessType == "L" || model.ProcessType == "CO Loader")
+            {
+                YearEndProcessSearch model1 = AccountsDAO.GetYearEndProcessCustomerInv("L", yearid, BranchId, 0);
+                model.CustomerInvDetails = new List<YearEndProcessCustomer>();
+                model.CustomerInvDetails = model1.CustomerInvDetails;
+                model.PLDetails = model1.PLDetails;
+            }
+
+            if (model.ProcessType == "S" || model.ProcessType == "Supplier")
+            {
+                YearEndProcessSearch model1 = AccountsDAO.GetYearEndProcessSupplierInv(2, yearid, BranchId, 0);
+                model.SupplierInvDetails = new List<YearEndProcessSupplier>();
+                model.SupplierInvDetails = model1.SupplierInvDetails;
+
+            }
+
+            if (model.ProcessType == "F" || model.ProcessType == "Forwarding Agent")
+            {
+                YearEndProcessSearch model1 = AccountsDAO.GetYearEndProcessSupplierInv(3, yearid, BranchId, 0);
+                model.SupplierInvDetails = new List<YearEndProcessSupplier>();
+                model.SupplierInvDetails = model1.SupplierInvDetails;
+
+            }
+
+
+            return View(model);
+        }
+        [HttpPost]
+        public JsonResult SaveYearEndProcessing()
+        {
+            try
+            {
+
+                YearEndProcessSearch model = (YearEndProcessSearch)Session["YearEndProcessSearch"];
+                string ProcessType = model.ProcessType;
+                int yearid = Convert.ToInt32(Session["fyearid"].ToString());
+                int branchid = Convert.ToInt32(Session["CurrentBranchID"]);
+                int userid = Convert.ToInt32(Session["UserID"]);
+                if (ProcessType == "A")
+                {
+                    List<YearEndProcessAccounts> list = AccountsDAO.GetYearEndAccountOpening(userid, yearid, branchid, 1);
+                    //model.OpeningDetails = list;
+                }
+
+                if (ProcessType == "Y")
+                {
+                    YearEndProcessSearch model1 = AccountsDAO.GetYearEndProcess(yearid, branchid, 1);
+                    //model.OpeningDetails = new List<YearEndProcessAccounts>();
+                    //model.IncomeExpDetails = model1.IncomeExpDetails;
+                    //model.PLDetails = model1.PLDetails;
+                }
+                if (model.ProcessType == "C" || model.ProcessType == "Customer")
+                {
+                    YearEndProcessSearch model1 = AccountsDAO.GetYearEndProcessCustomerInv("C", yearid, branchid, 1);
+
+                }
+                if (model.ProcessType == "S" || model.ProcessType == "Supplier")
+                {
+                    YearEndProcessSearch model1 = AccountsDAO.GetYearEndProcessSupplierInv(2, yearid, branchid, 1);
+
+                }
+
+                string result = SaveLog();
+                if (result == "OK")
+                {
+                    return Json(new { status = "ok", message = "Year End Processed Successfully!" }, JsonRequestBehavior.AllowGet);
+                }
+                else
+                {
+                    return Json(new { status = "failed", message = result }, JsonRequestBehavior.AllowGet);
+                }
+            }
+            catch (Exception e)
+            {
+                return Json(new { status = "failed", message = e.Message.ToString() }, JsonRequestBehavior.AllowGet);
+
+            }
+        }
+        #endregion

@@ -1,0 +1,223 @@
+﻿@using System.Globalization
+@model HVAC.Models.ProjectHandoverModel
+@{
+    Layout = null;
+    var i = 0;
+}
+@{
+    var omrFormat = new CultureInfo("en-OM");
+    omrFormat.NumberFormat.CurrencyDecimalDigits = 3;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Client PO Summary</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 13px;
+            color: #000;
+        }
+
+        h2 {
+            text-align: center;
+            color: #d9534f;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 12px;
+        }
+
+        th, td {
+            padding: 6px 10px;
+            border: 1px solid #000;
+            text-align: left;
+        }
+        .pdf-two-col {
+            width: 100%;
+            white-space: nowrap;
+        }
+
+        .pdf-col {
+            display: inline-block;
+            vertical-align: top;
+            width: 75%; /* Half width with slight margin */
+            white-space: normal;
+        }
+        .pdf-col1 {
+            display: inline-block;
+            vertical-align: top;
+            width: 25%; /* Half width with slight margin */
+            white-space: normal;
+        }
+        .section {
+            margin-top: 20px;
+            font-weight: bold;
+        }
+
+        .highlight {
+            background: #fef3c7;
+        }
+        .highlight1 {
+            background: #58bcf6;
+        }
+        .costing th, .costing td {
+            text-align: right;
+        }
+
+            .costing th:first-child, .costing td:first-child,
+            .costing th:nth-child(2), .costing td:nth-child(2),
+            .costing th:nth-child(3), .costing td:nth-child(3) {
+                text-align: left;
+            }
+    </style>
+</head>
+<body>
+    
+    <p><strong>Date:</strong> @Model.ReportDate.ToString("dd/MM/yyyy")</p>
+    <div class="pdf-two-col mt-3">
+        <h2 style="margin:0; font-weight:bold; text-transform:uppercase;text-align:center">Client PO Summary Report</h2>
+        <div class="pdf-col">
+            <table>
+                <tr>
+                    <th class="highlight">Project Title</th>
+                    <td>@Model.ProjectTitle</td>
+                    <th class="highlight">Job No.</th>
+                    <td><b>@Model.JobNo</b></td>
+                    <th class="highlight">Var.</th>
+                    <td>@Model.Variation</td>
+                </tr>
+                <tr>
+                    <th class="highlight">Contractor</th>
+                    <td colspan="5">@Model.Contractor</td>
+                </tr>
+                <tr>
+                    <th class="highlight">PO No.</th>
+                    <td>@Model.PONo</td>
+                    <th class="highlight">PO Date</th>
+                    <td>@Model.PODate.ToString("dd/MM/yyyy")</td>
+                    <th class="highlight">Order Value</th>
+                    <td>@string.Format(new CultureInfo("en-US"), "{0:C3}", Model.OrderValue).Replace("$", "OMR ")</td>
+                </tr>
+                <tr>
+                    <th class="highlight">VAT 5%</th>
+                    <td>@Model.VAT.ToString("N3")</td>
+                    <th class="highlight">Total Value</th>
+                    <td colspan="3">@string.Format(new CultureInfo("en-US"), "{0:C3}", Model.TotalValue).Replace("$", "OMR ")</td>
+                </tr>
+            </table>
+
+        </div>
+        <div class="pdf-col1" style="text-align:right">
+            <table>
+                <tr>
+                    <th class="highlight1">Job Value</th>
+                    <td>@string.Format(new CultureInfo("en-US"), "{0:C3}", Model.JobValue).Replace("$", "OMR ")</td>
+                    <th class="highlight1">Total Cost</th>
+                    <td>
+                        @*@Model.TotalCost.ToString("C", omrFormat)*@
+                        @*@Model.TotalCost.ToString("C", new CultureInfo("en-OM"))*@
+                        @*@string.Format(new CultureInfo("en-US"), "{N3:C}", Model.TotalCost).Replace("$", "OMR ")*@
+                        @string.Format(new CultureInfo("en-US"), "{0:C3}", Model.TotalCost).Replace("$", "OMR ")
+                    </td>
+
+                </tr>
+                <tr>
+                    <th class="highlight1">Margin</th>
+                    <td>@Model.Margin.ToString("N3")</td>
+                    <th class="highlight1">Avg.Margin %</th>
+                    <td>@Model.MarginPercent.ToString("N2")%</td>
+                </tr>
+                <tr><th class="highlight1">VAT</th><td colspan="3"> @string.Format(new CultureInfo("en-US"), "{0:C3}", Model.VAT).Replace("$", "OMR ")</td></tr>
+            </table>
+        </div>
+    </div>
+   
+
+   
+
+    <div class="section">Payment Terms</div>
+    <p>@Model.PaymentTerms</p>
+
+    <p><strong>Handled By:</strong> @Model.HandledBy</p>
+
+    <table>
+        <tr>
+            <th class="highlight">Warranty Terms</th>
+            <td>Main Unit: @Model.MainUnitWarranty</td>
+            <td>Compressor: @Model.CompressorWarranty</td>
+            <td>Condenser: @Model.CondenserWarranty</td>
+        </tr>
+        @*<tr>
+                <th class="highlight">Refrigerant</th>
+                <td colspan="3">@Model.Refrigerant</td>
+            </tr>*@
+        <tr>
+            <th>Warranty Starts From</th>
+            <td colspan="3">@Model.WarrantyStart</td>
+        </tr>
+    </table>
+
+    <table>
+        <tr>
+            <th class="highlight">Delivery Location</th>
+            <td>@Model.DeliveryLocation</td>
+            <th class="highlight">Delivery Place</th>
+            <td>@Model.DeliveryPlace</td>
+            <th class="highlight">Delivery Period</th>
+            <td>@Model.DeliveryPeriod</td>
+        </tr>
+    </table>
+
+    <table>
+        <tr>
+            <th class="highlight">Advance Bond</th>
+            <td>@Model.AdvanceBond</td>
+            <th class="highlight">Performance Bond</th>
+            <td>@Model.PerformanceBond</td>
+            <th class="highlight">Corporate Bond</th>
+            <td>@Model.CorporateBond</td>
+            <th class="highlight">Any Bond</th>
+            <td>@Model.AnyBond</td>
+        </tr>
+    </table>
+
+    <div class="section">Costing</div>
+    <table class="costing">
+        <thead>
+            <tr style="background-color:#dedede">
+                <th>Sl No</th>
+                <th>Item</th>
+                <th>Unit Model No.</th>
+                <th>Qty</th>
+                <th>Unit</th>
+                <th>Unit Rate</th>
+                <th>Total Rate</th>
+
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.CostingDetails)
+            {
+                <tr>
+                    <td> @(i+1)</td>
+                    <td>@item.Description <span style="color:blue;font-size:10px"> @item.EstimationNo</span> </td>
+                    <td>@item.Model</td>
+                    <td>@Convert.ToDecimal(@item.Quantity).ToString("N0")</td>
+                    <td>@item.UnitName</td>
+                    <td>@string.Format(new CultureInfo("en-US"), "{0:C3}", item.UnitRate).Replace("$", "")</td>
+                    <td>  @string.Format(new CultureInfo("en-US"), "{0:C3}", item.Amount).Replace("$", "")</td>
+
+                </tr>
+                i++;
+            }
+        </tbody>
+        <tfoot>
+            <tr style="text-align:right;background-color:#58bcf6"><td colspan="6" style="text-align:right"><strong>Total Cost</strong></td><td colspan="2" style="text-align:right"> <strong>  @string.Format(new CultureInfo("en-US"), "{0:C3}", Model.TotalCost).Replace("$", "OMR ")</strong></td></tr>
+        </tfoot>
+    </table>
+</body>
+</html>

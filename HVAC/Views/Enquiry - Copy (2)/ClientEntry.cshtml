@@ -1,0 +1,497 @@
+﻿@model HVAC.Models.ClientVM
+@{
+    Layout = null;
+}
+<style>
+    ul.ui-front {
+        z-index: 1100;
+    }
+</style>
+<script type="text/javascript">
+   
+    $(document).ready(function () {
+
+        //$('.enquiry-client').each(function () {
+        //    var $select = $(this);
+
+        //    // Handle the clear event
+        //    $select.on('select2:select2-selection__arrow', function () {
+        //        suppressOpenOnClear = true;
+
+        //        // Remove focus from both the hidden <select> and visible Select2 box
+        //        setTimeout(() => {
+        //            $select.blur();
+        //            $select.next('.select2-container').find('.select2-selection').blur();
+        //        }, 0);
+        //    });
+
+        //    // Prevent dropdown from reopening immediately after clear
+        //    $select.on('select2:opening', function (e) {
+        //        if (suppressOpenOnClear) {
+        //            e.preventDefault(); // Stop it from opening
+        //            suppressOpenOnClear = false;
+        //        }
+        //    });
+        //    var defaultOption = new Option($select.attr('boxname'), $select.attr('boxid'), true, true);
+        //    $select.append(defaultOption);
+        //    //// Append it to the select
+        //    $select.append('<option id="" value=""></option>').trigger('change');
+        //    $select.select2({
+        //        width: 'resolve', // respects width set in the HTML
+        //        placeholder: 'Select a Client',
+        //        allowClear: false,
+        //        minLength: 1,
+        //        ajax: {
+        //            url: '/Enquiry/GetClientName',
+        //            dataType: 'json',
+        //            delay: 250,
+        //            data: function (params) {
+        //                // var category = $select.closest('tr').find('.category').val();
+        //                return {
+        //                    term: params.term,
+        //                    ClientType: ''
+
+        //                };
+        //            },
+        //            processResults: function (data) {
+        //                return {
+        //                    results: data.map(function (item) {
+        //                        return { id: item.ClientID, text: item.ClientName };
+        //                    })
+        //                };
+        //            },
+        //            cache: true
+        //        }
+        //    });
+
+
+
+        //});
+       $("#cCountryName").autocomplete({
+            source: function (request, response) {
+                $.ajax({
+                    url: '/LocationMaster/GetCountryName',
+                    datatype: "json",
+                    data: {
+                        term: request.term
+                    },
+                    success: function (data) {
+                        response($.map(data, function (val, item) {
+                            return {
+                                label: val.CountryName,
+                                value: val.Id
+                            }
+                        }))
+                    }
+                })
+            },
+            minLength: 1,
+            autoFocus: false,
+            focus: function (e, ui) {
+                e.preventDefault();
+                $('#cCountryID').val(ui.item.value);
+                $('#cCountryName').val(ui.item.label);
+                $('#cCountryName').attr('portname', ui.item.label);
+
+            },
+            select: function (e, ui) {
+
+                e.preventDefault();
+                $('#cCountryID').val(ui.item.value);
+                $('#cCountryName').val(ui.item.label);
+                $('#cCountryName').attr('portname', ui.item.label);
+
+            },
+
+        });
+
+        $('#cCityName').autocomplete({
+            source: function (request, response) {
+                $.ajax({
+                    url: "@Url.Action("GetCityName", "LocationMaster")",
+                    data: { term: request.term },
+                    dataType: "json",
+                    type: "GET",
+                    success: function (data) {
+                        response($.map(data, function (val, item) {
+                            return {
+                                label: val.CityName,
+                                value: val.Id,
+                                Country: val.CountryName
+                            }
+                        }))
+                    }
+                });
+            },
+            minLength: 1,
+            autoFocus: false,
+            select: function (event, ui) {
+                event.preventDefault();
+                $('#cCityID').val(ui.item.value);
+                $('#cCityName').val(ui.item.label);
+                $('#cCountryName').val(ui.item.Country);
+                return false;
+            },
+            focus: function (event, ui) {
+                $('#cCityID').val(ui.item.value);
+                $('#cCityName').val(ui.item.label);
+                $('#cCountryName').val(ui.item.Country);
+                return false;
+            }
+        });
+
+
+        @*$('#LocationName').autocomplete({
+            source: function (request, response) {
+                $.ajax({
+                    url: "@Url.Action("GetLocation", "LocationMaster")",
+                    data: { term: request.term },
+                    dataType: "json",
+                    type: "GET",
+                    success: function (data) {
+                        response($.map(data, function (val, item) {
+                            return {
+                                label: val.Location,
+                                value: val.Location,
+                                City: val.CityName,
+                                Country: val.CountryName
+                            }
+                        }))
+                    }
+                })
+            },
+            minLength: 1,
+            autoFocus: false,
+            select: function (e, ui) {
+                e.preventDefault();
+                $('#LocationName').val(ui.item.label);
+                $('#CityName').val(ui.item.City);
+                $('#CountryName').val(ui.item.Country);
+                return false;
+            },
+            focus: function (event, ui) {
+                $('#LocationName').val(ui.item.label);
+                $('#CityName').val(ui.item.City);
+                $('#CountryName').val(ui.item.Country);
+                return false;
+            }
+        });*@
+
+
+    });
+    $(document).ready(function () {
+       $("#cCountryName").autocomplete({
+            source: function (request, response) {
+                $.ajax({
+                    url: '/LocationMaster/GetCountryName',
+                    datatype: "json",
+                    data: {
+                        term: request.term
+                    },
+                    success: function (data) {
+                        response($.map(data, function (val, item) {
+                            return {
+                                label: val.CountryName,
+                                value: val.Id
+                            }
+                        }))
+                    }
+                })
+            },
+            minLength: 1,
+            autoFocus: false,
+            focus: function (e, ui) {
+                e.preventDefault();
+                $('#cCountryID').val(ui.item.value);
+                $('#cCountryName').val(ui.item.label);
+                $('#cCountryName').attr('portname', ui.item.label);
+
+            },
+            select: function (e, ui) {
+
+                e.preventDefault();
+                $('#cCountryID').val(ui.item.value);
+                $('#cCountryName').val(ui.item.label);
+                $('#cCountryName').attr('portname', ui.item.label);
+
+            },
+
+        });
+
+        $('#cCityName').autocomplete({
+            source: function (request, response) {
+                $.ajax({
+                    url: "@Url.Action("GetCityName", "LocationMaster")",
+                    data: { term: request.term },
+                    dataType: "json",
+                    type: "GET",
+                    success: function (data) {
+                        response($.map(data, function (val, item) {
+                            return {
+                                label: val.CityName,
+                                value: val.Id,
+                                Country: val.CountryName
+                            }
+                        }))
+                    }
+                });
+            },
+            minLength: 1,
+            autoFocus: false,
+            select: function (event, ui) {
+                event.preventDefault();
+                $('#cCityID').val(ui.item.value);
+                $('#cCityName').val(ui.item.label);
+                $('#cCountryName').val(ui.item.Country);
+                return false;
+            },
+            focus: function (event, ui) {
+                $('#cCityID').val(ui.item.value);
+                $('#cCityName').val(ui.item.label);
+                $('#cCountryName').val(ui.item.Country);
+                return false;
+            }
+        });
+        //for client binding
+        $.ajax({
+            type: "GET",
+            url: '/Enquiry/GetClientName',
+            data: {
+                'term': '', 'ClientType': ""
+            },
+            success: function (data) {
+                debugger;
+
+
+                $.each(data, function (index, item) {
+                  //  console.log(data);
+                    var value = data[index].ClientID;
+                    var label = data[index].ClientName;
+
+
+                    var selected = false;
+                    //$.each(selectedjobid, function (val1, item1) {
+                    //    if (value == item1)
+                    //        selected = true;
+                    //});
+                    if (selected == true) {
+                        var html = '<option selected value="' + value + '">' + label + '</option>';
+                        $('#drpClientID1').append(html);
+                    }
+                    else {
+                        var html = '<option value="' + value + '">' + label + '</option>';
+                        $('#drpClientID1').append(html);
+                    }
+                })
+
+                $('#drpClientID1').select2({
+                    width: '100%',
+                    dropdownParent: $('#customerpopup')   // adjust to your modal's ID
+                });
+
+
+            }
+        });
+
+        // Bootstrap 5 event for tab change
+        var triggerTabList = document.querySelectorAll('#clientTabs a')
+        triggerTabList.forEach(function (tabEl) {
+            tabEl.addEventListener('shown.bs.tab', function (event) {
+                var activeTab = event.target.getAttribute("href"); // #select-client or #add-client
+                console.log("Active Tab: " + activeTab);
+
+                if (activeTab === "#select-client") {
+                
+                    $('#btnaddclient').removeClass('hide');
+                    $('#btnsaveclient').addClass('hide');
+                    // your logic here
+                }
+                else if (activeTab === "#add-client") {
+                    $('#btnaddclient').addClass('hide');
+                    $('#btnsaveclient').removeClass('hide');
+                    // your logic here
+                }
+            });
+        });
+
+    });
+
+</script>
+@using (Html.BeginForm("ClientEntry", "Enquiry", FormMethod.Post, new { @class = "clientneeds-validation", @novalidate = "novalidate", @id = "formclientEntry" }))
+{
+<div class="card">
+    <div class="card-header bg-transparent border-bottom">
+        <div class="d-flex flex-wrap ">
+            <div class="me-2">
+                <h5 class="card-title mt-1 mb-0">Client/Contractor</h5>
+            </div>
+            <ul class="nav nav-tabs nav-tabs-custom card-header-tabs ms-auto" role="tablist" id="clientTabs">
+                <li class="nav-item" role="presentation">
+                    <a class="nav-link  active" data-bs-toggle="tab" href="#select-client" role="tab" aria-selected="false" tabindex="-1">
+                        Existing Client
+                    </a>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <a class="nav-link" data-bs-toggle="tab" href="#add-client" role="tab" aria-selected="true">
+                        Add New Client
+                    </a>
+                </li>
+
+            </ul> 
+        </div>
+
+    </div>
+
+    <div class="card-body">
+
+        
+                                <!-- Tab panes -->
+                                <div class="tab-content">
+                                    <div class="tab-pane active show" id="select-client" role="tabpanel">
+                                        <div class="row">
+                                            <div class="col-md-8">
+                                                <label class="col-form-label">Client / Consultant</label>
+                                                <select id="drpClientID1" class="form-select enquiry-client" style="width:100%"></select>
+                                            </div>
+                                            <div class="col-md-4">
+
+                                                <label class="col-form-label"> Type </label>
+
+                                                @Html.DropDownList("ClientType", new List<SelectListItem>
+                                            {
+                                                new SelectListItem{ Text="Client", Value = "Client" },
+                                                new SelectListItem{ Text="Contractor", Value = "Contractor" },
+                                                new SelectListItem{ Text="Consultant", Value = "Consultant" },
+                                             }, new { @class = "form-select", @id = "drpClientType" })
+
+
+
+                                            </div>
+                                        </div>
+                                        @*<div class="col-md-6">
+
+                                            <div class="input-group gap-2 m-2">
+
+                                                <button type="button" class="btn btn-primary waves-effect waves-light filter btn_top" id="btnaddclient" title="Insert into Grid" onclick="AddClient()">
+                                                    <i class="dripicons-enter mt-1" style="font-size: 18px;"></i>
+                                                </button>
+
+
+
+
+                                            </div>
+                                        </div>*@
+                                    </div>
+                                    <!-- end tab pane -->
+
+                                    <div class="tab-pane" id="add-client" role="tabpanel">
+
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <div class="mb-2">
+                                                    @Html.HiddenFor(model => model.ClientID)
+                                                    @Html.HiddenFor(model => model.ClientType)
+                                                    @Html.HiddenFor(model => model.CityID, new { @id = "cCityID" })
+                                                    @Html.HiddenFor(model => model.CountryID, new { @id = "cCountryID" })
+                                                    <label class="col-form-label required">Type</label>
+                                                    @Html.DropDownList("CustomerType1", new List<SelectListItem>
+                                                {
+                                                    new SelectListItem{ Text="Client", Value = "Client" },
+                                                    new SelectListItem{ Text="Contractor", Value = "Contractor" },
+                                                    new SelectListItem{ Text="Consultant", Value = "Consultant" },
+                                                 }, new { @class = "form-select" })
+
+                                                    @Html.ValidationMessageFor(model => model.ClientType)
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-6">
+                                                <div class="mb-2">
+                                                    <input type="hidden" id="TargetCustomerName" />
+                                                    <input type="hidden" id="TargetCustomerId" />
+                                                    <label class="col-form-label required">Name</label>
+                                                    @Html.TextBoxFor(model => model.ClientName, new { @class = "form-control txttarget", @autocomplete = "off", @required = "required", @id = "cClientName" })
+                                                    @Html.ValidationMessageFor(model => model.ClientName)
+                                                </div>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <div class="mb-2">
+
+                                                    <label class="col-form-label">Client Code</label>
+                                                    @Html.TextBoxFor(model => model.ClientPrefix, new { @class = "form-control txttarget", @autocomplete = "off", @required = "required", @id = "cClientPrefix", @maxlength = "10" })
+                                                    @Html.ValidationMessageFor(model => model.ClientPrefix)
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <div class="mb-2">
+                                                    <label class="col-form-label">Contact Name</label>
+                                                    @Html.TextBoxFor(model => model.ContactName, new { @class = "form-control txttarget", @id = "cContactName" })
+                                                    @Html.ValidationMessageFor(model => model.ContactName)
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="mb-2">
+                                                    <label class="col-form-label">Phone No.</label>
+                                                    @Html.TextBoxFor(model => model.ContactNo, new { @class = "form-control", @id = "cContactNo" })
+                                                    @Html.ValidationMessageFor(model => model.ContactNo)
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="mb-2">
+                                                    <label class="col-form-label">Email</label>
+                                                    @Html.TextBoxFor(model => model.Email, new { @class = "form-control", @id = "cEmail" })
+                                                    @Html.ValidationMessageFor(model => model.Email)
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <label class="col-form-label">Office</label>
+                                                @Html.TextBoxFor(model => model.Address1, new { @class = "form-control txttarget", @id = "cAddress1" })
+                                                @Html.ValidationMessageFor(model => model.Address1)
+                                            </div>
+                                            <div class="col-md-4">
+                                                <label class="col-form-label">Building</label>
+                                                @Html.TextBoxFor(model => model.Address2, new { @class = "form-control txttarget", @id = "cAddress2" })
+                                                @Html.ValidationMessageFor(model => model.Address2)
+                                            </div>
+                                            <div class="col-md-4">
+                                                <label class="col-form-label">Street</label>
+                                                @Html.TextBoxFor(model => model.Address3, new { @class = "form-control txttarget", @id = "cAddress3" })
+                                                @Html.ValidationMessageFor(model => model.Address2)
+                                            </div>
+
+
+                                        </div>
+                                        <div class="row">
+
+                                            <div class="col-md-4">
+                                                <label class="col-form-label">Location</label>
+                                                @Html.TextBoxFor(mode => Model.LocationName, new { @class = "form-select", @id = "cLocationName" })
+                                                @Html.ValidationMessageFor(model => model.LocationName)
+                                            </div>
+                                            <div class="col-md-4">
+                                                <label class="required col-form-label">City</label>
+                                                @Html.TextBoxFor(model => model.CityName, new { @class = "form-select", @required = "required", @id = "cCityName" })
+                                                @Html.ValidationMessageFor(model => model.CityName)
+                                            </div>
+                                            <div class="col-md-4">
+                                                <label class="col-form-label required">Country</label>
+                                                @Html.TextBoxFor(model => model.CountryName, new { @class = "form-select", @id = "cCountryName" })
+                                                @Html.ValidationMessageFor(model => model.CountryName)
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                    <!-- end tab pane -->
+                                </div>
+                                <!-- end tab content -->
+                            </div>
+                         
+                   
+</div>
+
+}

@@ -1,0 +1,57 @@
+﻿@model List<HVAC.Models.NotificationModel>
+
+@{
+    ViewBag.Title = "Unread Notifications";
+
+}
+
+<h2>Unread Notifications</h2>
+
+@if (Model != null && Model.Count > 0)
+{
+    <table class="table table-striped table-bordered">
+        <thead>
+            <tr>
+                <th>Priority</th>
+                <th>Title</th>
+                <th>Message</th>
+                <th>Type</th>
+                <th>Channel</th>
+                <th>Created At</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var n in Model)
+            {
+                <tr>
+                    <td>
+                        @if (n.Priority == 2)
+                        {
+                            <span class="badge bg-danger">High</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-secondary">Normal</span>
+                        }
+                    </td>
+                    <td><strong>@n.Title</strong></td>
+                    <td>@n.Message</td>
+                    <td>@n.NotificationType</td>
+                    <td>@n.DeliveryChannel</td>
+                    <td>@n.CreatedAt.ToString("dd MMM yyyy HH:mm")</td>
+                    <td>
+                        <a href="@Url.Action("MarkAsRead", "Notification", new { id = n.NotificationId })"
+                           class="btn btn-sm btn-success">
+                            Mark as Read
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <div class="alert alert-info">No unread notifications.</div>
+}

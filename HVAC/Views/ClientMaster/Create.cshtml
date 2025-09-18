@@ -1,0 +1,327 @@
+﻿@model HVAC.Models.ClientMasterVM
+@{
+
+    ViewBag.pTitle = "Client Master";
+    ViewBag.pageTitle = "Setup";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+
+      $('#CountryName').autocomplete({
+            source: function (request, response) {
+                $.ajax({
+                    url: "@Url.Action("GetCountryList", "CountryMaster")",
+                    data: { SearchText: request.term },
+                    dataType: "json",
+                    type: "GET",
+                    success: function (data) {
+                        response($.map(data, function (val, item) {
+                            return {
+                                label: val.CountryName,
+                                value: val.Id
+                            }
+                        }))
+                    }
+                });
+            },
+            minLength: 1,
+            autoFocus: false,
+            select: function (event, ui) {
+                event.preventDefault();
+                $('#CountryID').val(ui.item.value);
+                $('#CountryName').val(ui.item.label);
+                return false;
+            },
+          focus: function (event, ui) {
+              $('#CountryID').val(ui.item.value);
+                $('#CountryName').val(ui.item.label);
+
+                return false;
+            }
+        });
+        $('#CityName').autocomplete({
+            source: function (request, response) {
+                $.ajax({
+                    url: "@Url.Action("GetCityList", "CountryMaster")",
+                    data: { SearchText: request.term },
+                    dataType: "json",
+                    type: "GET",
+                    success: function (data) {
+                        response($.map(data, function (val, item) {
+                            return {
+                                label: val.City,
+                                value: val.CityID,
+                                Country: val.CountryName
+
+                            }
+                        }))
+                    }
+                });
+            },
+            minLength: 1,
+            autoFocus: false,
+            select: function (event, ui) {
+                event.preventDefault();
+                $('#CityID').val(ui.item.value);
+                $('#CityName').val(ui.item.label);
+               $('#CountryID').val(ui.item.value);
+                $('#CountryName').val(ui.item.Country);
+                return false;
+            },
+            focus: function (event, ui) {
+                $('#CityID').val(ui.item.value);
+                $('#CityName').val(ui.item.label);
+                $('#CountryID').val(ui.item.value);
+                $('#CountryName').val(ui.item.Country);
+                return false;
+            }
+        });
+
+        $(function () {
+
+            var monthArray = [8, 9, 10]
+
+            //$('#JoinDate').datepicker({
+            //    dateFormat: 'dd-M-yy',
+            //    changeYear: true, changeMonth: true,
+
+            //});
+
+
+
+
+            $(".dolclass").css({ "display": "none" });
+            $(".chkclass").css({ "display": "block" });
+
+
+            $("#StatusActive").click(function () {
+                if ($("#StatusActive").is(':checked')) {
+                    $(".dolclass").css({ "display": "none" });
+
+                }
+                else {
+                    $(".dolclass").css({ "display": "block" });
+
+                }
+            });
+
+        });
+
+        $(function () {
+            const types = ["Client", "Contractor", "Consultant"];
+            let selected = ($('#ClientType').val() || "").split(",").filter(Boolean);
+
+            const render = () => {
+                $('#ClientType').val(selected.join(','));
+                $('#ClientTypeContainer .tag').remove();
+
+                selected.forEach(v => {
+                    $('#ClientTypeInput').before(
+                        $(`<span class="tag">${v} ×</span>`).css({
+                            'background-color': 'lightgray',
+                            'color': '#000',
+                            'padding': '5px 10px',
+                            'border-radius': '5px',
+                            'font-size': '11px',
+                            'cursor': 'pointer',
+                            'margin-right': '3px',
+                            'display': 'inline-block'
+                        }).click(() => {
+                            selected = selected.filter(x => x !== v);
+                            render();
+                        })
+                    );
+                });
+                // Hide input if all selected
+                if (selected.length >= types.length) {
+                    $('#ClientTypeInput').hide();
+                } else {
+                    $('#ClientTypeInput').show().val('');
+                }
+            };
+            render();
+
+            $('#ClientTypeInput').autocomplete({
+                source: (req, res) => {
+                    const available = types.filter(v => !selected.includes(v));
+                    res(available.filter(v => v.toLowerCase().includes(req.term.toLowerCase())));
+                },
+                select: (e, ui) => {
+                    e.preventDefault();
+                    selected.push(ui.item.value);
+                    render();
+                },
+                minLength: 0
+            }).on('focus', function () {
+                $(this).autocomplete("search", "");
+            });
+
+            $('#ClientTypeContainer').click(() => $('#ClientTypeInput').focus());
+         
+          
+        });
+
+    });
+
+
+</script>
+
+<div class="card">
+    <div class="card-body">
+        @using (Html.BeginForm("Create", "ClientMaster", FormMethod.Post, new { @class = "needs-validation ", @novalidate = "novalidate" }))
+        {
+            @Html.AntiForgeryToken()
+            @Html.ValidationSummary(true, "", new { @class = "needs-validation" })
+            <div class="row">
+                <div class="col-md-8">
+                    <h4 class="card-title mb-2 mt-3 text-danger" id="msg1">
+                    </h4>
+                </div>
+                <div class="col-md-4 text-md-end">
+
+                    <input type="submit" value="Save" class="btn btn-success" id="btnsave" />
+                    <a href='@Url.Action("Index", "ClientMAster")' class="btn btn-secondary">Cancel</a>
+
+                </div>
+
+            </div>
+
+
+            <div class="row">
+
+
+
+                <div class="col-md-3">
+
+                    <label class="col-form-label"> Type </label>
+                    @*@Html.TextBoxFor(model => model.ClientType, new { @class = "form-control txttarget", @tabindex = 3, @required = "true" })
+        @Html.ValidationMessageFor(model => model.ClientType)*@
+
+                    @Html.HiddenFor(model => model.ClientType, new { id = "ClientType" })
+
+                    <div id="ClientTypeContainer" class="form-control" style="min-height:40px; display:flex; flex-wrap:wrap; gap:5px; padding:3px;">
+                        <input  type="text" id="ClientTypeInput"  style="border:none; flex:1; min-width:100px;" />
+                    </div>
+                  
+                    @Html.ValidationMessageFor(model => model.ClientType)
+
+                </div>
+
+                <div class="col-md-3">
+
+                    <label class="col-form-label"> Client Name</label>
+                    @Html.HiddenFor(model => model.ClientID)
+                    @Html.HiddenFor(model => model.CityID, new { @id = "CityID" })
+                    @Html.HiddenFor(model => model.CountryID, new { @id = "CountryID" })
+
+                    @Html.TextBoxFor(model => model.ClientName, new { @class = "form-control txttarget", @id = "ClientName", @required = "required" })
+                    @Html.ValidationMessageFor(model => model.ClientName)
+
+
+                </div>
+                <div class="col-md-3">
+
+                    <label class="col-form-label">Contact Name</label>
+                    @Html.TextBoxFor(model => model.ContactName, new { @class = "form-control txttarget", @id = "ContactName"})
+                    @Html.ValidationMessageFor(model => model.ContactName)
+
+                </div>
+
+                <div class="col-md-3">
+
+                    <label class="col-form-label">Client Code</label>
+
+                    @Html.TextBoxFor(model => model.ClientPrefix, new { @class = "form-control", id = "ClientPrefix", @maxlength = "10" })
+                    @Html.ValidationMessageFor(model => model.ClientPrefix)
+
+                </div>
+
+
+
+
+
+            </div>
+            <div class="row">
+
+                <div class="col-md-3">
+
+                    <label class="col-form-label">Building No.</label>
+                    @Html.TextBoxFor(model => model.Address1, new { @class = "form-control txttarget", @id = "Address1" })
+                    @Html.ValidationMessageFor(model => model.Address1)
+
+                </div>
+                <div class="col-md-3">
+
+                    <label class="col-form-label">Street Name</label>
+                    @Html.TextBoxFor(model => model.Address2, new { @class = "form-control ", @id = "Address2" })
+                    @Html.ValidationMessageFor(model => model.Address2)
+                </div>
+                <div class="col-md-3">
+
+                    <label class="col-form-label">Postal Code</label>
+                    @Html.TextBoxFor(model => model.Address3, new { @class = "form-control ", @id = "Address3" })
+                    @Html.ValidationMessageFor(model => model.Address3)
+                </div>
+                <div class="col-md-3">
+
+                    <label class="col-form-label required">Location</label>
+
+                    @Html.TextBoxFor(model => model.LocationName, new { @class = "form-control", @id = "LocationName" })
+                    @Html.ValidationMessageFor(model => model.LocationName)
+
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-3">
+                    <label class="col-form-label required">City</label>
+
+                    @Html.TextBoxFor(model => model.CityName, new { @class = "form-select", @id = "CityName", @required = "required" })
+                    @Html.ValidationMessageFor(model => model.CityID)
+                </div>
+
+                <div class="col-md-3">
+
+                    <label class="col-form-label required">Country</label>
+
+                    @Html.TextBoxFor(model => model.CountryName, new { @class = "form-select", @id = "CountryName", @required = "required" })
+                    @Html.ValidationMessageFor(model => model.CountryID)
+
+                </div>
+                <div class="col-md-3">
+
+                    <label class="col-form-label required">Contact No.</label>
+                    @Html.TextBoxFor(model => model.ContactNo, new { @class = "form-control", @id = "ContactNo" })
+                    @Html.ValidationMessageFor(model => model.ContactNo)
+
+
+                </div>
+
+                <div class="col-md-3">
+
+                    <label class="col-form-label">Email</label>
+                    @Html.TextBoxFor(model => model.Email, new { @class = "form-control ", @id = "Email" })
+                    @Html.ValidationMessageFor(model => model.Email)
+                </div>
+                <div class="col-md-3">
+
+                    <label class="col-form-label">VAT No.</label>
+                    @Html.TextBoxFor(model => model.VATNo, new { @class = "form-control ", @id = "VATNo" })
+                    @Html.ValidationMessageFor(model => model.VATNo)
+                </div>
+
+
+            </div>
+
+        }
+    </div>
+
+</div>
+@section scripts{
+
+    <script src="~/Scripts/JS/ClientMaster.js"></script>
+}

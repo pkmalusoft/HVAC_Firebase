@@ -1,0 +1,66 @@
+﻿@model HVAC.Models.EnquiryVM
+@{
+    var i = 0;
+    var _decimal = @Session["Decimal"].ToString();
+}
+
+
+
+<div class="card-body">
+    <h4 class="card-title">Equipment List</h4>
+    <div data-simplebar="init" style="max-height: 295px;" class="simplebar-scrollable-y">
+        <div class="simplebar-wrapper" style="margin: 0px;">
+            <div class="simplebar-height-auto-observer-wrapper"><div class="simplebar-height-auto-observer"></div></div><div class="simplebar-mask">
+                <div class="simplebar-offset" style="right: 0px; bottom: 0px;">
+                    <div class="simplebar-content-wrapper" tabindex="0" role="region" aria-label="scrollable content" style="height: auto; overflow: hidden scroll;">
+                        <div class="simplebar-content" style="padding: 0px;">
+                            <!-- Tab panes -->
+                          
+                               
+                            <ul class="list-group list-group-flush">
+                                @foreach (var item in Model.EquipmentDetails)
+                                {
+                                    {
+
+                                        <li class="list-group-item py-3" id="trclient_@i">
+                                            <div class="d-flex">
+                                                <div class="me-3">
+                                                    @item.Brand                                                    
+                                                </div>
+
+                                                <div class="align-self-center overflow-hidden me-auto">
+                                                    <div>
+                                                        <h5 class="font-size-14 text-truncate"><a href="javascript: void(0);" class="text-dark"> @item.EquipmentName <br />@item.ProductFamilyName</a></h5>
+                                                        <p class="text-muted mb-0">
+                                                            @item.CreatedBy <br />
+                                                            @item.CreatedDate
+                                                        </p>
+                                                        @Html.HiddenFor(model => model.EquipmentDetails[i].ID, new { @Value = @item.ID, @id = "hdnEquipmentId_" + @i })
+
+                                                    </div>
+                                                </div>
+
+                                                <div class="dropdown ms-2">
+                                                    <a class="text-muted font-size-14" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                        <i class="mdi mdi-dots-horizontal"></i>
+                                                    </a>
+
+                                                    <div class="dropdown-menu dropdown-menu-end">
+                                                        <a class="dropdown-item" href="#"><a class="text-danger" onclick="DeleteEquipment('@item.ID','@i')" href="javascript:void(0);" title="Delete Equipment"><i class="mdi mdi-delete font-size-18"></i></a></a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    }
+                                </ul>
+                                
+                            </div>
+                            <!-- end tab content -->
+                        </div>
+                    </div>
+                </div>
+            </div><div class="simplebar-placeholder" style="width: 698px; height: 323px;"></div>
+        </div><div class="simplebar-track simplebar-horizontal" style="visibility: hidden;"><div class="simplebar-scrollbar" style="width: 0px; display: none;"></div></div><div class="simplebar-track simplebar-vertical" style="visibility: visible;"><div class="simplebar-scrollbar" style="height: 269px; transform: translate3d(0px, 0px, 0px); display: block;"></div></div>
+    </div>
+ 
+

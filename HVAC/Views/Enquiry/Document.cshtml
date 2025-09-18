@@ -1,0 +1,126 @@
+﻿@model HVAC.Models.DocumentMasterVM
+@{
+    Layout = null;
+}
+<style>
+    ul.ui-front {
+        z-index: 1100;
+    }
+</style>
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        $("#FileUpload1").change(function () {
+            debugger;
+            var fileUpload = $("#FileUpload1").get(0);
+            var files = fileUpload.files;
+            if (files.length > 0) {
+                $('#btnUpload').trigger('click');
+            }
+        });
+
+        $('#btnUpload').click(function () {
+
+            // Checking whether FormData is available in browser
+            if (window.FormData !== undefined) {
+                $('#lbfileuploadstatus').html('File Uploading..');
+                $('#btnSaveDocuments').attr('disabled', 'disabled');
+                var fileUpload = $("#FileUpload1").get(0);
+                var files = fileUpload.files;
+
+                // Create FormData object
+                var fileData = new FormData();
+
+                // Looping over all files and add it to FormData object
+                for (var i = 0; i < files.length; i++) {
+                    fileData.append(files[i].name, files[i]);
+                }
+
+                // Adding one more key to FormData object
+                fileData.append('username', "Manas");
+
+                $.ajax({
+                    url: '/Enquiry/UploadFiles',
+                    type: "POST",
+                    contentType: false, // Not to set any content header
+                    processData: false, // Not to process data
+                    data: fileData,
+                    success: function (result) {
+                        if (result.status == "ok") {
+                            $('#imglogo').attr('src', "/UploadDocuments/" + result.FileName);
+                            //alert(result.FileName);
+                            $('#Filename').val(result.FileName);
+                            $('#btnSaveDocuments').removeAttr('disabled');
+                            $('#lbfileuploadstatus').html('File Uploaded Successfully,Click Save Now!',)
+                            //Swal.fire("File Uploading Status!", "File Uploaded Successfully", "success");
+
+                        }
+                    },
+                    error: function (err) {
+                        alert(err.statusText);
+                        $('#lbfileuploadstatus').html(err.statusText);
+                        $('#btnSaveDocuments').removeAttr('disabled');
+                    }
+                });
+            } else {
+                alert("FormData is not supported.");
+                $('#lbfileuploadstatus').html('');
+                $('#btnSaveDocuments').removeAttr('disabled');
+            }
+
+        });
+
+    });
+
+</script>
+@using (Html.BeginForm("Document", "Enquiry", FormMethod.Post, new { @class = "documentneeds-validation",  @id = "formdocumentEntry" }))
+{
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="mb-2">
+            @Html.HiddenFor(model => model.DocumentID)
+            @Html.HiddenFor(model => model.Filename)
+            @Html.HiddenFor(model => model.EnquiryID)
+
+            <label class="col-form-label">Document Type</label>
+            @Html.DropDownListFor(model => model.DocumentTypeID, new SelectList(ViewBag.DocumentTypes, "DocumentTypeID", "DocumentTypeName"), "Select", new { @class = "form-select", @required = "required" })
+            @Html.ValidationMessageFor(model => model.DocumentTypeID)
+        </div>
+    </div>
+    <div class="col-md-12">
+        <div class="mb-2">
+            <label class="col-form-label">Document Title</label>
+            @Html.TextBoxFor(model => model.DocumentTitle, new { @class = "form-control", @required = "required", @autocomplete = "off" })
+            @Html.ValidationMessageFor(model => model.DocumentTitle)
+        </div>
+    </div>
+    <div class="col-md-12">
+        <div class="mb-2">
+            <label class="col-form-label">Document Link</label>
+            @Html.TextBoxFor(model => model.DocumentLink, new { @class = "form-control", @required = "required", @autocomplete = "off" })
+            @Html.ValidationMessageFor(model => model.DocumentLink)
+        </div>
+    </div>
+    <div class="col-md-12">
+        <div class="mb-2">
+
+            <div class="input-group gap-2">
+                <label class="col-form-label">Select File</label>
+                <label class="color_red mt-2" id="lbfileuploadstatus"></label>
+            </div>
+            <input type="file" id="FileUpload1" class="form-control">
+            <input type="button" id="btnUpload" style="display:none" value="Upload Files" />
+        </div>
+    </div>
+    
+</div>
+    
+
+}
+@section scripts{
+    @*<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/3.2.12/jquery.validate.unobtrusive.min.js"></script>*@
+    @*<script src="~/Scripts/JS/EnquiryDocument.js"></script>*@
+
+}

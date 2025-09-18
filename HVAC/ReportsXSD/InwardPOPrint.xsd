@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="NewDataSet" xmlns="" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+  <xs:element name="NewDataSet" msdata:IsDataSet="true" msdata:UseCurrentLocale="true">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="InWardPOPrint">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="JobHandoverID" type="xs:int" minOccurs="0" />
+              <xs:element name="ProjectNumber" type="xs:string" minOccurs="0" />
+              <xs:element name="PONumber" type="xs:string" minOccurs="0" />
+              <xs:element name="PODate" type="xs:dateTime" minOccurs="0" />
+              <xs:element name="ID" type="xs:int" minOccurs="0" />
+              <xs:element name="JobDate" type="xs:dateTime" minOccurs="0" />
+              <xs:element name="EnquiryNo" type="xs:string" minOccurs="0" />
+              <xs:element name="ProjectTitle" type="xs:string" minOccurs="0" />
+              <xs:element name="POOrderValue" type="xs:decimal" minOccurs="0" />
+              <xs:element name="POTotalValue" type="xs:decimal" minOccurs="0" />
+              <xs:element name="VarNo" type="xs:int" minOccurs="0" />
+              <xs:element name="POVATPercent" type="xs:decimal" minOccurs="0" />
+              <xs:element name="POVATAmount" type="xs:decimal" minOccurs="0" />
+              <xs:element name="ClientName" type="xs:string" minOccurs="0" />
+              <xs:element name="EmployeeName" type="xs:string" minOccurs="0" />
+              <xs:element name="EnquiryID" type="xs:int" minOccurs="0" />
+              <xs:element name="CreatedDate" type="xs:dateTime" minOccurs="0" />
+              <xs:element name="ModifiedDate" type="xs:dateTime" minOccurs="0" />
+              <xs:element name="CreatedBy" type="xs:int" minOccurs="0" />
+              <xs:element name="JobValue" type="xs:decimal" minOccurs="0" />
+              <xs:element name="Margin" type="xs:decimal" minOccurs="0" />
+              <xs:element name="MarginPercent" type="xs:decimal" minOccurs="0" />
+              <xs:element name="JobCost" type="xs:decimal" minOccurs="0" />
+              <xs:element name="JobTotalValue" type="xs:decimal" minOccurs="0" />
+              <xs:element name="VatAmount" type="xs:decimal" minOccurs="0" />
+              <xs:element name="VatPercentage" type="xs:decimal" minOccurs="0" />
+              <xs:element name="QutationNo" type="xs:string" minOccurs="0" />
+              <xs:element name="PaymentTerms" type="xs:string" minOccurs="0" />
+              <xs:element name="DeliveryTerms" type="xs:string" minOccurs="0" />
+              <xs:element name="Location" type="xs:string" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="InWardPOPrint1">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="QuotationDetailID" type="xs:int" minOccurs="0" />
+              <xs:element name="QuotationID" type="xs:int" minOccurs="0" />
+              <xs:element name="EstimationDetailID" type="xs:int" minOccurs="0" />
+              <xs:element name="EstimationID" type="xs:int" minOccurs="0" />
+              <xs:element name="EstimationCategoryID" type="xs:int" minOccurs="0" />
+              <xs:element name="EquipmentID" type="xs:int" minOccurs="0" />
+              <xs:element name="Description" type="xs:string" minOccurs="0" />
+              <xs:element name="Model" type="xs:string" minOccurs="0" />
+              <xs:element name="UnitID" type="xs:int" minOccurs="0" />
+              <xs:element name="Quantity" type="xs:decimal" minOccurs="0" />
+              <xs:element name="UnitRate" type="xs:decimal" minOccurs="0" />
+              <xs:element name="Amount" type="xs:decimal" minOccurs="0" />
+              <xs:element name="ItemUnit" type="xs:string" minOccurs="0" />
+              <xs:element name="CategoryName" type="xs:string" minOccurs="0" />
+              <xs:element name="EstimationMasterID" type="xs:int" minOccurs="0" />
+              <xs:element name="EstimationNo" type="xs:string" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="InWardPOPrint2">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="ID" type="xs:int" minOccurs="0" />
+              <xs:element name="QuotationID" type="xs:int" minOccurs="0" />
+              <xs:element name="Description" type="xs:string" minOccurs="0" />
+              <xs:element name="EquipmentID" type="xs:int" minOccurs="0" />
+              <xs:element name="WarrantyType" type="xs:string" minOccurs="0" />
+              <xs:element name="JobPurchaseOrderDetailID" type="xs:int" minOccurs="0" />
+              <xs:element name="JobHandOverID" type="xs:int" minOccurs="0" />
+              <xs:element name="EquipmentName" type="xs:string" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="InWardPOPrint3">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="ID" type="xs:int" minOccurs="0" />
+              <xs:element name="JobHandOverID" type="xs:int" minOccurs="0" />
+              <xs:element name="BondTypeID" type="xs:int" minOccurs="0" />
+              <xs:element name="BondTypeAdded" type="xs:boolean" minOccurs="0" />
+              <xs:element name="BondValue" type="xs:decimal" minOccurs="0" />
+              <xs:element name="BondValidity" type="xs:int" minOccurs="0" />
+              <xs:element name="BondIssueDate" type="xs:dateTime" minOccurs="0" />
+              <xs:element name="BondExpiryDate" type="xs:dateTime" minOccurs="0" />
+              <xs:element name="JobPurchaseOrderDetailID" type="xs:int" minOccurs="0" />
+              <xs:element name="Percentage" type="xs:decimal" minOccurs="0" />
+              <xs:element name="SalesValue" type="xs:decimal" minOccurs="0" />
+              <xs:element name="CurrencyID" type="xs:int" minOccurs="0" />
+              <xs:element name="CreatedBy" type="xs:int" minOccurs="0" />
+              <xs:element name="CreatedDate" type="xs:dateTime" minOccurs="0" />
+              <xs:element name="ModifiedBy" type="xs:int" minOccurs="0" />
+              <xs:element name="ModifiedDate" type="xs:dateTime" minOccurs="0" />
+              <xs:element name="IsDeleted" type="xs:boolean" minOccurs="0" />
+              <xs:element name="DeletedBy" type="xs:int" minOccurs="0" />
+              <xs:element name="DeletedDate" type="xs:dateTime" minOccurs="0" />
+              <xs:element name="ID1" type="xs:int" minOccurs="0" />
+              <xs:element name="BondType" type="xs:string" minOccurs="0" />
+              <xs:element name="BondType1" type="xs:string" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

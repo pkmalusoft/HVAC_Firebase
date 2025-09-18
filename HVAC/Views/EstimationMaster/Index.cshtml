@@ -1,0 +1,130 @@
+﻿@model IEnumerable<HVAC.Models.EstimationMasterVM>
+
+@{
+    ViewBag.pTitle = "Estimation Master";
+    ViewBag.pageTitle = "Setup";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#dataTables-example tfoot th').each(function () {
+            var title = $(this).text();
+            $(this).html('<input type="text" />');
+        });
+
+
+        var table = $('#dataTables-example').DataTable({ "sPaginationType": "full_numbers" });
+
+        table.columns().every(function () {
+            var that = this;
+
+            $('input', this.footer()).on('keyup change', function () {
+                if (that.search() !== this.value) {
+                    that
+                        .search(this.value)
+                        .draw();
+                }
+            });
+        });
+
+    });
+
+
+</script>
+
+<div class="row">
+    <div class="col-xl-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-12 mb-2">
+
+                        <a disabled class="btn btn-primary waves-effect waves-light float-right" href="/EstimationMaster/Create"><i class="mdi  mdi-plus me-1"></i>New Estimation Type</a>
+                    </div>
+                </div>
+                <div class="row hide">
+                    <div class="col-lg-12 mt-2 mb-2 ">
+                        <div class="text-right">
+                            <button type="button" class="btn btn-primary waves-effect waves-light pull-right" data-toggle="modal" data-target="#modelPackages">Create New</button>
+                        </div>
+
+
+                    </div>
+                </div>
+                <div class="">
+                    <table class="table align-middle table-nowrap" id="datatable">
+                        <thead class="table-light">
+                            <tr>
+
+                                <th>
+                                    Category
+                                </th>
+                                <th>
+                                Type Name
+                                </th>
+                                <th>Currency Code</th>
+                                <th>Unit</th>
+
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+
+                        @foreach (var item in Model)
+                        {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelitem => item.CategoryName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.TypeName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.CurrencyCode)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Unit)
+                        </td>
+                        <td>
+                            <div class="d-flex gap-3">
+                                <a href="@Url.Action("Create", new { id = item.ID })" class="text-success"><i class="mdi mdi-pencil font-size-18"></i></a>
+                                <a href="#" onclick="Delete(ID =@item.ID)" class="text-danger"><i class="mdi mdi-delete font-size-18"></i></a>
+                            </div>
+                        </td>
+                    </tr>
+                        }
+
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    function Delete(ID) {
+        Swal.fire({ title: "Are you sure?", text: "You won't be able to revert this!", icon: "warning", showCancelButton: !0, confirmButtonColor: "#34c38f", cancelButtonColor: "#f46a6a", confirmButtonText: "Yes, delete it!" }).then(
+            function (t) {
+                if (t.value) {
+                    $.ajax({
+                        type: "Post",
+                        url: '/EnquiryStage/DeleteProjecType',
+                        datatype: "json",
+                        data: {
+                            'id': ID
+                        },
+                        success: function (response) {
+                            if (response.status == "OK") {
+                                Swal.fire("Deleted!", response.message, "success");
+                                window.location.reload();
+                            }
+                            else
+                                Swal.fire("Delete Failed!", response.message, "error");
+                        }
+                    });
+                }
+            });
+
+    }
+</script>
+
+

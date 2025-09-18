@@ -1,0 +1,1291 @@
+﻿@model  HVAC.Models.PurchaseOrderSaveRequest
+@using Newtonsoft.Json
+@{ ViewBag.pTitle = "Purchase Order";
+    ViewBag.pageTitle = "Inventory";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var _decimal = @Session["Decimal"].ToString();
+    int i = 0;
+    HVAC.Models.HVACEntities db = new HVAC.Models.HVACEntities(); }
+
+
+@section styles{
+    <link href="~/assets/libs/select2/css/select2.min.css" rel="stylesheet" type="text/css" />
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <!-- Select2 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
+    <!-- Select2 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+}
+
+
+<style>
+
+    /*#custom-form-style .form-control,
+    #custom-form-style .form-select
+    #custom-form-style .select2-container {
+        height: 30px;*/ /* or any desired height */
+    /*padding: 4px 8px;
+        font-size: 0.775rem;
+    }*/
+
+    /*select.select2-hidden-accessible {
+        display: block !important;
+        height: 0;
+        padding: 0;
+        width: 0;
+        position: absolute;
+        opacity: 0;
+        pointer-events: none;
+    }*/
+    /* More specific and with !important to override conflicting styles */
+    #PurchaseOrderEquipmentTables tbody tr.highlight-row td {
+        border-top: 1px solid #d3d3d3; /* light grey */
+        border-bottom: 1px solid #d3d3d3; /* light grey */
+        color: red;
+    }
+
+
+
+    .field-validation-error {
+        color: red;
+    }
+
+    .input-validation-error {
+        border-color: red !important;
+    }
+</style>
+
+
+
+@using (Html.BeginForm("Create", "PurchaseOrder", FormMethod.Post, new { enctype = "multipart/form-data", @class = "needs-validation ", @novalidate = "novalidate" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+
+    <div class="card">
+        <div class="card-body">
+            @Html.AntiForgeryToken()
+            @Html.ValidationSummary(true)
+
+
+            <input type="hidden" id="Id" name="Id" value="@Model.po.PurchaseOrderID" />
+            @Html.HiddenFor(model => model.po.POValue, new { @id = "txtPOValue", @class = "form-control" })
+            @Html.HiddenFor(model => model.po.TotalAmount, new { @id = "txtTotalAmount", @class = "form-control" })
+
+            <div class="row">
+                <div class="col-md-8">
+                    <div id="validations" style="color:red;margin-left:7px;display:none">* Please fill mandatory fields!</div>
+                </div>
+                <div class="col-md-4 text-md-end mb-1">
+
+                    <button type="submit" class="btn btn-success" id="btnsave" tabindex="50">Save</button>
+
+                    <a href='@Url.Action("Index", "PurchaseOrder", new { id = 0 })' class="btn btn-secondary" data-toggle="tooltip" data-placement="right" title="Click here">Cancel</a>
+
+                    <div id="divothermenu" class="btn-group hide">
+                        @*<button type="submit" class="btn btn-primary">Menu</button>*@
+                        <span class="btn btn-primary"><i class="bx bx-cog bx-spin me-2"></i>Sub Menu</span>
+                        <button type="button" class="btn btn-primary dropdown-toggle-split border_right" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="mdi mdi-chevron-down"></i>
+                        </button>
+                        <div class="dropdown-menu" id="divsubmenu">
+
+                            <a class="dropdown-item" target="_blank" href="InvoicePrint?id=@Model.po.PurchaseOrderID" title="Invoice Printing">Invoice Print</a>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-2">
+                    @Html.HiddenFor(model => model.po.PurchaseOrderID, new { @class = "form-control" })
+                    @Html.HiddenFor(model => model.po.ExchangeRate, new { @class = "form-select", @required = "true" })
+                    <label class="col-form-label required"> Purchase Order No.</label>
+                    @Html.TextBoxFor(model => model.po.PurchaseOrderNo, new { @class = "form-control txttarget", @required = "true", @readonly = "readonly", @tabindex = "1" })
+                    @Html.ValidationMessageFor(model => model.po.PurchaseOrderNo)
+                </div>
+                <div class="col-md-2">
+                    <div class="mb-2">
+                        <label class="col-form-label">P.O Date</label>
+                        <div class="docs-datepicker">
+                            <div class="input-group">
+                                <input type="text" class="form-control docs-date" name="PurchaseOrderDate" id="PurchaseOrderDate" data-date-format="dd/MM/yyyy" data-date-autoclose="true" data-provide="datepicker" value="@Model.po.PurchaseOrderDate.ToShortDateString()"
+                                       placeholder="Pick a date" autocomplete="off" tabindex="2" required="required">
+
+                                <button type="button" class="btn btn-secondary docs-datepicker-trigger">
+                                    <i class="mdi mdi-calendar"></i>
+                                </button>
+                            </div>
+                            <div class="docs-datepicker-container"></div>
+                        </div>
+                    </div>
+                </div>
+
+
+
+                <div class="col-md-3">
+                    <label class="col-form-label required ">Supplier</label>
+
+                    <select id="SupplierID" name="SupplierID" class="select2 form-control" required="required"
+                            data-placeholder="Choose Supplier..." tabindex="3">
+                    </select>
+
+                    @Html.ValidationMessageFor(model => model.po.SupplierID)
+                </div>
+                <div class="col-md-1">
+                    <label class="col-form-label required">Currency</label>
+                    @Html.DropDownListFor(model => model.po.CurrencyID, new SelectList(@ViewBag.Currency, "CurrencyID", "CurrencyName"), "Select", new { @class = "form-select", @tabindex = "4", @required = "true" })
+                    @Html.ValidationMessageFor(model => model.po.CurrencyID)
+                </div>
+
+                <div class="col-md-1">
+                    <label class="col-form-label">Revision</label>
+
+                    @Html.TextBoxFor(model => model.po.Revision, new { @class = "form-control", @tabindex = "5" })
+                </div>
+                <div class="col-md-3">
+                    <label class="col-form-label required">Bank</label>
+                    @Html.DropDownListFor(model => model.po.Bank, new SelectList(@ViewBag.Bank, "ID", "BankName"), "Select", new { @class = "form-select", @tabindex = "6", @required = "true" })
+
+                    @Html.ValidationMessageFor(model => model.po.Bank)
+                </div>
+
+                <div class="col-md-2">
+                    <div class="mb-2">
+                        <label class="col-form-label required ">Port of Import</label>
+                        @Html.DropDownListFor(model => model.po.PortID, new SelectList(@ViewBag.Port, "PortID", "Port1"), "Select", new { @class = "form-select", @tabindex = "7", @required = "true" })
+                        @Html.ValidationMessageFor(model => model.po.PortID)
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="mb-2">
+                        <label class="col-form-label required ">COO</label>
+
+                        @Html.DropDownListFor(model => model.po.OriginCountryID, new SelectList(@ViewBag.Country, "CountryID", "CountryName"), "Select", new { @class = "form-select", @tabindex = "8", @required = "true" })
+                        @Html.ValidationMessageFor(model => model.po.OriginCountryID)
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="mb-2">
+                        <label class="col-form-label">Sales Order</label>
+
+                        @Html.TextBoxFor(model => model.po.SONoRef, new { @class = "form-control", @tabindex = "9" })
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="mb-2">
+                        <label class="col-form-label required ">Payment Terms</label>
+
+                        <select id="PaymentTermID" name="PaymentTermID" class="select2 form-control" required="required"
+                                data-placeholder="Choose PaymentTerms..." tabindex="10">
+                        </select>
+                        @*@Html.DropDownListFor(model => model.SupplierID, new SelectList(@ViewBag.Supplier, "SupplierID", "SupplierName"), "Select", new { @class = "form-select", @required = "true" })*@
+                        @Html.ValidationMessageFor(model => model.po.PaymentTerms)
+                    </div>
+                </div>
+
+                <div class="col-md-2">
+                    <div class="mb-2">
+                        <label class="col-form-label required ">Delivery Terms</label>
+
+                        <select id="DeliveryTermID" name="DeliveryTermID" class="select2 form-control" required="required"
+                                data-placeholder="Choose DeliveryTerms..." tabindex="11">
+                        </select>
+                        @*@Html.DropDownListFor(model => model.SupplierID, new SelectList(@ViewBag.Supplier, "SupplierID", "SupplierName"), "Select", new { @class = "form-select", @required = "true" })*@
+                        @Html.ValidationMessageFor(model => model.po.DeliveryTerms)
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="mb-2">
+                        <label class="col-form-label required">Inco Terms</label>
+                        <select id="IncoTermID" name="IncoTermID" class="select2 form-control" required="required"
+                                data-placeholder="Choose IncoTerms..." tabindex="12">
+                        </select>
+                        @*@Html.ValidationMessageFor(model => model.IncoTerms)*@
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+
+    </div>
+    <div class="card" id="custom-form-style">
+        <div class="card-body">
+            <div class="row">
+
+                <div class="col-md-4">
+                    <h4 class="card-title">Other Charges</h4>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="mb-2">
+                                <label class="col-form-label">Freight</label>
+                                <input type="text" id="QtxtFreightCharges" value="@Model.po.FreightCharges" class="form-control textrightamount" placeholder="Enter FreightCharges" tabindex="13" onchange="calculatePoValue()" />
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="mb-2">
+                                <label class="col-form-label">Origin</label>
+                                <input type="text" id="QtxtOriginCharges" value="@Model.po.OriginCharges" class="form-control textrightamount" placeholder="Enter OriginCharges" onchange="calculatePoValue()" tabindex="14" />
+                                <input type="hidden" id="QtxtFinanceChargePercent" readonly value="@(Model.po.FinancePercent != null ? Model.po.FinancePercent.Value.ToString("0.####") : "")" class="form-control textrightamount" placeholder="Enter Finance %" onchange="calculatePoValue()" />
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="mb-2">
+                                <label class="col-form-label">Finance Charges</label>
+                                <input type="text" id="QtxtFinanceCharges" value="@(Model.po.FinanceCharges != null ? Model.po.FinanceCharges.Value.ToString("0.####") : "")" class="form-control textrightamount" placeholder="Enter Finance Charges" onchange="calculatePoValue()" />
+                                <input type="hidden" id="QtxtVATPercent" value="@(Model.po.VATPercent != null ? Model.po.VATPercent.Value.ToString("0.####") : "")" class="form-control textrightamount" placeholder="Enter VAT %" tabindex="15" onchange="calculatePoValue()" />
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="mb-2">
+                                <div class="flexTitle">
+                                    <label class="col-form-label">Vat Amt.</label>
+                                    <div class="checkboxdesign no-padding  text-right" style="float:right">
+                                        @Html.CheckBox("ChkVATPercent", new { @name = "Approver", @tabindex = "16" }) &nbsp;&nbsp;
+                                        <label class="col-form-label" style="color:#07a7e3!important;padding-left: 0!important">5%</label>
+                                    </div>
+                                </div>
+                                <input type="text" id="QtxtVATAmount" readonly value="@(Model.po.VATAmount != null ? Model.po.VATAmount.Value.ToString("0.####") : "")" class="form-control textrightamount" placeholder="Enter VAT Amount" tabindex="16" />
+                            </div>
+                        </div>
+                        <div class="col-md-8">
+                            <div class="mb-2">
+                                <label class="col-form-label">Remarks</label>
+
+                                @Html.TextBoxFor(model => model.po.Remarks, new { @class = "form-control", @tabindex = "18" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <h4 class="card-title">Warranty Terms</h4>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="mb-2">
+                                <label class="col-form-label">Unit Warranty</label>
+                                <select id="UnitWarrantyID" style="width:100%" name="UnitWarrantyID" class="select2  form-select project-select"
+                                        data-placeholder="Choose Unit Warranty..." tabindex="18" required="required">
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="mb-2">
+                                <label class="col-form-label">Compressor Warranty</label>
+                                <select id="CompressorWarrantyID" style="width:100%" name="CompressorWarranty" class="select2 form-select project-select"
+                                        data-placeholder="Choose CompressorWarranty..." tabindex="19" required="required">
+                                </select>
+                            </div>
+                        </div>
+
+
+
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <ul class="nav nav-tabs nav-tabs-custom nav-justified" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <a class="nav-link active" data-bs-toggle="tab" href="#home1" role="tab" aria-selected="true">
+                                <span class="d-block d-sm-none"><i class="fas fa-home"></i></span>
+                                <span class="d-none d-sm-block">Revision Comments</span>
+                            </a>
+                        </li>
+
+                        <li class="nav-item" role="presentation">
+                            <a class="nav-link" data-bs-toggle="tab" href="#otherorder" role="tab" aria-selected="false" tabindex="-1">
+                                <span class="d-block d-sm-none"><i class="far fa-envelope"></i></span>
+                                <span class="d-none d-sm-block">Other Order Details</span>
+                            </a>
+                        </li>
+                    </ul>
+                    <div class="tab-content  text-muted">
+                        <div class="tab-pane active" id="home1" role="tabpanel">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="mb-2">
+                                        <label class="col-form-label">Refrigerant</label>
+
+                                        @Html.HiddenFor(model => model.po.Refrigerant, new { @class = "form-control", @id = "RefrigerantID" })
+                                        <select id="drpRefrigerantID" name="Regrigerant" style="width:100%" class="select2 form-control-sm project-select" multiple
+                                                data-placeholder="Choose Regrigerant..." tabindex="20" required="required">
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-9">
+                                    <div class="mb-2">
+                                        <label class="col-form-label">Remarks</label>
+                                        <input type="text" value="@Model.po.RevisionRemarks" class="form-control" tabindex="21" placeholder="Enter Remarks" />
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="mb-2">
+                                        <label class="col-form-label">Previous Value</label>
+                                        <input type="text" value="@Model.po.PreviousValue" readonly class="form-control" tabindex="-1" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane" id="otherorder" role="tabpanel">
+                            <div class="row">
+
+
+                                <div class="col-md-4">
+                                    <label class="col-form-label required">Order Date</label>
+                                    <div class="docs-datepicker">
+                                        <div class="input-group input-group-sm">
+                                            <input type="text"
+                                                   class="form-control docs-date"
+                                                   name="QtxtOrderDate" id="QtxtOrderDate"
+                                                   placeholder="Pick an Issue Date" tabindex="22"
+                                                   autocomplete="off" />
+
+                                            <!-- Wrap calendar icon in a div for alignment -->
+                                            <div class="input-group-text docs-datepicker-trigger" style="cursor: pointer;">
+                                                <i class="mdi mdi-calendar" aria-hidden="true" title="Open calendar"></i>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    @*<input type="date" id="QtxtOrderDate" class="form-control" />*@
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="col-form-label required">Drawing App. Date</label>
+                                    <div class="docs-datepicker">
+                                        <div class="input-group input-group-sm">
+                                            <input type="text"
+                                                   class="form-control docs-date"
+                                                   name="QtxtDrawingApprovalDate" id="QtxtDrawingApprovalDate"
+                                                   placeholder="Drawing Approval Date" tabindex="23"
+                                                   autocomplete="off" />
+
+                                            <!-- Wrap calendar icon in a div for alignment -->
+                                            <div class="input-group-text docs-datepicker-trigger" style="cursor: pointer;">
+                                                <i class="mdi mdi-calendar" aria-hidden="true" title="Open calendar"></i>
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="col-form-label required">Ex. Factory Date</label>
+                                    <div class="docs-datepicker">
+                                        <div class="input-group input-group-sm">
+                                            <input type="text"
+                                                   class="form-control docs-date"
+                                                   name="QtxtExFactoryDate" id="QtxtExFactoryDate" tabindex="24"
+                                                   placeholder="Pick an Issue Date"
+                                                   autocomplete="off" />
+
+                                            <!-- Wrap calendar icon in a div for alignment -->
+                                            <div class="input-group-text docs-datepicker-trigger" style="cursor: pointer;">
+                                                <i class="mdi mdi-calendar" aria-hidden="true" title="Open calendar"></i>
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="col-form-label required">ETD</label>
+                                    <div class="docs-datepicker">
+                                        <div class="input-group input-group-sm">
+                                            <input type="text"
+                                                   class="form-control docs-date"
+                                                   name="QtxtETD" id="QtxtETD"
+                                                   placeholder="Pick an Issue Date" tabindex="25"
+                                                   autocomplete="off" />
+
+                                            <!-- Wrap calendar icon in a div for alignment -->
+                                            <div class="input-group-text docs-datepicker-trigger" style="cursor: pointer;">
+                                                <i class="mdi mdi-calendar" aria-hidden="true" title="Open calendar"></i>
+                                            </div>
+                                        </div>
+
+
+                                    </div>
+
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="col-form-label required">ETA</label>
+                                    <div class="docs-datepicker">
+                                        <div class="input-group input-group-sm">
+                                            <input type="text"
+                                                   class="form-control docs-date"
+                                                   name="QtxtETA" id="QtxtETA"
+                                                   placeholder="Pick an Issue Date" tabindex="26"
+                                                   autocomplete="off" />
+
+                                            <!-- Wrap calendar icon in a div for alignment -->
+                                            <div class="input-group-text docs-datepicker-trigger" style="cursor: pointer;">
+                                                <i class="mdi mdi-calendar" aria-hidden="true" title="Open calendar"></i>
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="col-form-label">Remarks</label>
+                                    <input type="text" id="DetailsRemarks" class="form-control" placeholder="Enter Remarks" tabindex="27" />
+                                </div>
+
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title">Equipments</h4>
+
+                    <div class="row">
+                        <div class="col-md-12">
+
+                            <div class="row" id="divestimationqutation">
+                                <div class="col-md-12">
+                                    <label class="col-form-label required">Select Project No.</label>
+                                    <div class="input-group gap-3">
+                                        <select id="ProjectNo" name="ProjectNo" style="width:70%" class="select2 form-select-sm project-select"
+                                                data-placeholder="Choose Project..." tabindex="28">
+                                        </select>
+                                        <button type="button" class="btn btn-primary waves-effect waves-light filter" id="btnaddestimation" title="Insert into Grid">
+                                            <i class="dripicons-enter mt-1" style="font-size: 18px;"></i>
+                                        </button>
+                                        <button type="button" class="btn btn-pink waves-effect waves-light filter" id="btnviewestimation" title="Goto Estimation">
+                                            <i class="mdi mdi-eye mt-1" style="font-size: 18px;"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row d-xl-none" id="divdirectquotation">
+                                <input type="hidden" id="QtxtSLNO" value="" />
+                                <div class="col-md-4">
+                                    <label class="col-form-label required">Equipment</label>
+                                    <select id="eEquipmentType" class="form-select equipment-select" style="width:100%"></select>
+                                    @*<input type="text" id="EquipmentName" class="form-control form-control-sm" placeholder="Type Equipment..." tabindex="10" />
+                                        <input type="hidden" id="EquipmentID" name="EquipmentID" />*@
+                                </div>
+
+                                <div class="col-md-2">
+                                    <label class="col-form-label">Model</label>
+                                    <input type="text" id="QtxtModel" class="form-control" placeholder="Enter Model" required tabindex="12" />
+                                    <span id="modelError" class="text-danger small"></span>
+
+                                </div>
+                                <div class="col-md-1">
+                                    <label class="col-form-label">Unit Type</label>
+                                    @Html.DropDownList("QUnitID", new SelectList(ViewBag.Unit, "ItemUnitID", "ItemUnit1"), "Select", new { @class = "form-select", @id = "QUnitID" })
+                                </div>
+                                <div class="col-md-1">
+                                    <label class="col-form-label" id="lblQty">Qty</label>
+                                    <input type="text" id="QtxtQty" value="1" class="form-control textright" placeholder="Enter Qty" required tabindex="13" />
+                                    <span id="qtyError" class="text-danger small"></span>
+
+                                </div>
+                                <div class="col-md-1">
+                                    <label class="col-form-label">Rate</label>
+                                    <input type="text" id="QtxtRate" value="" class="form-control textrightamount" placeholder="Enter Rate" required tabindex="14" />
+                                    <span id="rateError" class="text-danger small"></span>
+
+                                </div>
+                                @*<div class="col-md-2">
+                                        <label class="col-form-label">Unit Price</label>
+                                        <input type="text" id="QtxtUnitPrice" value="" class="form-control textrightamount" placeholder="Enter Unit Price" />
+                                    </div>*@
+                                <div class="col-md-2">
+                                    <label class="col-form-label">Value</label>
+                                    <input type="hidden" id="QtxtExRate" value="" readonly class="textrightamount form-control" placeholder="Value" />
+                                    <input type="text" id="QtxtValue" value="" readonly class="textrightamount form-control" placeholder="Value" tabindex="15" />
+                                    <input type="hidden" id="QtxtFValue" value="" readonly class="textrightamount form-control form-control-sm" placeholder="Value" />
+                                    <input type="hidden" id="QtxtLValue" value="" readonly class="textright form-control form-control-sm" placeholder="Value" />
+                                </div>
+
+                                <div class="col-md-2">
+
+                                    <button type="button" class="btn btn-success waves-effect waves-light filter" style="margin-top:37px;" id="btnaddclient" title="Insert into Grid" tabindex="19" onclick="AddDetail(this)">
+                                        <i class="dripicons-enter" style="font-size: 18px;"></i>
+                                    </button>
+                                    <button type="button" class="btn btn-danger waves-effect waves-light" style="margin-top:37px;" id="btnClearForm" title="Clear Form" tabindex="20">
+                                        <i class="mdi mdi-refresh"></i>
+                                    </button>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <br />
+                    <div class="row">
+                        <div class="col-md-12" id="PurchaseOrderContainer">
+                            @{Html.RenderPartial("DetailList", Model);}
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title">Notes</h4>
+                    <table class="table table-bordered" id="notesTable">
+                        <thead>
+                            <tr>
+                                <th>Note</th>
+                                <th style="width: 50px;"></th>
+                            </tr>
+                        </thead>
+                        <tbody id="notesBody">
+                            <tr>
+                                <td>
+                                    <input type="text" name="Notes[0].NoteText" class="form-control" />
+                                </td>
+                                <td>
+                                    <button type="button" class="btn btn-danger remove-note">X</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <button type="button" id="addNote" class="btn btn-primary">+ Add Note</button>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title">Approval Log</h4>
+                    @{Html.RenderPartial("ApprovalDetailList", Model);}
+              
+                    <button type="button" id="btnaddApproval" class="btn btn-primary">+ Add Reviewer</button>
+                </div>
+            </div> 
+        </div>
+    </div>
+
+    <input type="hidden" value="" id="hdnHidden" />
+}
+
+<div class="modal fade bs-example-modal-xl" id="estimationdetailpopup" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="divEstimationNo">
+                    Project Equipments
+                </h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body">
+                <div class="container-fluid" id="estimationdetailContainer">
+
+                </div>
+            </div>
+            <div class="modal-footer" style="padding-top: 5px">
+                <span class="error text-left" id="spanequiperror"></span>
+                <button type="button" class="btn btn-primary" id="btnAddEstimationDetail" onclick="SaveEstimationDetailEntry()">Add Items</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade " id="approvalpopup" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">
+                    Project Approval
+                </h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body">
+                <div class="container-fluid" id="estimationapprovalontainer">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="mb-2">
+                                <label class="col-form-label">Employee Name</label>
+                                @Html.DropDownListFor(mode => mode.EmployeeID, new SelectList(ViewBag.EmployeeMaster, "EmployeeID", "EmployeeName"), "Select Engineer", new { @class = "form-select", @id = "drpApproveEmployeeID", @required = "required", @tabindex = "2" })
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="mb-2">
+                                <label class="col-form-label">Approval Type</label>
+                                <select id="drpApproveType" name="Status"  class="form-select">
+                                    <option value="Reviewed By">Reviewed By</option>
+                                    <option value="Approved By">Approved By</option>
+                                    <option value="Authorized By">Authorized By</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="mb-2">
+                                <label class="col-form-label">Approver Password</label>
+                                <input type="password" id="txtValidate" autocomplete="off" class="form-control" /> 
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" style="padding-top: 5px">
+                <span class="error text-left" id="spanequiperror"></span>
+                <button type="button" class="btn btn-primary" id="btnsaveApprover" onclick="SaveApproverEntry()">Update Approver</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="modal fade bs-example-modal-xl" id="commentspopup" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="divEstimationNo">
+                    PO Comments
+                </h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body">
+                <div class="container-fluid" id="commentsContainer">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <input type="hidden" id="QtxtDate" value="" class="form-control" placeholder="Enter Date" readonly tabindex="32" />
+                            <label class="col-form-label">Comments</label>
+                            <input type="text" id="QtxtComments" class="form-control" placeholder="Enter Comments" tabindex="33" />
+                        </div>
+
+                        <div class="col-md-2">
+                            <button type="button" class="btn btn-success waves-effect waves-light filter" style="margin-top:37px;" id="btnaddComments" title="Insert into Grid" tabindex="34">
+                                <i class="dripicons-enter" style="font-size: 18px;"></i>
+                            </button>
+                        </div>
+
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12" id="PurchaseOrderContainer">
+                            <table class="table table-datatable dataTable tblfont table-bordered table-striped mb-0" id="PurchaseOrderUserCommentsTables" style="width: 100% !important;">
+
+                                <thead class="table-light" style="text-align:center">
+                                    <tr>
+                                        <th width="85%">Comments</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody style="text-align:center">
+                                </tbody>
+                            </table>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" style="padding-top: 5px">
+                <span class="error text-left" id="spanequiperror"></span>
+                <button type="button" class="btn btn-primary" id="btnAddEstimationDetail" onclick="SaveEstimationDetailEntry()">Add Items</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts{
+    <script src="~/assets/libs/select2/js/select2.min.js"></script>
+    <script src="~/Scripts/JS/PurchaseOrder.js"></script>
+
+    <script type="text/javascript">
+
+            var commentsList = @Html.Raw(Json.Encode(Model.comment ?? new List<HVAC.Models.PurchaseOrderUserComment>()));
+            var orderDetailsList = @Html.Raw(Json.Encode(Model.orderdetails ?? new List<HVAC.Models.PurchaseOrderOtherDetail>()));
+
+            var masterDropDownList = @Html.Raw(Json.Encode(Model.masterDropdowns ?? new HVAC.Models.PurchaseOrderTextVM()));
+            var poModel = @Html.Raw(JsonConvert.SerializeObject(Model.po));
+
+
+            console.log(masterDropDownList);
+
+
+
+
+        $(document).ready(function () {
+            let noteIndex = 1;
+
+            $('#addNote').click(function () {
+                $('#notesBody').append(`
+            <tr>
+                <td><input type="text" class="form-control-sm note-text" /></td>
+                <td><button type="button" class="remove-note"><i class="mdi mdi-delete font-size-18"></i></button></td>
+            </tr>
+        `);
+                noteIndex++;
+            });
+
+            $(document).on('click', '.remove-note', function () {
+                $(this).closest('tr').remove();
+            });
+                var hdnid = $('#po_PurchaseOrderID').val();
+
+                if (hdnid > 0)
+                {
+                    // Debug log for dropdown values
+                    console.log('poModel.Regrigerant:', poModel.Regrigerant);
+                    console.log('masterDropDownList.RegrigerantText:', masterDropDownList.RegrigerantText);
+                    console.log('poModel.CompressorWarranty:', poModel.CompressorWarranty);
+                    console.log('masterDropDownList.CompressorWarrantyText:', masterDropDownList.CompressorWarrantyText);
+                    // Set Payment Terms
+                    let paymentVal = poModel.PaymentTerms || masterDropDownList.PaymentTermsText;
+                    let paymentText = masterDropDownList.PaymentTermsText || poModel.PaymentTerms;
+                    if (paymentVal && paymentText) {
+                        let PaymentTerm = new Option(paymentText, paymentVal, true, true);
+                    $('#PaymentTermID').append(PaymentTerm).trigger('change');
+                    }
+                    // Set Delivery Terms
+                    let deliveryVal = poModel.DeliveryTerms || masterDropDownList.DeliveryTermsText;
+                    let deliveryText = masterDropDownList.DeliveryTermsText || poModel.DeliveryTerms;
+                    if (deliveryVal && deliveryText) {
+                        let Delivery = new Option(deliveryText, deliveryVal, true, true);
+                    $('#DeliveryTermID').append(Delivery).trigger('change');
+                    }
+                    // Set Regrigerant
+                    let regVal = poModel.Regrigerant;
+                    let regText = poModel.RegrigerantText;
+                    if (!regText && regVal) {
+                        // Try to find text from equipmentList or fallback
+                        if (Array.isArray(window.refrigerantMaster) && regVal) {
+                            let found = window.refrigerantMaster.find(x => x.ID == regVal);
+                            regText = found ? found.Regrigerant : regVal;
+                        } else {
+                            regText = regVal;
+                        }
+                    }
+                    if (regVal && regText) {
+                        let Regrigerant = new Option(regText, regVal, true, true);
+                        $('#RegrigerantID').append(Regrigerant).trigger('change');
+                    }
+                    // Set Compressor Warranty
+                    let cwVal = poModel.CompressorWarranty;
+                    let cwText = poModel.CompressorWarrantyText;
+                    if (!cwText && cwVal) {
+                        if (Array.isArray(window.compressorWarrantyMaster) && cwVal) {
+                            let found = window.compressorWarrantyMaster.find(x => x.ID == cwVal);
+                            cwText = found ? found.CompressorWarranty : cwVal;
+                        } else {
+                            cwText = cwVal;
+                        }
+                    }
+                    if (cwVal && cwText) {
+                        let CompressorWarranty = new Option(cwText, cwVal, true, true);
+                        $('#CompressorWarrantyID').append(CompressorWarranty).trigger('change');
+                    }
+
+                    let INCO = new Option(masterDropDownList.INCOTermsText, poModel.INCOTerms, true, true);
+                    $('#IncoTermID').append(INCO).trigger('change');
+
+                    //let Bank = new Option(masterDropDownList.BankText, poModel.Bank, true, true);
+                    //$('#po_Bank').append(Bank).trigger('change');
+
+                    let Supp = new Option(masterDropDownList.SupplierText, poModel.SupplierID, true, true);
+                    $('#SupplierID').append(Supp).trigger('change');
+
+
+
+                }
+
+               // var dataArray = equipmentList || [];
+                //var chargesArray = otherChargesList || [];
+                var commentsArray = commentsList || [];
+                var detailsArray = orderDetailsList || [];
+                let slnoCounter = 1;
+
+              //  renderTable();
+                renderCommentsTable();
+                //renderOrderDetailsTable();
+                renderOtherOrderDetails();
+                renderOtherCharges();
+            calculatePoValue();
+                $('#QtxtDate').val(getdatetime());
+                // Add Detail button click handler
+            $('#btnaddclient').click(function () {
+                let isValid = true;
+
+                let model = $('#QtxtModel').val().trim();
+                let qty = $('#QtxtQty').val().trim();
+                let rate = $('#QtxtRate').val().trim();
+
+                // Clear previous errors
+                $('#modelError').text('');
+                $('#qtyError').text('');
+                $('#rateError').text('');
+
+                if (!model) {
+                    $('#modelError').text('Model is required.');
+                    isValid = false;
+                }
+
+                if (!qty) {
+                    $('#qtyError').text('Qty is required.');
+                    isValid = false;
+                }
+
+                if (!rate) {
+                    $('#rateError').text('Rate is required.');
+                    isValid = false;
+                }
+
+                if (!isValid) {
+                    return;
+                }
+
+
+                    $('#QtxtSLNO').val(slnoCounter);  // Set hidden SLNO
+                    slnoCounter++;
+
+                    //var editIndex = $("#hdnHidden").val()
+                    //if (editIndex != '') {
+                    //    dataArray[editIndex].SLno = $('#QtxtSLNO').val();
+                    //    dataArray[editIndex].Equipment = $('#EquipmentName').val();
+                    //    dataArray[editIndex].Model = $('#QtxtModel').val();
+                    //    dataArray[editIndex].Qty = parseInt($('#QtxtQty').val());
+                    //    //dataArray[editIndex].UnitPrice = $('#QtxtUnitPrice').val();
+                    //    dataArray[editIndex].Value = $('#QtxtValue').val();
+                    //    dataArray[editIndex].JobNumber = $('#ProjectNo').val();
+                    //    dataArray[editIndex].JobNumberText = $('#ProjectNo').select2('data')[0]?.text;
+                    //    dataArray[editIndex].Remarks = $('#QtxtRemarks').val();
+                    //}
+                    //else {
+                    //    var data = {
+                    //        SLno: $('#QtxtSLNO').val(),
+                    //        Equipment: $('#EquipmentName').val(),
+                    //        Model: $('#QtxtModel').val(),
+                    //        Qty: parseInt($('#QtxtQty').val()),
+                    //        //UnitPrice: $('#QtxtUnitPrice').val(),
+                    //        Value: $('#QtxtValue').val(),
+                    //        JobNumber: $('#ProjectNo').val(),
+                    //        JobNumberText: $('#ProjectNo').select2('data')[0]?.text,
+                    //        Remarks: $('#QtxtRemarks').val()
+                    //    };
+                    //    dataArray.push(data);
+                    //}
+
+                    //renderTable();
+                   // clearFormEquipment();
+            });
+
+            $('#btnClearForm').click(function () {
+                $('#QtxtSLNO').val('');
+                $('#EquipmentName').val('');
+                $('#QtxtModel').val('');
+                $('#QtxtQty').val('1');
+                $('#QtxtRate').val('');
+                $('#QtxtValue').val('');
+                $('#QtxtFValue').val('');
+                $('#QtxtLValue').val('');
+                $('#QtxtExRate').val('');
+                $('#ProjectNo').val('').trigger('change');
+                $('#QtxtRemarks').val('');
+                $('#EquipmentID').val('');
+                $("#hdnHidden").val('');
+            });
+
+
+            //$('#txtVATPercent').on('input', calculatePoValue);
+            $('#ChkVATPercent').on('change', function () {
+                calculatePoValue();
+            })
+
+            //$('#QtxtOrderDate').datepicker({
+            //    dateFormat: 'dd-mm-yy',
+            //    changeMonth: true,
+            //    changeYear: true
+            //}).on('changeDate', function (e) {
+            //    $(this).datepicker('hide');
+            //});
+            $('#QtxtDrawingApprovalDate').datepicker({
+                dateFormat: 'dd-mm-yy',
+                changeMonth: true,
+                changeYear: true
+            }).on('changeDate', function (e) {
+                $(this).datepicker('hide');
+            });
+            $('#QtxtExFactoryDate').datepicker({
+                dateFormat: 'dd-mm-yy',
+                changeMonth: true,
+                changeYear: true
+            }).on('changeDate', function (e) {
+                $(this).datepicker('hide');
+            });
+            $('#QtxtETA').datepicker({
+                dateFormat: 'dd-mm-yy',
+                changeMonth: true,
+                changeYear: true
+            }).on('changeDate', function (e) {
+                $(this).datepicker('hide');
+            });
+            $('#QtxtETD').datepicker({
+                dateFormat: 'dd-mm-yy',
+                changeMonth: true,
+                changeYear: true
+            }).on('changeDate', function (e) {
+                $(this).datepicker('hide');
+            });
+
+            // Checkbox change handler
+            function ckbVatChange() {
+                const isChecked = $('#ckbVat').is(':checked');
+
+                // Enable or disable the VAT percent textbox based on checkbox state
+                $('#txtVATPercent').prop('disabled', !isChecked);
+
+                if (!isChecked) {
+                    $('#txtVATAmount').val('');
+                    $("#txtVATPercent").val('0');
+                    $('#spanVATAmount').html('');
+                }
+
+                // Optional: Recalculate PO value
+                calculatePoValue();
+            }
+
+
+
+
+                //$('#btnaddDetails').click(function () {
+                //    var editDetailsIndex = $("#hdnHidden").val()
+                //    if (editDetailsIndex != '') {
+                //        detailsArray[editDetailsIndex].OrderDate = $("#QtxtOrderDate").val(),
+                //        detailsArray[editDetailsIndex].DrawingApprovalDate = $("#QtxtDrawingApprovalDate").val(),
+                //        detailsArray[editDetailsIndex].ExFactoryDate =  $("#QtxtExFactoryDate").val(),
+                //        detailsArray[editDetailsIndex].ETD = $("#QtxtETD").val(),
+                //        detailsArray[editDetailsIndex].ETA = $("#QtxtETA").val(),
+                //            detailsArray[editDetailsIndex].Remarks = $("#DetailsRemarks").val()
+
+                //    }
+                //    else {
+                //        var data = {
+                //            OrderDate: $("#QtxtOrderDate").val(),
+                //            DrawingApprovalDate: $("#QtxtDrawingApprovalDate").val(),
+                //            ExFactoryDate: $("#QtxtExFactoryDate").val(),
+                //            ETD: $("#QtxtETD").val(),
+                //            ETA: $("#QtxtETA").val(),
+                //            Remarks: $("#DetailsRemarks").val()
+                //        };
+                //        detailsArray.push(data);
+                //    }
+
+                //    renderOrderDetailsTable();
+                //});
+
+                function parseMSDate(msDate) {
+                    if (!msDate) return "";
+
+                    if (typeof msDate === "string") {
+                        // Match /Date(1234567890)/ pattern
+                        var match = /\/Date\((\d+)(?:[+-]\d+)?\)\//.exec(msDate);
+                        if (match) {
+                            const timestamp = parseInt(match[1], 10);
+                            if (!isNaN(timestamp)) {
+                                const date = new Date(timestamp);
+                                return date.toISOString().split("T")[0]; // yyyy-MM-dd
+                            }
+                        }
+                        // If it's already in yyyy-MM-dd format, return as-is
+                        if (/^\d{4}-\d{2}-\d{2}$/.test(msDate)) {
+                            return msDate;
+                        }
+                    }
+
+                    // If it's a Date object
+                    if (msDate instanceof Date) {
+                        return msDate.toISOString().split("T")[0];
+                    }
+
+                    return "";
+                }
+
+
+
+                //function renderOrderDetailsTable() {
+                //    const tableDetailsBody = $('#PurchaseOrderOtherDetilsTables tbody');
+                //    tableDetailsBody.empty(); // Clear previous rows
+
+                //    detailsArray.forEach((item, index) => {
+                //        const row = $(`
+                //                <tr>
+                //                    <td>${parseMSDate(item.OrderDate)}</td>
+                //                    <td>${parseMSDate(item.DrawingApprovalDate)}</td>
+                //                    <td>${parseMSDate(item.ExFactoryDate)}</td>
+                //                    <td>${parseMSDate(item.ETD)}</td>
+                //                    <td>${parseMSDate(item.ETA)}</td>
+                //                    <td>${item.Remarks || ''}</td>
+                //                    <td>
+                //                        <a onclick="EditDetailsEntry(${index})" href="javascript:void(0);" title="Edit Item" class="edit-btn text-success">
+                //                            <i class="mdi mdi-pencil font-size-18"></i>
+                //                        </a>
+                //                        <a onclick="DeleteDetailsEntry(${index})" href="javascript:void(0);" title="Delete Item" class="text-danger">
+                //                            <i class="mdi mdi-delete font-size-18"></i>
+                //                        </a>
+                //                    </td>
+                //                </tr>
+                //            `);
+                //        tableDetailsBody.append(row);
+                //    });
+                //}
+                window.EditDetailsEntry = function (index) {
+                    $('#hdnHidden').val(index);
+                    var item = detailsArray[index];
+                    $('#QtxtOrderDate').val(parseMSDate(item.OrderDate));
+                    $('#QtxtDrawingApprovalDate').val(parseMSDate(item.DrawingApprovalDate));
+                    $('#QtxtExFactoryDate').val(parseMSDate(item.ExFactoryDate));
+                    $('#QtxtETD').val(parseMSDate(item.ETD));
+                    $('#QtxtETA').val(parseMSDate(item.ETA));
+                    $('#DetailsRemarks').val(item.Remarks);
+                };
+
+
+                window.DeleteDetailsEntry = function (index) {
+                    if (confirm("Are you sure you want to delete this item?")) {
+                        detailsArray.splice(index, 1); // Remove item from array
+                        //renderOrderDetailsTable();
+                    }
+                }
+
+                function renderOtherCharges() {
+                    // Add your logic here to show prefilled other charge values in input fields
+                    if (chargesArray.length > 0) {
+                        $('#QtxtFreightCharges').val(chargesArray[0].FreightCharges);
+                        $('#QtxtOriginCharges').val(chargesArray[0].OriginCharges);
+                        $('#QtxtFinanceCharges').val(chargesArray[0].FinanceCharges);
+                    }
+            }
+
+            function renderOtherOrderDetails() {
+                // Add your logic here to show prefilled other charge values in input fields
+                if (detailsArray.length > 0) {
+                    $('#QtxtOrderDate').val(parseMSDate(detailsArray[0].OrderDate));
+                    $('#QtxtDrawingApprovalDate').val(parseMSDate(detailsArray[0].DrawingApprovalDate));
+                    $('#QtxtExFactoryDate').val(parseMSDate(detailsArray[0].ExFactoryDate));
+                    $('#QtxtETD').val(parseMSDate(detailsArray[0].ETD));
+                    $('#QtxtETA').val(parseMSDate(detailsArray[0].ETA));
+                    $('#DetailsRemarks').val(parseMSDate(detailsArray[0].Remarks));
+                }
+
+            }
+
+
+                $('#btnaddComments').click(function () {
+                    var editCommentsIndex = $("#hdnHidden").val()
+                    if (editCommentsIndex != '') {
+                        commentsArray[editCommentsIndex].EntryDate = $("#QtxtDate").val();
+                        commentsArray[editCommentsIndex].Comments = $("#QtxtComments").val();
+
+                    }
+                    else {
+                        var data = {
+                            EntryDate: $("#QtxtDate").val(),
+                            Comments: $("#QtxtComments").val()
+                        };
+                        commentsArray.push(data);
+                    }
+
+                    renderCommentsTable();
+                    if (hdnid > 0) {
+                        savePurchaseOrder();
+                    }
+                });
+
+                function renderCommentsTable() {
+                    const tableCommentsBody = $('#PurchaseOrderUserCommentsTables tbody');
+                    tableCommentsBody.empty(); // Clear previous rows
+
+                    commentsArray.forEach((item, index) => {
+                        console.log(item.EntryDate)
+                        const entryDate = item.EntryDate ? parseMSDate(item.EntryDate) : '';
+                        const comments = item.Comments || '';
+
+                        const rowHtml = `
+                                  <tr>
+                                    <td>${entryDate}</td>
+                                    <td>${comments}</td>
+                                    <td>
+                                      <a onclick="EditCommentEntry(${index})" href="javascript:void(0);" title="Edit Comment" class="text-success">
+                                        <i class="mdi mdi-pencil font-size-18"></i>
+                                      </a>
+                                      <a onclick="DeleteCommentEntry(${index})" href="javascript:void(0);" title="Delete Comment" class="text-danger">
+                                        <i class="mdi mdi-delete font-size-18"></i>
+                                      </a>
+                                    </td>
+                                  </tr>
+                                `;
+
+                        tableCommentsBody.append(rowHtml);
+                    });
+                }
+
+                window.EditCommentEntry = function (index) {
+                    $('#hdnHidden').val(index);
+                    const item = commentsArray[index];
+                    const parsedDate = parseMSDate(item.EntryDate);
+                    $('#QtxtDate').val(parsedDate);
+                    $('#QtxtComments').val(item.Comments || '');
+                }
+
+
+                window.DeleteCommentEntry = function (index) {
+                    if (confirm("Are you sure you want to delete this item?")) {
+                        commentsArray.splice(index, 1); // Remove item from array
+                        renderCommentsTable();
+                    }
+                }
+
+                function calculateValue() {
+                    let rate = parseFloat($('#QtxtRate').val()) || 0;
+                    let qty = parseFloat($('#QtxtQty').val()) || 0;
+                    //let unitPrice = parseFloat($('#QtxtUnitPrice').val()) || 0;
+                    let value = rate * qty;
+
+                    $('#QtxtValue').val(value.toFixed(2));
+                    $('#QtxtFValue').val(value.toFixed(2)); // If needed for internal logic
+                    $('#QtxtLValue').val(value.toFixed(2));
+                }
+                function getdatetime() {
+                    var now = new Date();
+                    var year = now.getFullYear();
+                    var month = String(now.getMonth() + 1).padStart(2, '0');
+                    var day = String(now.getDate()).padStart(2, '0');
+                    var hours = String(now.getHours()).padStart(2, '0');
+                    var minutes = String(now.getMinutes()).padStart(2, '0');
+                    var seconds = String(now.getSeconds()).padStart(2, '0');
+                    return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+                }
+
+                 $('#QtxtRate, #QtxtQty').on('input', calculateValue);
+
+
+
+
+                function clearall() {
+                    $("#PurchaseOrderNo").val('');
+                    $("#PurchaseOrderDate").val('');
+                    $("#SupplierID").val('');
+                    $("#SalesOrder").val('');
+                    $("#PaymentTermID").val('').trigger('change');
+                    $("#DeliveryTermID").val('').trigger('change');
+                    $("#IncoTermID").val('').trigger('change');
+                    $("#BankID").val('').trigger('change');
+                    $("#txtPurchaseGrossAmount").val('');
+                    $("#ckbVat").val('false');
+                    $("#txtTotalAmount").val('');
+                    $("#txtVATPercent").val('0');
+                    $("#txtVATAmount").val('');
+                    $("#Remarks").val('');
+                    clearFormEquipment();
+                    clearFormOtherCharges();
+                    clearFormUserComments();
+                    clearFormOrderDetails()
+                    //dataArray = [];
+                    //renderTable();
+                    renderCommentsTable();
+                    //renderOrderDetailsTable();
+                }
+
+                function clearFormEquipment() {
+                    $('#QtxtSLNO').val('');
+                    $('#EquipmentName').val('').trigger('change');
+                    $('#QtxtModel').val('');
+                    $('#QtxtQty').val('1');
+                    $('#QtxtRate').val('');
+                    //$('#QtxtUnitPrice').val('');
+                    $('#QtxtValue').val('');
+                    $('#ProjectNo').val('').trigger('change');
+                    $('#QtxtRemarks').val('');
+
+
+                    $("#hdnHidden").val('');
+                }
+
+                function clearFormUserComments() {
+                    $("#QtxtDate").val('');
+                    $("#QtxtComments").val('');
+                }
+
+                function clearFormOtherCharges() {
+                    $("#QtxtFreightCharges").val('');
+                    $("#QtxtOriginCharges").val('');
+                    $("#QtxtFinanceCharges").val('');
+                }
+                function clearFormOrderDetails() {
+                    $("#QtxtOrderDate").val('');
+                    $("#QtxtDrawingApprovalDate").val('');
+                    $("#QtxtExFactoryDate").val('');
+                    $("#QtxtETD").val('');
+                    $("#QtxtETA").val('');
+                    $("#DetailsRemarks").val('');
+                }
+                //$('#btnsave').click(function () {
+                //    validatePurchaseOrderForm();
+                //});
+
+                // Inline validation for required fields
+
+
+                // Real-time validation on blur/change
+                //$('#PurchaseOrderDate, #SupplierID, #PaymentTermID, #DeliveryTermID, #IncoTermID, #BankID, #RegrigerantID, #CompressorWarrantyID').on('blur change', function () {
+                //    validatePurchaseOrderForm();
+                //});
+
+
+
+                // Set focus to the date field on page load
+                $('#PurchaseOrderDate').focus();
+
+        });
+
+    setTimeout(function() {
+        var hdnid = $('#po_PurchaseOrderID').val();
+        if (hdnid > 0) {
+            // Payment Terms
+            if (poModel.PaymentTerms && masterDropDownList.PaymentTermsText) {
+                let PaymentTerm = new Option(masterDropDownList.PaymentTermsText, poModel.PaymentTerms, true, true);
+                $('#PaymentTermID').append(PaymentTerm).trigger('change');
+            }
+            // Delivery Terms
+            if (poModel.DeliveryTerms && masterDropDownList.DeliveryTermsText) {
+                let Delivery = new Option(masterDropDownList.DeliveryTermsText, poModel.DeliveryTerms, true, true);
+                $('#DeliveryTermID').append(Delivery).trigger('change');
+            }
+            // Regrigerant
+            if (poModel.Regrigerant && masterDropDownList.RegrigerantText) {
+                let Regrigerant = new Option(masterDropDownList.RegrigerantText, poModel.Regrigerant, true, true);
+                $('#drpRefrigerantID').append(Regrigerant).trigger('change');
+            }
+            // CompressorWarranty
+            if (poModel.CompressorWarranty && masterDropDownList.CompressorWarrantyText) {
+                let CompressorWarranty = new Option(masterDropDownList.CompressorWarrantyText, poModel.CompressorWarranty, true, true);
+                $('#CompressorWarrantyID').append(CompressorWarranty).trigger('change');
+            }
+
+            // CompressorWarranty
+            if (poModel.UnitWarrantyID && masterDropDownList.UnitWarrantyText) {
+                let UnitWarranty = new Option(masterDropDownList.UnitWarrantyText, poModel.UnitWarrantyID, true, true);
+                $('#UnitWarrantyID').append(UnitWarranty).trigger('change');
+            }
+        }
+    }, 500); // 500ms is usually enough; increase if needed
+
+    $('#QtxtFreightCharges').on('input', calculatePoValue);
+    $('#QtxtOriginCharges').on('input', calculatePoValue);
+    $('#QtxtFinanceCharges').on('input', calculatePoValue);
+
+    </script>
+}

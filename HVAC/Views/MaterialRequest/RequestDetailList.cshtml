@@ -1,0 +1,104 @@
+﻿@model HVAC.Models.MaterialRequestVM
+    @{
+        var i = 0;
+        var _decimal = @Session["Decimal"].ToString();
+        Layout = null;
+    }
+
+    @*<style>
+        tfoot {
+            display: table-header-group;
+        }
+        #CargodataTables tbody tr.selected {
+            color: white;
+            background-color: #eeeeee;
+        }
+        .dataTables_filter{
+            display:none;
+        }
+        .Qqty {
+            width: 120px;
+        }
+        .container-fluid {
+            padding-left: 0px !important;
+            padding-right: 0px !important;
+        }
+    </style>*@
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+           
+           // var table1 = $('#AccdataTables').DataTable({ "paging": false, "sPaginationType": "simple" });
+
+            //table1.columns().every(function () {
+            //    var that = this;
+
+            //    $('input', this.footer()).on('keyup change', function () {
+            //        if (that.search() !== this.value) {
+            //            that
+            //                .search(this.value)
+            //                .draw();
+            //        }
+            //    });
+            //});
+        });
+
+     
+    </script>
+    
+        <table  class="table table-bordered mb-0" id="DetailTables">
+
+            <thead class="table-light">
+                <tr>
+                    
+                    <th width="20%">Equipment</th>
+                    <th width="10%">Model</th>
+                    <th width="7%">Qty</th>                                      
+                    <th width="10%">Stock Status</th>                    
+                    <th width="12%">Action</th>
+                </tr>
+            </thead>
+            <tbody class=""  style="text-align:center" >
+
+
+                @foreach (var item1 in Model.Details)
+                {
+                <tr id="quodtr_@i">
+                    <td>
+                        @Html.HiddenFor(modelitem => item1.EquipmentName, new { @id = "QEquipmentName_" + @i, @class = "form-control", @readonly = "readonly" })
+                        
+                        @Html.HiddenFor(modelitem => item1.JobHandOverID, new { @id = "QJobHandOverID_" + @i })
+                        @Html.HiddenFor(modelitem => item1.EquipmentID, new { @id = "QEquipmentID_" + @i })
+                        @Html.HiddenFor(modelitem => item1.MRequestDetailID, new { @id = "QMRequestDetailID_" + @i })
+                        @Html.HiddenFor(modelitem => item1.ProjectNo, new { @id = "QProjectNo_" + @i })
+                        <span class="color_blue">@item1.ProjectNo</span>
+                    </td>
+                    <td>
+                        @Html.HiddenFor(modelitem => item1.Description, new { @id = "QtxtDescription_" + @i })
+                        <span class="color_blue">@item1.Description</span>
+                    </td>
+                    <td>
+                        @Html.HiddenFor(modelitem => item1.Model, new { @id = "QtxtModel_" + @i })
+                        <span class="color_blue">@item1.Model</span>
+                    </td>
+                    <td>
+                        @Html.HiddenFor(modelitem => item1.Quantity, new { @id = "QtxtQty_" + @i })
+                        <span class="color_blue">@item1.Quantity</span>
+                    </td>
+                    <td>
+                        @Html.HiddenFor(modelitem => item1.StockStatus, new { @id = "QUnitTypeStockStatus_" + @i })
+                        <span class="color_blue">@item1.StockStatus</span>
+                    </td>                    
+                    <td>
+                        <a onclick="EditDetailEntry('@i')" href="javascript:void(0);" title="Edit Entry" class="text-primary"><i class="mdi mdi-pencil font-size-18"></i></a>
+                        <a onclick="DeleteDetailEntry('@i')" href="javascript:void(0);" title="Delete Entry" class="text-danger"><i class="mdi mdi-delete font-size-18"></i></a>
+                    </td>
+                </tr>
+                    i++;
+                }
+            </tbody>
+
+        </table>
+
+  
+

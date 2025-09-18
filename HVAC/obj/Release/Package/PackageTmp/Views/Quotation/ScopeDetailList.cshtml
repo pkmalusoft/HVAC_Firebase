@@ -1,0 +1,166 @@
+﻿@model HVAC.Models.QuotationVM
+@{
+    var i = 0;
+    var _decimal = @Session["Decimal"].ToString();
+    Layout = null;
+}
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#DetailTable1').DataTable({
+            paging: false,           // disable pagination
+            searching: true,         // enable the search box
+            info: false,             // hide "Showing X of Y entries"
+            sPaginationType: "simple"
+        });
+
+    });
+
+
+</script>
+
+<div class="table-responsive">
+    <table class="table table-condensed-custom table-striped" id="DetailTable1" style="width: 100% !important;">
+
+        <thead class="table-secondary" style="text-align:center">
+            <tr>
+                <th width="2%"></th>
+                <th width="5%">Equipment Name</th>
+                <th width="5%">Model</th>
+                <th width="600px">Description</th>
+                <th width="5%">Order No.</th>
+                <th width="5%">Action</th>
+
+            </tr>
+        </thead>
+        <tbody class="" style="text-align:left">
+
+            @foreach (var item1 in Model.QuotationScopeDetails)
+            {
+              
+            <tr id="quodtr_@i">
+                <td>
+                    @{
+                        @*if (item1.Checked)
+                        {
+                            <input type="checkbox" id="chkScopeItem_@i" checked />
+                        }
+                        else
+                        {
+                            <input type="checkbox" id="chkScopeItem_@i" checked />
+                        }*@
+                        @(i+1)
+                    }
+
+                </td>
+
+                <td style="text-align:left">
+
+
+                    @Html.HiddenFor(modelitem => item1.EquipmentName, new { @id = "txtEquipmentName1_" + @i, @class = " form-control-sm", @style = "width:200px" })
+
+                    <span id="QscopeEquipment_@i">@item1.EquipmentName</span>
+
+                </td>
+                <td style="text-align:left" class="editable">
+                    @Html.HiddenFor(modelitem => item1.Model, new { @id = "txtModel_" + @i, @class = " form-control-sm", @style = "width:100%" })
+                    <span id="QscopeModel_@i">@item1.Model</span>
+                </td>
+                <td>
+
+
+                    @Html.HiddenFor(modelitem => item1.Description, new { @id = "txtDescription1_" + @i, @class = " form-control-sm", @style = "width:100%" })
+
+                   @Html.Raw(@item1.Description) 
+
+                </td>
+
+                <td style="text-align:left" class="editable">
+
+
+                    @Html.HiddenFor(modelitem => item1.OrderNo, new { @id = "txtOrderNo1_" + @i, @class = " form-control-sm", @style = "width:100%" })
+                    
+                    <span id="QscopeOrderNo_@i">@item1.OrderNo</span>
+
+                </td>
+
+
+                <td>
+                    @Html.HiddenFor(modelitem => item1.ID, new { @id = "QScopeWorkID_" + @i, @class = "form-control", @readonly = "readonly" })
+                    @Html.HiddenFor(modelitem => item1.EquipmentID, new { @id = "QScopeEquipmentID_" + @i, @class = "form-control", @readonly = "readonly" })
+                    <a href="javascript:void(0);" title="Edit Item" class="text-success" onclick="AddScopePopup(@item1.ID)"><i class="mdi mdi-pencil font-size-18"></i></a>
+                    <a href="javascript:void(0);" style="display:none" scopeoworkid="@item1.ID" title="Save Item" id="btnscopesave_@i" class="text-success save-btn"><i class="mdi mdi-content-save-edit font-size-18"></i></a>
+
+                    <a onclick="DeleteScopeDetailEntry('@i')" href="javascript:void(0);" scopeoworkid="@item1.ID" title="Delete Item" class="text-danger"><i class="mdi mdi-delete font-size-18"></i></a>
+                </td>
+            </tr>
+                i++;
+            }
+        </tbody>
+
+    </table>
+
+</div>
+<script>
+    $(document).ready(function () {
+        $('.edit-btn').on('click', function () {
+            var $row = $(this).closest('tr');
+         
+            $row.find('.editable').each(function () {
+                var _text = $(this).find('input');
+                var _span = $(this).find('span');
+                $(_text).attr('type', 'text');
+                $(_span).css('display', 'none');
+
+            });
+
+            $row.find('.edit-btn').hide();
+            $row.find('.save-btn').show();
+            $row.find('.editable input:first').focus().select();
+        });
+
+        $('.save-btn').on('click', function () {
+            var $row = $(this).closest('tr');
+            var rowindex = $(this).attr('id').split('_')[1];
+            $row.find('.editable').each(function () {
+                var inputVal = $(this).find('input').val();
+                var _text = $(this).find('input');
+                var _span = $(this).find('span');
+                $(_text).attr('type', 'hidden');
+                $(_span).html(inputVal);
+                $(_span).css('display', 'block');
+
+            });
+
+            $row.find('.save-btn').hide();
+            $row.find('.edit-btn').show();
+            var scopeoworkid = $(this).attr('scopeoworkid');
+            var obj = {
+                ID: scopeoworkid,
+                QuotationID: $('#QuotationID').val(),
+                Model: $('#txtModel_' + rowindex).val(),
+                Description: $('#txtDescription1_' + rowindex).val(),
+                OrderNo: $('#txtOrderNo1_' +rowindex).val()
+
+            }
+
+            // NOT stringified again
+            // You can add AJAX here to save the changes to the server
+            $.ajax({
+                type: "POST",
+                url: "/Quotation/SaveScopeItem1",
+                contentType: "application/json;",
+                dataType: "json",
+                data: JSON.stringify(obj) ,
+                
+                //headers: { 'RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val() },
+                success: function (data) {
+                    debugger;
+                    console.log(data);
+                    
+                }
+            });
+        });
+    });
+</script>

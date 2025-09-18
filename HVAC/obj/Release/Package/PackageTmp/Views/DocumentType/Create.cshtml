@@ -1,0 +1,70 @@
+﻿@model HVAC.Models.DocumentType
+
+@{
+
+    ViewBag.pTitle = "Document Type";
+    ViewBag.pageTitle = "Setup";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $(":text").css({ "border-radius": "5px" });
+        $("select").css({ "border-radius": "5px" });
+
+        $("#ItemUnit1").focus();
+
+        //$("#btnsave").click(function () {
+        //    var type = $("#TypeOfGood").val();
+
+        //    if (type == "") {
+        //        $("#validations").show();
+        //        return false;
+        //    }
+        //    else {
+        //        $("#validations").hide();
+        //        return true;
+        //    }
+        //});
+    });
+</script>
+
+
+@using (Html.BeginForm("Create", "DocumentType", FormMethod.Post, new { @class = "needs-validation ", @novalidate = "novalidate" }))
+{
+    @Html.ValidationSummary(true)
+    @Html.ValidationSummary(true)
+    <div id="validations" style="color:red;margin-left:7px;display:none">* Please fill mandatory fields</div>
+    <fieldset>
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+
+                    <div class="col-md-4">
+                        <div class="mb-2">
+                            @Html.HiddenFor(mode=>Model.DocumentTypeID)
+                            <label class="col-form-label required">Document Type</label>
+                            @Html.TextBoxFor(model => model.DocumentTypeName, new { @class = "form-control txttarget", @required = "required" })
+                            @Html.ValidationMessageFor(model => model.DocumentTypeName)
+
+                        </div>
+                    </div>
+
+                    <div class="col-md-12 text-md-end">
+                        <input type="submit" value="Save" class="btn btn-success" id="btnsave" />
+
+                        <a href='@Url.Action("Index", "DocumentType", new { id = 0 })' class="btn btn-secondary" data-toggle="tooltip" data-placement="right" title="Click here">Cancel</a>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </fieldset>
+}
+
+
+
+
+ 

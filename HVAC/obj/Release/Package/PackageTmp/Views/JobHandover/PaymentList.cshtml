@@ -1,0 +1,61 @@
+﻿@model HVAC.Models.JobHandOverVM
+@{
+    Layout = null;
+    var i = 0;
+}
+<style>
+    ul.ui-front {
+        z-index: 1100;
+    }
+</style>
+<script type="text/javascript">
+    $(document).ready(function () {
+      
+    });
+
+</script>
+<div class="row no-margin" style="padding-top:0px">
+    <div class="col-md-12 tblbackground">
+        <table class="table table-datatable dataTable tblfont table-bordered table-striped mb-0" id="ContainerTables">
+            <thead class="table-light">
+                <tr>
+                    <th>S.No</th>
+                    <th>Payment Instrument</th>
+                    <th>Terms</th>
+                    <th>Due Days</th>
+                    <th>Amount</th>
+                    <th></th>
+
+
+                </tr>
+            </thead>
+            <tbody id="tbodyclient">
+
+                @foreach (var item in Model.PaymentDetails)
+                {
+                <tr id="trclient_@i">
+                    <td id="row_@i">
+                        @(i+1)
+                        @Html.HiddenFor(model => model.PaymentDetails[i].ID, new { @Value = @item.ID, @id = "hdnPOID_" + @i })
+                        @Html.HiddenFor(model => model.PaymentDetails[i].JobHandOverID, new { @Value = @item.JobHandOverID, @id = "hdnJobHandOverID_" + @i })
+                    </td>
+                    <td>
+                        @item.PaymentInstrument
+                    </td>
+                    <td>
+                        @item.Terms
+                    </td>
+                    <td>
+                        @item.DueDays
+                    </td>
+                    <td>
+                        @item.Amount
+                    </td>
+
+                </tr>
+                    i++;
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

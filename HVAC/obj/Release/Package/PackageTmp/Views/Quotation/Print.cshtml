@@ -1,0 +1,387 @@
+﻿@using System.Globalization
+@model HVAC.Models.QuotationVM
+@{
+    ViewBag.Title = "Print";
+    ViewBag.pTitle = "Quotation";
+    ViewBag.pageTitle = "HVAC";
+    if (Model.ReportClass != "")
+    {
+        Layout = null;
+    }
+    else
+    {
+        Layout = "~/Views/Shared/_Layout.cshtml";
+    }
+
+}
+
+
+
+@using (Html.BeginForm("Print", "Quotation", FormMethod.Post, new { @id = "customerledger" }))
+{
+    @Html.AntiForgeryToken()
+
+
+<div class="row @Model.ReportClass" style="padding-top:10px">
+    <div class="col-md-5">
+        <div class="mb-2 d-flex align-items-center">
+            @Html.Hidden("Id", Model.QuotationID) <!-- pass Id -->
+
+            <label for="ClientID" class="col-form-label" style="font-weight:bold">Quotation To</label>
+            @Html.DropDownListFor(model => model.ClientID,
+                new SelectList(ViewBag.Client, "ClientID", "ClientName"),
+                "Select",
+                new
+                     {
+                    @class = "form-select",
+                    @required = "required",
+                    @id = "ClientID",
+                    @svalue = Model.ClientID,
+                    @style="widht:90%"
+                }
+            )
+            @Html.HiddenFor(model => model.QuotationID, new { @id = "QuotationID" })
+        </div>
+    </div>
+
+    <!-- Filter/Submit Button -->
+    <div class="col-md-1">
+        <div class="mb-2 text-md-start">
+            <button type="submit" class="btn btn-success waves-effect waves-light filter  reload" id="btnreport" style="margin-top:15px">
+                <i class="bx bx-revision" style="font-size: 21px;"></i>
+            </button>
+        </div>
+    </div>
+    <div class="col-md-6 text-md-end" style="padding-top:10px">
+        <div class="mb-2">
+            <a href="@Url.Action("PrintPDF","Quotation",new { Id = Model.QuotationID, ClientID= Model.ClientID })"
+               class="btn btn-warning" target="_blank">
+                <i class="fa fa-file-download" style="font-size:18px"></i> Download PDF
+            </a>
+            <a href='/Quotation/Index' title="Back to Quotation Page" class="pull-right btn btn-secondary">Cancel</a>
+        </div>
+    </div>
+    </div>
+
+    <style>
+        .pdfenable {
+            display: none;
+        }
+    </style>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 14px;
+            color: #000;
+        }
+        .important-notes {
+            font-size: 15px;
+            color: blue;
+            font-weight: bold;
+            padding-top: 10px;
+            margin-bottom: 10px;
+        }
+
+        .page-break {
+            page-break-before: always; /* force start of a new page */
+        }
+
+        .table th, .table td {
+            padding: 8px;
+            vertical-align: middle;
+        }
+
+        .bordered {
+            border: 1px solid #000;
+            padding: 5px;
+        }
+
+        .highlight {
+            background: #f8f9fa;
+            font-weight: bold;
+        }
+
+        .po-header {
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .footer {
+            margin-top: 20px;
+            font-size: 12px;
+            text-align: left;
+        }
+    </style>
+    <div class="container" style="background-color:white;padding:35px">
+        @Html.HiddenFor(mode => mode.QuotationID, new { @class = "form-control" })
+        <!-- Header with Logo & Addresses -->
+        @*<div style="border-bottom:2px solid #000; padding-bottom:10px; margin-bottom:20px; white-space:nowrap;">*@
+
+        <!-- Left: Logo + Company Address -->
+        <div style="display:inline-block; vertical-align:top; width:100%; white-space:normal;">
+            <img src="@Url.Content("~/assets/images/CompanyLogo2.png")" alt="Company Logo" /><br />
+        </div>
+
+
+
+        @*</div>*@
+
+        <div class="pdf-two-col mt-3">
+            <h2 style="margin:0; font-weight:bold; text-transform:uppercase;text-align:center">Quotation</h2>
+            <div class="pdf-col">
+
+                <p style="line-height:25px;">
+                    <strong>OUR REF:</strong> @Model.EnquiryNo<br />
+                    <strong>Date:</strong> @Convert.ToDateTime(@Model.QuotationDate).ToString("dd-MMM-yyyy")<br />
+
+                    <strong>Project Name:</strong> @Model.ProjectName<br />
+                    <strong>@Model.ClientDetail</strong><br />
+                    <strong>@Model.QuoteClientDetail</strong><br />
+                    <strong>Kind Attn:@Model.ContactPerson  </strong>
+                </p>
+            </div>
+            <div class="pdf-col">
+                <p>
+                    <strong>Project : @Model.ProjectName:</strong>
+                </p>
+                <p>@Html.Raw(@Model.SubjectText) </p>
+            </div>
+            <div class="pdf-col">
+
+                <strong>Dear Sir,</strong> <br />
+                <p style="text-align:justify">
+                    We thank you for inviting us to quote for the subject stated above.  We are
+                    pleased to submit our most competitive techno-commercial bid for the
+                    subject project as under-
+                </p>
+            </div>
+        </div>
+
+
+
+        <strong style="font-size:15px"> Scope of Work : </strong>
+        <div class="pdf-two-col">
+
+            <!-- LEFT SIDE: Important Notes -->
+            <div class="pdf-col">
+
+                <ul>
+                    @foreach (var note in Model.QuotationScopeofWork)
+                    {
+                        <span class="important-notes">Supply of  @note.EquipmentName Model- @note.Model ( Qty : @note.Qty) </span>
+                        foreach (var note1 in note.Items)
+                        {
+                            <li style="margin-left:35px;">@Html.Raw(@note1.Description)</li>
+                        }
+                    }
+
+                </ul>
+            </div>
+
+
+        </div>
+
+        <br />
+        <br />
+        <!-- Items Table -->
+        <table style="width:100%; border:1px solid #ddd; border-collapse:collapse; font-family:Arial, sans-serif; font-size:14px;">
+            <thead class="table-light">
+                <tr style="padding: 8px; background: #808080; color: white; border-bottom: 2px solid #fff;">
+
+                    <th style="padding: 8px; ">Description</th>
+                    <th style="padding: 8px; ">Model</th>
+                    <th style="padding: 8px; ">Quantity</th>
+                    <th style="padding: 8px; "> Rate</th>
+                    <th style="padding: 8px; ">Amount</th>
+
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.QuotationDetails)
+                {
+                    <tr style="border-bottom:1px solid #eee;">
+
+                        <td style="padding: 8px; text-align: left; border: 1px solid #ddd;">@item.Description</td>
+                        <td style="padding: 8px; text-align: left; border: 1px solid #ddd;">@item.Model</td>
+                        <td style="padding: 8px; text-align: right; border: 1px solid #ddd;">@string.Format(new CultureInfo("en-US"), "{0:C0}", item.Quantity).Replace("$", "")</td>
+
+                        <td style="padding: 8px; text-align: right; border: 1px solid #ddd;">@string.Format(new CultureInfo("en-US"), "{0:C3}", item.UnitRate).Replace("$", "")</td>
+                        <td style="padding: 8px; text-align: right; border: 1px solid #ddd;">@string.Format(new CultureInfo("en-US"), "{0:C3}", item.Amount).Replace("$", "")</td>
+
+                    </tr>
+                }
+            </tbody>
+            <tfoot>
+                <tr style="border-bottom:1px solid #eee;">
+                    <td colspan="3" style="padding: 8px; font-weight: bold; text-align: right">Gross Total</td>
+                    <td colspan="1" style="padding: 8px;"></td>
+
+                    <td style="padding: 8px; font-weight: bold; text-align: right">@string.Format(new CultureInfo("en-US"), "{0:C3}", @Model.GrossAmount).Replace("$", "")</td>
+
+
+                </tr>
+                <tr style="text-align: right; border-bottom: 1px solid #eee;">
+                    <td colspan="3" style="padding: 8px; font-weight: bold; text-align: right">Discount &nbsp;&nbsp;</td>
+                    <td colspan="1" style="padding: 8px; text-align: right; font-weight: bold">
+                        <div class="input-group">
+                            @Convert.ToDecimal(Model.DiscountPercent).ToString("N0")
+                        </div>
+                    </td>
+
+                    <td style="padding: 8px; text-align: right">@Convert.ToDecimal(Model.DiscountAmount).ToString("N3")</td>
+
+
+                </tr>
+                <tr style="text-align: right; border-bottom: 1px solid #eee;">
+                    <td colspan="3" style="padding: 8px; font-weight: bold; text-align: right">VAT &nbsp;&nbsp;&nbsp;&nbsp;</td>
+                    <td colspan="1" style="padding: 8px; font-weight: bold; text-align: right">
+                        @{
+                            if (Model.VATPercent != null)
+                            {
+                                if (Model.VATPercent > 0)
+                                {
+                                    @Convert.ToDecimal(Model.VATPercent).ToString("N0")
+                                }
+                            }
+                        }
+                    </td>
+                    <td style="text-align: right; padding: 8px;">@string.Format(new CultureInfo("en-US"), "{0:C3}", @Model.VATAmount).Replace("$", "")</td>
+
+
+                </tr>
+                <tr style="background: #808080; border-bottom: 1px solid #eee; ">
+                    <td colspan="2" style="padding: 8px; font-weight: bold; text-align: left; color: white">@Model.QuotationValueInWords</td>
+                    <td colspan="2" style="padding: 8px; font-weight: bold; color: white">Net Total</td>
+
+                    <td style="padding: 8px;text-align: right; color: white; font-weight: bold;">@string.Format(new CultureInfo("en-US"), "{0:C3}", @Model.QuotationValue).Replace("$", "OMR")</td>
+
+
+                </tr>
+            </tfoot>
+        </table>
+        <strong style="font-size:15px">Payment Terms </strong>
+
+        <div class="pdf-two-col" style="margin-top:10px">
+
+            <!-- LEFT SIDE: Important Notes -->
+            <div class="pdf-col">
+
+                @Html.Raw(@Model.PaymentTerms)
+            </div>
+
+
+        </div>
+        <br />
+        <strong style="font-size:15px">Validity</strong>
+        <div class="pdf-two-col" style="margin-top:10px">
+
+            <!-- LEFT SIDE: Important Notes -->
+            <div class="pdf-col">
+
+                @Html.Raw(@Model.Validity)
+            </div>
+
+
+        </div>
+        <br />
+        <strong style="font-size:15px">Delivery Terms</strong>
+        <div class="pdf-two-col" style="margin-top:10px">
+
+            <!-- LEFT SIDE: Important Notes -->
+            <div class="pdf-col">
+
+                @Html.Raw(@Model.DeliveryTerms)
+            </div>
+
+
+        </div>
+        <br />
+        <strong style="font-size:15px">Warranty</strong>
+        <div class="pdf-two-col" style="margin-top:10px">
+
+            <!-- LEFT SIDE: Important Notes -->
+            <div class="pdf-col">
+
+                <ul>
+                    @foreach (var warranty in Model.QuotationWarrantyDetails)
+                    {
+
+
+                        <li>@Html.Raw(warranty.Description)</li>
+                    }
+
+                </ul>
+            </div>
+
+
+        </div>
+
+        <strong style="font-size:15px">Exclusion:</strong>
+        <div class="pdf-two-col" style="margin-top:10px">
+
+            <!-- LEFT SIDE: Important Notes -->
+            <div class="pdf-col">
+
+                <ul>
+                    @foreach (var warranty in Model.QuotationExclusionDetails)
+                    {
+
+
+                        <li>@Html.Raw(warranty.Description)</li>
+                    }
+
+                </ul>
+            </div>
+
+
+        </div>
+        <strong style="font-size:15px">Terms and Condition</strong>
+        <div class="pdf-two-col" style="margin-top:10px">
+
+            <!-- LEFT SIDE: Important Notes -->
+            <div class="pdf-col">
+
+                @Html.Raw(@Model.TermsandConditions)
+            </div>
+
+
+        </div>
+        <br />
+        <br />
+        <br />
+        <div>
+            <p style="text-align:justify">
+                We trust you will find the above offer in line with your requirement .In case you
+                shall require any further clarifications, please feel free to contact us.
+                Thanking you and assuring you our best attention at all times.
+
+            </p>
+        </div>
+        <!-- Footer -->
+        <div class="">
+            <b>Yours truly,</b>
+
+            <!-- Signatory Section -->
+            <div style="width:100%; text-align:left; margin-top:50px; white-space:nowrap;">
+
+                <b>@Model.EmployeeName</b>
+                <!-- Received By -->
+                <div style="width:32%; text-align:left; vertical-align:top;">
+                    <div style="height:60px; border-bottom:1px solid #000; margin-bottom:5px;"></div>
+                    <strong>For AIRMECH OMAN L.L.C</strong><br />
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+}
+
+
+
+
+
+
+

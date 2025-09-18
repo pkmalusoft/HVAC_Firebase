@@ -1,0 +1,1719 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="db_a69d99_airmech1ModelStoreContainer" CdmEntityContainer="HVACEntities">
+    <EntitySetMapping Name="AcCompanies">
+      <EntityTypeMapping TypeName="db_a69d99_airmech1Model.AcCompany">
+        <MappingFragment StoreEntitySet="AcCompany">
+          <ScalarProperty Name="AcCompanyID" ColumnName="AcCompanyID" />
+          <ScalarProperty Name="AcCompany1" ColumnName="AcCompany" />
+          <ScalarProperty Name="ParentID" ColumnName="ParentID" />
+          <ScalarProperty Name="Address1" ColumnName="Address1" />
+          <ScalarProperty Name="Address2" ColumnName="Address2" />
+          <ScalarProperty Name="Address3" ColumnName="Address3" />
+          <ScalarProperty Name="Phone" ColumnName="Phone" />
+          <ScalarProperty Name="EMail" ColumnName="EMail" />
+          <ScalarProperty Name="UserID" ColumnName="UserID" />
+          <ScalarProperty Name="CountryID" ColumnName="CountryID" />
+          <ScalarProperty Name="CityID" ColumnName="CityID" />
+          <ScalarProperty Name="LocationID" ColumnName="LocationID" />
+          <ScalarProperty Name="KeyPerson" ColumnName="KeyPerson" />
+          <ScalarProperty Name="DesignationID" ColumnName="DesignationID" />
+          <ScalarProperty Name="PhoneNo1" ColumnName="PhoneNo1" />
+          <ScalarProperty Name="PhoneNo2" ColumnName="PhoneNo2" />
+          <ScalarProperty Name="PhoneNo3" ColumnName="PhoneNo3" />
+          <ScalarProperty Name="PhoneNo4" ColumnName="PhoneNo4" />
+          <ScalarProperty Name="MobileNo1" ColumnName="MobileNo1" />
+          <ScalarProperty Name="MobileNo2" ColumnName="MobileNo2" />
+          <ScalarProperty Name="Website" ColumnName="Website" />
+          <ScalarProperty Name="CompanyPrefix" ColumnName="CompanyPrefix" />
+          <ScalarProperty Name="CurrencyID" ColumnName="CurrencyID" />
+          <ScalarProperty Name="IsAWBAutoGenrated" ColumnName="IsAWBAutoGenrated" />
+          <ScalarProperty Name="AWBFormat" ColumnName="AWBFormat" />
+          <ScalarProperty Name="StateID" ColumnName="StateID" />
+          <ScalarProperty Name="IncrementBy" ColumnName="IncrementBy" />
+          <ScalarProperty Name="CountryName" ColumnName="CountryName" />
+          <ScalarProperty Name="CityName" ColumnName="CityName" />
+          <ScalarProperty Name="LocationName" ColumnName="LocationName" />
+          <ScalarProperty Name="InvoicePrefix" ColumnName="InvoicePrefix" />
+          <ScalarProperty Name="InvoiceFormat" ColumnName="InvoiceFormat" />
+          <ScalarProperty Name="CompanyLogo" ColumnName="CompanyLogo" />
+          <ScalarProperty Name="Logo" ColumnName="Logo" />
+          <ScalarProperty Name="LogoFileName" ColumnName="LogoFileName" />
+          <ScalarProperty Name="EnableAPI" ColumnName="EnableAPI" />
+          <ScalarProperty Name="EnableCashCustomerInvoice" ColumnName="EnableCashCustomerInvoice" />
+          <ScalarProperty Name="AcceptSystem" ColumnName="AcceptSystem" />
+          <ScalarProperty Name="AWBAlphaNumeric" ColumnName="AWBAlphaNumeric" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="AcFinancialYears">
+      <EntityTypeMapping TypeName="db_a69d99_airmech1Model.AcFinancialYear">
+        <MappingFragment StoreEntitySet="AcFinancialYear">
+          <ScalarProperty Name="AcFinancialYearID" ColumnName="AcFinancialYearID" />
+          <ScalarProperty Name="AcCompanyID" ColumnName="AcCompanyID" />
+          <ScalarProperty Name="AcFYearFrom" ColumnName="AcFYearFrom" />
+          <ScalarProperty Name="AcFYearTo" ColumnName="AcFYearTo" />
+          <ScalarProperty Name="ReferenceName" ColumnName="ReferenceName" />
+          <ScalarProperty Name="StatusClose" ColumnName="StatusClose" />
+          <ScalarProperty Name="UserID" ColumnName="UserID" />
+          <ScalarProperty Name="BranchID" ColumnName="BranchID" />
+          <ScalarProperty Name="CurrentFinancialYear" ColumnName="CurrentFinancialYear" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="BondTypes">
+      <EntityTypeMapping TypeName="db_a69d99_airmech1Model.BondType">
+        <MappingFragment StoreEntitySet="BondType">
+          <ScalarProperty Name="ID" ColumnName="ID" />
+          <ScalarProperty Name="BondType1" ColumnName="BondType" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="BranchMasters">
+      <EntityTypeMapping TypeName="db_a69d99_airmech1Model.BranchMaster">
+        <MappingFragment StoreEntitySet="BranchMaster">
+          <ScalarProperty Name="BranchID" ColumnName="BranchID" />
+          <ScalarProperty Name="BranchName" ColumnName="BranchName" />
+          <ScalarProperty Name="Address1" ColumnName="Address1" />
+          <ScalarProperty Name="Address2" ColumnName="Address2" />
+          <ScalarProperty Name="Address3" ColumnName="Address3" />
+          <ScalarProperty Name="CountryID" ColumnName="CountryID" />
+          <ScalarProperty Name="CityID" ColumnName="CityID" />
+          <ScalarProperty Name="LocationID" ColumnName="LocationID" />
+          <ScalarProperty Name="KeyPerson" ColumnName="KeyPerson" />
+          <ScalarProperty Name="DesignationID" ColumnName="DesignationID" />
+          <ScalarProperty Name="Phone" ColumnName="Phone" />
+          <ScalarProperty Name="PhoneNo1" ColumnName="PhoneNo1" />
+          <ScalarProperty Name="PhoneNo2" ColumnName="PhoneNo2" />
+          <ScalarProperty Name="PhoneNo3" ColumnName="PhoneNo3" />
+          <ScalarProperty Name="PhoneNo4" ColumnName="PhoneNo4" />
+          <ScalarProperty Name="MobileNo1" ColumnName="MobileNo1" />
+          <ScalarProperty Name="MobileNo2" ColumnName="MobileNo2" />
+          <ScalarProperty Name="EMail" ColumnName="EMail" />
+          <ScalarProperty Name="Website" ColumnName="Website" />
+          <ScalarProperty Name="BranchPrefix" ColumnName="BranchPrefix" />
+          <ScalarProperty Name="CurrencyID" ColumnName="CurrencyID" />
+          <ScalarProperty Name="AcCompanyID" ColumnName="AcCompanyID" />
+          <ScalarProperty Name="StatusAssociate" ColumnName="StatusAssociate" />
+          <ScalarProperty Name="CountryName" ColumnName="CountryName" />
+          <ScalarProperty Name="CityName" ColumnName="CityName" />
+          <ScalarProperty Name="LocationName" ColumnName="LocationName" />
+          <ScalarProperty Name="InvoicePrefix" ColumnName="InvoicePrefix" />
+          <ScalarProperty Name="InvoiceFormat" ColumnName="InvoiceFormat" />
+          <ScalarProperty Name="VATRegistrationNo" ColumnName="VATRegistrationNo" />
+          <ScalarProperty Name="VATPercent" ColumnName="VATPercent" />
+          <ScalarProperty Name="AcFinancialYearID" ColumnName="AcFinancialYearID" />
+          <ScalarProperty Name="VATAccountId" ColumnName="VATAccountId" />
+          <ScalarProperty Name="TaxEnable" ColumnName="TaxEnable" />
+          <ScalarProperty Name="TaxType" ColumnName="TaxType" />
+          <ScalarProperty Name="InvoiceNoStart" ColumnName="InvoiceNoStart" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Brands">
+      <EntityTypeMapping TypeName="db_a69d99_airmech1Model.Brand">
+        <MappingFragment StoreEntitySet="Brand">
+          <ScalarProperty Name="BrandID" ColumnName="BrandID" />
+          <ScalarProperty Name="BrandName" ColumnName="BrandName" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="BuildingTypes">
+      <EntityTypeMapping TypeName="db_a69d99_airmech1Model.BuildingType">
+        <MappingFragment StoreEntitySet="BuildingType">
+          <ScalarProperty Name="BldgTypeID" ColumnName="BldgTypeID" />
+          <ScalarProperty Name="BldgTypeName" ColumnName="BldgTypeName" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="BusinessTypes">
+      <EntityTypeMapping TypeName="db_a69d99_airmech1Model.BusinessType">
+        <MappingFragment StoreEntitySet="BusinessType">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="BusinessType1" ColumnName="BusinessType" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="CityMasters">
+      <EntityTypeMapping TypeName="db_a69d99_airmech1Model.CityMaster">
+        <MappingFragment StoreEntitySet="CityMaster">
+          <ScalarProperty Name="CityID" ColumnName="CityID" />
+          <ScalarProperty Name="City" ColumnName="City" />
+          <ScalarProperty Name="CountryID" ColumnName="CountryID" />
+          <ScalarProperty Name="CityCode" ColumnName="CityCode" />
+          <ScalarProperty Name="IsHub" ColumnName="IsHub" />
+          <ScalarProperty Name="CountryCode" ColumnName="CountryCode" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="ClientMasters">
+      <EntityTypeMapping TypeName="db_a69d99_airmech1Model.ClientMaster">
+        <MappingFragment StoreEntitySet="ClientMaster">
+          <ScalarProperty Name="VATNo" ColumnName="VATNo" />
+          <ScalarProperty Name="ClientPrefix" ColumnName="ClientPrefix" />
+          <ScalarProperty Name="ClientID" ColumnName="ClientID" />
+          <ScalarProperty Name="ClientName" ColumnName="ClientName" />
+          <ScalarProperty Name="Address1" ColumnName="Address1" />
+          <ScalarProperty Name="Address2" ColumnName="Address2" />
+          <ScalarProperty Name="Address3" ColumnName="Address3" />
+          <ScalarProperty Name="LocationName" ColumnName="LocationName" />
+          <ScalarProperty Name="CityID" ColumnName="CityID" />
+          <ScalarProperty Name="CountryID" ColumnName="CountryID" />
+          <ScalarProperty Name="ContactName" ColumnName="ContactName" />
+          <ScalarProperty Name="ContactNo" ColumnName="ContactNo" />
+          <ScalarProperty Name="Email" ColumnName="Email" />
+          <ScalarProperty Name="ClientType" ColumnName="ClientType" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="CountryMasters">
+      <EntityTypeMapping TypeName="db_a69d99_airmech1Model.CountryMaster">
+        <MappingFragment StoreEntitySet="CountryMaster">
+          <ScalarProperty Name="CountryID" ColumnName="CountryID" />
+          <ScalarProperty Name="CountryName" ColumnName="CountryName" />
+          <ScalarProperty Name="CountryCode" ColumnName="CountryCode" />
+          <ScalarProperty Name="StatusCountry" ColumnName="StatusCountry" />
+          <ScalarProperty Name="StatusBaseCountry" ColumnName="StatusBaseCountry" />
+          <ScalarProperty Name="TelephoneCode" ColumnName="TelephoneCode" />
+          <ScalarProperty Name="IATACode" ColumnName="IATACode" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="CurrencyMasters">
+      <EntityTypeMapping TypeName="db_a69d99_airmech1Model.CurrencyMaster">
+        <MappingFragment StoreEntitySet="CurrencyMaster">
+          <ScalarProperty Name="CurrencyID" ColumnName="CurrencyID" />
+          <ScalarProperty Name="CurrencyName" ColumnName="CurrencyName" />
+          <ScalarProperty Name="Symbol" ColumnName="Symbol" />
+          <ScalarProperty Name="NoOfDecimals" ColumnName="NoOfDecimals" />
+          <ScalarProperty Name="MonetaryUnit" ColumnName="MonetaryUnit" />
+          <ScalarProperty Name="CountryID" ColumnName="CountryID" />
+          <ScalarProperty Name="StatusBaseCurrency" ColumnName="StatusBaseCurrency" />
+          <ScalarProperty Name="ExchangeRate" ColumnName="ExchangeRate" />
+          <ScalarProperty Name="CurrencyCode" ColumnName="CurrencyCode" />
+          <ScalarProperty Name="CountryName" ColumnName="CountryName" />
+          <ScalarProperty Name="NumberFormat" ColumnName="NumberFormat" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="CustomerMasters">
+      <EntityTypeMapping TypeName="db_a69d99_airmech1Model.CustomerMaster">
+        <MappingFragment StoreEntitySet="CustomerMaster">
+          <ScalarProperty Name="CustomerID" ColumnName="CustomerID" />
+          <ScalarProperty Name="AcCompanyID" ColumnName="AcCompanyID" />
+          <ScalarProperty Name="CustomerCode" ColumnName="CustomerCode" />
+          <ScalarProperty Name="CustomerName" ColumnName="CustomerName" />
+          <ScalarProperty Name="CustomerType" ColumnName="CustomerType" />
+          <ScalarProperty Name="CustomerRateTypeID" ColumnName="CustomerRateTypeID" />
+          <ScalarProperty Name="ReferenceCode" ColumnName="ReferenceCode" />
+          <ScalarProperty Name="ContactPerson" ColumnName="ContactPerson" />
+          <ScalarProperty Name="Address1" ColumnName="Address1" />
+          <ScalarProperty Name="Address2" ColumnName="Address2" />
+          <ScalarProperty Name="Address3" ColumnName="Address3" />
+          <ScalarProperty Name="Phone" ColumnName="Phone" />
+          <ScalarProperty Name="Mobile" ColumnName="Mobile" />
+          <ScalarProperty Name="Fax" ColumnName="Fax" />
+          <ScalarProperty Name="Email" ColumnName="Email" />
+          <ScalarProperty Name="WebSite" ColumnName="WebSite" />
+          <ScalarProperty Name="CountryID" ColumnName="CountryID" />
+          <ScalarProperty Name="CityID" ColumnName="CityID" />
+          <ScalarProperty Name="LocationID" ColumnName="LocationID" />
+          <ScalarProperty Name="CurrencyID" ColumnName="CurrencyID" />
+          <ScalarProperty Name="StatusActive" ColumnName="StatusActive" />
+          <ScalarProperty Name="CreditLimit" ColumnName="CreditLimit" />
+          <ScalarProperty Name="StatusTaxable" ColumnName="StatusTaxable" />
+          <ScalarProperty Name="EmployeeID" ColumnName="EmployeeID" />
+          <ScalarProperty Name="statusCommission" ColumnName="statusCommission" />
+          <ScalarProperty Name="StatusGPA" ColumnName="StatusGPA" />
+          <ScalarProperty Name="StatusWalkIn" ColumnName="StatusWalkIn" />
+          <ScalarProperty Name="CustomerRateTypeIntID" ColumnName="CustomerRateTypeIntID" />
+          <ScalarProperty Name="CourierServiceID" ColumnName="CourierServiceID" />
+          <ScalarProperty Name="BranchID" ColumnName="BranchID" />
+          <ScalarProperty Name="CustomerUsername" ColumnName="CustomerUsername" />
+          <ScalarProperty Name="Password" ColumnName="Password" />
+          <ScalarProperty Name="VATTRN" ColumnName="VATTRN" />
+          <ScalarProperty Name="OfficeOpenTime" ColumnName="OfficeOpenTime" />
+          <ScalarProperty Name="OfficeCloseTime" ColumnName="OfficeCloseTime" />
+          <ScalarProperty Name="Referal" ColumnName="Referal" />
+          <ScalarProperty Name="BusinessTypeId" ColumnName="BusinessTypeId" />
+          <ScalarProperty Name="CountryName" ColumnName="CountryName" />
+          <ScalarProperty Name="LocationName" ColumnName="LocationName" />
+          <ScalarProperty Name="CityName" ColumnName="CityName" />
+          <ScalarProperty Name="DepotID" ColumnName="DepotID" />
+          <ScalarProperty Name="UserID" ColumnName="UserID" />
+          <ScalarProperty Name="ApprovedBy" ColumnName="ApprovedBy" />
+          <ScalarProperty Name="ApprovedOn" ColumnName="ApprovedOn" />
+          <ScalarProperty Name="PlaceID" ColumnName="PlaceID" />
+          <ScalarProperty Name="CountryCode" ColumnName="CountryCode" />
+          <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+          <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+          <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
+          <ScalarProperty Name="ModifiedDate" ColumnName="ModifiedDate" />
+          <ScalarProperty Name="OldCustomerId" ColumnName="OldCustomerId" />
+          <ScalarProperty Name="TransactionStartDate" ColumnName="TransactionStartDate" />
+          <ScalarProperty Name="AMCStartDate" ColumnName="AMCStartDate" />
+          <ScalarProperty Name="AMCEndDate" ColumnName="AMCEndDate" />
+          <ScalarProperty Name="AMCAmount" ColumnName="AMCAmount" />
+          <ScalarProperty Name="Remarks" ColumnName="Remarks" />
+          <ScalarProperty Name="AMCContract" ColumnName="AMCContract" />
+          <ScalarProperty Name="Test" ColumnName="Test" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="DashBoardInfoes">
+      <EntityTypeMapping TypeName="db_a69d99_airmech1Model.DashBoardInfo">
+        <MappingFragment StoreEntitySet="DashBoardInfo">
+          <ScalarProperty Name="ID" ColumnName="ID" />
+          <ScalarProperty Name="BranchId" ColumnName="BranchId" />
+          <ScalarProperty Name="FyearId" ColumnName="FyearId" />
+          <ScalarProperty Name="TotalJobs" ColumnName="TotalJobs" />
+          <ScalarProperty Name="TotalInStock" ColumnName="TotalInStock" />
+          <ScalarProperty Name="InStockCBM" ColumnName="InStockCBM" />
+          <ScalarProperty Name="RevenueYTD" ColumnName="RevenueYTD" />
+          <ScalarProperty Name="RevenueMTD" ColumnName="RevenueMTD" />
+          <ScalarProperty Name="RevenueSeriesA" ColumnName="RevenueSeriesA" />
+          <ScalarProperty Name="RevenueSeriesB" ColumnName="RevenueSeriesB" />
+          <ScalarProperty Name="RevenueSeriesC" ColumnName="RevenueSeriesC" />
+          <ScalarProperty Name="CountSeriesA" ColumnName="CountSeriesA" />
+          <ScalarProperty Name="CountSeriesB" ColumnName="CountSeriesB" />
+          <ScalarProperty Name="CountSeriesC" ColumnName="CountSeriesC" />
+          <ScalarProperty Name="Top1City" ColumnName="Top1City" />
+          <ScalarProperty Name="Top2City" ColumnName="Top2City" />
+          <ScalarProperty Name="Top3City" ColumnName="Top3City" />
+          <ScalarProperty Name="Top1CityName" ColumnName="Top1CityName" />
+          <ScalarProperty Name="Top2CityName" ColumnName="Top2CityName" />
+          <ScalarProperty Name="Top3CityName" ColumnName="Top3CityName" />
+          <ScalarProperty Name="LastProcessDate" ColumnName="LastProcessDate" />
+          <ScalarProperty Name="UserId" ColumnName="UserId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Departments">
+      <EntityTypeMapping TypeName="db_a69d99_airmech1Model.Department">
+        <MappingFragment StoreEntitySet="Department">
+          <ScalarProperty Name="DepartmentID" ColumnName="DepartmentID" />
+          <ScalarProperty Name="Department1" ColumnName="Department" />
+          <ScalarProperty Name="AcCompanyID" ColumnName="AcCompanyID" />
+          <ScalarProperty Name="UserID" ColumnName="UserID" />
+          <ScalarProperty Name="StatusDefaultD" ColumnName="StatusDefaultD" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Designations">
+      <EntityTypeMapping TypeName="db_a69d99_airmech1Model.Designation">
+        <MappingFragment StoreEntitySet="Designation">
+          <ScalarProperty Name="DesignationID" ColumnName="DesignationID" />
+          <ScalarProperty Name="Designation1" ColumnName="Designation" />
+          <ScalarProperty Name="StatusDesignation" ColumnName="StatusDesignation" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="DocumentMasters">
+      <EntityTypeMapping TypeName="db_a69d99_airmech1Model.DocumentMaster">
+        <MappingFragment StoreEntitySet="DocumentMaster">
+          <ScalarProperty Name="DocumentLink" ColumnName="DocumentLink" />
+          <ScalarProperty Name="DocumentID" ColumnName="DocumentID" />
+          <ScalarProperty Name="DocumentTypeID" ColumnName="DocumentTypeID" />
+          <ScalarProperty Name="DocumentTitle" ColumnName="DocumentTitle" />
+          <ScalarProperty Name="EnquiryID" ColumnName="EnquiryID" />
+          <ScalarProperty Name="ConsignmentID" ColumnName="ConsignmentID" />
+          <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+          <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+          <ScalarProperty Name="FileName" ColumnName="FileName" />
+          <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
+          <ScalarProperty Name="ModifiedDate" ColumnName="ModifiedDate" />
+          <ScalarProperty Name="AcJournalID" ColumnName="AcJournalID" />
+          <ScalarProperty Name="CompanyID" ColumnName="CompanyID" />
+          <ScalarProperty Name="BranchID" ColumnName="BranchID" />
+          <ScalarProperty Name="EmployeeID" ColumnName="EmployeeID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="DocumentNoSetups">
+      <EntityTypeMapping TypeName="db_a69d99_airmech1Model.DocumentNoSetup">
+        <MappingFragment StoreEntitySet="DocumentNoSetup">
+          <ScalarProperty Name="ID" ColumnName="ID" />
+          <ScalarProperty Name="DocumentName" ColumnName="DocumentName" />
+          <ScalarProperty Name="SystemPrefix" ColumnName="SystemPrefix" />
+          <ScalarProperty Name="Prefix" ColumnName="Prefix" />
+          <ScalarProperty Name="StartNo" ColumnName="StartNo" />
+          <ScalarProperty Name="BranchId" ColumnName="BranchId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="DocumentTypes">
+      <EntityTypeMapping TypeName="db_a69d99_airmech1Model.DocumentType">
+        <MappingFragment StoreEntitySet="DocumentType">
+          <ScalarProperty Name="DocumentTypeID" ColumnName="DocumentTypeID" />
+          <ScalarProperty Name="DocumentTypeName" ColumnName="DocumentTypeName" />
+          <ScalarProperty Name="ReferenceFor" ColumnName="ReferenceFor" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="EnquirySources">
+      <EntityTypeMapping TypeName="db_a69d99_airmech1Model.EnquirySource">
+        <MappingFragment StoreEntitySet="EnquirySource">
+          <ScalarProperty Name="EnquirySourceID" ColumnName="EnquirySourceID" />
+          <ScalarProperty Name="EnquirySourceName" ColumnName="EnquirySourceName" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="EnquiryStages">
+      <EntityTypeMapping TypeName="db_a69d99_airmech1Model.EnquiryStage">
+        <MappingFragment StoreEntitySet="EnquiryStage">
+          <ScalarProperty Name="EnqStageID" ColumnName="EnqStageID" />
+          <ScalarProperty Name="EnqStageName" ColumnName="EnqStageName" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="EnquiryStatus">
+      <EntityTypeMapping TypeName="db_a69d99_airmech1Model.EnquiryStatu">
+        <MappingFragment StoreEntitySet="EnquiryStatus">
+          <ScalarProperty Name="EnqStatusID" ColumnName="EnqStatusID" />
+          <ScalarProperty Name="EnqStatusName" ColumnName="EnqStatusName" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="EntityTypes">
+      <EntityTypeMapping TypeName="db_a69d99_airmech1Model.EntityType">
+        <MappingFragment StoreEntitySet="EntityType">
+          <ScalarProperty Name="EntityTypeID" ColumnName="EntityTypeID" />
+          <ScalarProperty Name="EntityTypeName" ColumnName="EntityTypeName" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="EquipmentStatus">
+      <EntityTypeMapping TypeName="db_a69d99_airmech1Model.EquipmentStatu">
+        <MappingFragment StoreEntitySet="EquipmentStatus">
+          <ScalarProperty Name="EquipmentStatusID" ColumnName="EquipmentStatusID" />
+          <ScalarProperty Name="EquipmentStatus" ColumnName="EquipmentStatus" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="LocationMasters">
+      <EntityTypeMapping TypeName="db_a69d99_airmech1Model.LocationMaster">
+        <MappingFragment StoreEntitySet="LocationMaster">
+          <ScalarProperty Name="LocationID" ColumnName="LocationID" />
+          <ScalarProperty Name="Location" ColumnName="Location" />
+          <ScalarProperty Name="CityID" ColumnName="CityID" />
+          <ScalarProperty Name="IsDefault" ColumnName="IsDefault" />
+          <ScalarProperty Name="LocationName" ColumnName="LocationName" />
+          <ScalarProperty Name="CityName" ColumnName="CityName" />
+          <ScalarProperty Name="CountryName" ColumnName="CountryName" />
+          <ScalarProperty Name="PlaceID" ColumnName="PlaceID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Logs">
+      <EntityTypeMapping TypeName="db_a69d99_airmech1Model.Log">
+        <MappingFragment StoreEntitySet="Log">
+          <ScalarProperty Name="LogID" ColumnName="LogID" />
+          <ScalarProperty Name="Error" ColumnName="Error" />
+          <ScalarProperty Name="Page" ColumnName="Page" />
+          <ScalarProperty Name="Event" ColumnName="Event" />
+          <ScalarProperty Name="CreateDateTime" ColumnName="CreateDateTime" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="MenuAccessLevels">
+      <EntityTypeMapping TypeName="db_a69d99_airmech1Model.MenuAccessLevel">
+        <MappingFragment StoreEntitySet="MenuAccessLevel">
+          <ScalarProperty Name="MenuAccessID" ColumnName="MenuAccessID" />
+          <ScalarProperty Name="MenuID" ColumnName="MenuID" />
+          <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+          <ScalarProperty Name="CreatedOn" ColumnName="CreatedOn" />
+          <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
+          <ScalarProperty Name="ModifiedOn" ColumnName="ModifiedOn" />
+          <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+          <ScalarProperty Name="ParentID" ColumnName="ParentID" />
+          <ScalarProperty Name="RoleID" ColumnName="RoleID" />
+          <ScalarProperty Name="IsView" ColumnName="IsView" />
+          <ScalarProperty Name="IsAdd" ColumnName="IsAdd" />
+          <ScalarProperty Name="IsModify" ColumnName="IsModify" />
+          <ScalarProperty Name="IsDelete" ColumnName="IsDelete" />
+          <ScalarProperty Name="Isprint" ColumnName="Isprint" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Priorities">
+      <EntityTypeMapping TypeName="db_a69d99_airmech1Model.Priority">
+        <MappingFragment StoreEntitySet="Priority">
+          <ScalarProperty Name="PriorityID" ColumnName="PriorityID" />
+          <ScalarProperty Name="PriorityName" ColumnName="PriorityName" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="ProductFamilies">
+      <EntityTypeMapping TypeName="db_a69d99_airmech1Model.ProductFamily">
+        <MappingFragment StoreEntitySet="ProductFamily">
+          <ScalarProperty Name="ID" ColumnName="ID" />
+          <ScalarProperty Name="ProductFamilyName" ColumnName="ProductFamilyName" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="QuotationStatus">
+      <EntityTypeMapping TypeName="db_a69d99_airmech1Model.QuotationStatu">
+        <MappingFragment StoreEntitySet="QuotationStatus">
+          <ScalarProperty Name="DefaultStatus" ColumnName="DefaultStatus" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+          <ScalarProperty Name="Status" ColumnName="Status" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="QuotationTemplates">
+      <EntityTypeMapping TypeName="db_a69d99_airmech1Model.QuotationTemplate">
+        <MappingFragment StoreEntitySet="QuotationTemplate">
+          <ScalarProperty Name="TemplateID" ColumnName="TemplateID" />
+          <ScalarProperty Name="TemplateTitle" ColumnName="TemplateTitle" />
+          <ScalarProperty Name="TemplateText" ColumnName="TemplateText" />
+          <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+          <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+          <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
+          <ScalarProperty Name="ModifiedDate" ColumnName="ModifiedDate" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="RoleMasters">
+      <EntityTypeMapping TypeName="db_a69d99_airmech1Model.RoleMaster">
+        <MappingFragment StoreEntitySet="RoleMaster">
+          <ScalarProperty Name="RoleID" ColumnName="RoleID" />
+          <ScalarProperty Name="RoleName" ColumnName="RoleName" />
+          <ScalarProperty Name="Type" ColumnName="Type" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="UserInBranches">
+      <EntityTypeMapping TypeName="db_a69d99_airmech1Model.UserInBranch">
+        <MappingFragment StoreEntitySet="UserInBranch">
+          <ScalarProperty Name="UserBranchID" ColumnName="UserBranchID" />
+          <ScalarProperty Name="UserID" ColumnName="UserID" />
+          <ScalarProperty Name="BranchID" ColumnName="BranchID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="UserRegistrations">
+      <EntityTypeMapping TypeName="db_a69d99_airmech1Model.UserRegistration">
+        <MappingFragment StoreEntitySet="UserRegistration">
+          <ScalarProperty Name="UserID" ColumnName="UserID" />
+          <ScalarProperty Name="UserName" ColumnName="UserName" />
+          <ScalarProperty Name="Password" ColumnName="Password" />
+          <ScalarProperty Name="Phone" ColumnName="Phone" />
+          <ScalarProperty Name="EmailId" ColumnName="EmailId" />
+          <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+          <ScalarProperty Name="RoleID" ColumnName="RoleID" />
+          <ScalarProperty Name="isLogin" ColumnName="isLogin" />
+          <ScalarProperty Name="loginExpiryDate" ColumnName="loginExpiryDate" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Verticals">
+      <EntityTypeMapping TypeName="db_a69d99_airmech1Model.Vertical">
+        <MappingFragment StoreEntitySet="Vertical">
+          <ScalarProperty Name="VerticalID" ColumnName="VerticalID" />
+          <ScalarProperty Name="VerticalName" ColumnName="VerticalName" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Warranties">
+      <EntityTypeMapping TypeName="db_a69d99_airmech1Model.Warranty">
+        <MappingFragment StoreEntitySet="Warranty">
+          <ScalarProperty Name="WarrantyID" ColumnName="WarrantyID" />
+          <ScalarProperty Name="WarrantyType" ColumnName="WarrantyType" />
+          <ScalarProperty Name="WarrantyDescription" ColumnName="WarrantyDescription" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Menus">
+      <EntityTypeMapping TypeName="db_a69d99_airmech1Model.Menu">
+        <MappingFragment StoreEntitySet="Menu">
+          <ScalarProperty Name="MenuDescription" ColumnName="MenuDescription" />
+          <ScalarProperty Name="IsAccountMenu" ColumnName="IsAccountMenu" />
+          <ScalarProperty Name="MenuOrder" ColumnName="MenuOrder" />
+          <ScalarProperty Name="PermissionRequired" ColumnName="PermissionRequired" />
+          <ScalarProperty Name="imgclass" ColumnName="imgclass" />
+          <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+          <ScalarProperty Name="ModifiedOn" ColumnName="ModifiedOn" />
+          <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
+          <ScalarProperty Name="CreatedOn" ColumnName="CreatedOn" />
+          <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+          <ScalarProperty Name="RoleID" ColumnName="RoleID" />
+          <ScalarProperty Name="SubLevel" ColumnName="SubLevel" />
+          <ScalarProperty Name="Ordering" ColumnName="Ordering" />
+          <ScalarProperty Name="ParentID" ColumnName="ParentID" />
+          <ScalarProperty Name="Link" ColumnName="Link" />
+          <ScalarProperty Name="Title" ColumnName="Title" />
+          <ScalarProperty Name="MenuID" ColumnName="MenuID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="BriefScopes">
+      <EntityTypeMapping TypeName="db_a69d99_airmech1Model.BriefScope">
+        <MappingFragment StoreEntitySet="BriefScope">
+          <ScalarProperty Name="BriefScope1" ColumnName="BriefScope" />
+          <ScalarProperty Name="BriefScopeID" ColumnName="BriefScopeID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="PeriodLocks">
+      <EntityTypeMapping TypeName="db_a69d99_airmech1Model.PeriodLock">
+        <MappingFragment StoreEntitySet="PeriodLock">
+          <ScalarProperty Name="Remarks" ColumnName="Remarks" />
+          <ScalarProperty Name="FYearID" ColumnName="FYearID" />
+          <ScalarProperty Name="BranchId" ColumnName="BranchId" />
+          <ScalarProperty Name="UserName" ColumnName="UserName" />
+          <ScalarProperty Name="StatusChangeDate" ColumnName="StatusChangeDate" />
+          <ScalarProperty Name="CurrentStatus" ColumnName="CurrentStatus" />
+          <ScalarProperty Name="EndDate" ColumnName="EndDate" />
+          <ScalarProperty Name="StartDate" ColumnName="StartDate" />
+          <ScalarProperty Name="Period" ColumnName="Period" />
+          <ScalarProperty Name="PeriodLockID" ColumnName="PeriodLockID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="GeneralSetups">
+      <EntityTypeMapping TypeName="db_a69d99_airmech1Model.GeneralSetup">
+        <MappingFragment StoreEntitySet="GeneralSetup">
+          <ScalarProperty Name="Text5" ColumnName="Text5" />
+          <ScalarProperty Name="Text4" ColumnName="Text4" />
+          <ScalarProperty Name="Text3" ColumnName="Text3" />
+          <ScalarProperty Name="Text2" ColumnName="Text2" />
+          <ScalarProperty Name="Text1" ColumnName="Text1" />
+          <ScalarProperty Name="SetupName" ColumnName="SetupName" />
+          <ScalarProperty Name="SetupTypeID" ColumnName="SetupTypeID" />
+          <ScalarProperty Name="BranchId" ColumnName="BranchId" />
+          <ScalarProperty Name="AcCompanyId" ColumnName="AcCompanyId" />
+          <ScalarProperty Name="SetupID" ColumnName="SetupID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="GeneralSetupTypes">
+      <EntityTypeMapping TypeName="db_a69d99_airmech1Model.GeneralSetupType">
+        <MappingFragment StoreEntitySet="GeneralSetupType">
+          <ScalarProperty Name="TypeName" ColumnName="TypeName" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="CurrencyRates">
+      <EntityTypeMapping TypeName="db_a69d99_airmech1Model.CurrencyRate">
+        <MappingFragment StoreEntitySet="CurrencyRate">
+          <ScalarProperty Name="TransactionCurrencyID" ColumnName="TransactionCurrencyID" />
+          <ScalarProperty Name="BranchCurrencyID" ColumnName="BranchCurrencyID" />
+          <ScalarProperty Name="CurrencyRate1" ColumnName="CurrencyRate" />
+          <ScalarProperty Name="TransDate" ColumnName="TransDate" />
+          <ScalarProperty Name="CurrencyRateID" ColumnName="CurrencyRateID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Models">
+      <EntityTypeMapping TypeName="db_a69d99_airmech1Model.Model">
+        <MappingFragment StoreEntitySet="Model">
+          <ScalarProperty Name="ModelName" ColumnName="ModelName" />
+          <ScalarProperty Name="ModelID" ColumnName="ModelID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="AcHeads">
+      <EntityTypeMapping TypeName="db_a69d99_airmech1Model.AcHead">
+        <MappingFragment StoreEntitySet="AcHead">
+          <ScalarProperty Name="DisplayReceiptPayment" ColumnName="DisplayReceiptPayment" />
+          <ScalarProperty Name="TaxPercent" ColumnName="TaxPercent" />
+          <ScalarProperty Name="TaxApplicable" ColumnName="TaxApplicable" />
+          <ScalarProperty Name="AcBranchID" ColumnName="AcBranchID" />
+          <ScalarProperty Name="AccountDescription" ColumnName="AccountDescription" />
+          <ScalarProperty Name="StatusControlAC" ColumnName="StatusControlAC" />
+          <ScalarProperty Name="Prefix" ColumnName="Prefix" />
+          <ScalarProperty Name="UserID" ColumnName="UserID" />
+          <ScalarProperty Name="StatusHide" ColumnName="StatusHide" />
+          <ScalarProperty Name="HeadOrder" ColumnName="HeadOrder" />
+          <ScalarProperty Name="ParentID" ColumnName="ParentID" />
+          <ScalarProperty Name="AcGroupID" ColumnName="AcGroupID" />
+          <ScalarProperty Name="AcHead1" ColumnName="AcHead" />
+          <ScalarProperty Name="AcHeadKey" ColumnName="AcHeadKey" />
+          <ScalarProperty Name="AcHeadID" ColumnName="AcHeadID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="AssignedStatus">
+      <EntityTypeMapping TypeName="db_a69d99_airmech1Model.AssignedStatu">
+        <MappingFragment StoreEntitySet="AssignedStatus">
+          <ScalarProperty Name="AssignedStatusName" ColumnName="AssignedStatusName" />
+          <ScalarProperty Name="AssignedStatusID" ColumnName="AssignedStatusID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="ProductTypes">
+      <EntityTypeMapping TypeName="db_a69d99_airmech1Model.ProductType">
+        <MappingFragment StoreEntitySet="ProductType">
+          <ScalarProperty Name="ProductTypeName" ColumnName="ProductTypeName" />
+          <ScalarProperty Name="ProductTypeID" ColumnName="ProductTypeID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="SupplierMasters">
+      <EntityTypeMapping TypeName="db_a69d99_airmech1Model.SupplierMaster">
+        <MappingFragment StoreEntitySet="SupplierMaster">
+          <ScalarProperty Name="UserID" ColumnName="UserID" />
+          <ScalarProperty Name="APITracking" ColumnName="APITracking" />
+          <ScalarProperty Name="APIToken" ColumnName="APIToken" />
+          <ScalarProperty Name="APILink" ColumnName="APILink" />
+          <ScalarProperty Name="AcHeadID" ColumnName="AcHeadID" />
+          <ScalarProperty Name="RegistrationNo" ColumnName="RegistrationNo" />
+          <ScalarProperty Name="Remarks" ColumnName="Remarks" />
+          <ScalarProperty Name="POBoxNo" ColumnName="POBoxNo" />
+          <ScalarProperty Name="StatusReserved" ColumnName="StatusReserved" />
+          <ScalarProperty Name="StatusInventory" ColumnName="StatusInventory" />
+          <ScalarProperty Name="ExportCode" ColumnName="ExportCode" />
+          <ScalarProperty Name="RevenueTypeIds" ColumnName="RevenueTypeIds" />
+          <ScalarProperty Name="MaxCreditLimit" ColumnName="MaxCreditLimit" />
+          <ScalarProperty Name="MaxCreditDays" ColumnName="MaxCreditDays" />
+          <ScalarProperty Name="CountryName" ColumnName="CountryName" />
+          <ScalarProperty Name="LocationName" ColumnName="LocationName" />
+          <ScalarProperty Name="CityName" ColumnName="CityName" />
+          <ScalarProperty Name="SupplierTypeID" ColumnName="SupplierTypeID" />
+          <ScalarProperty Name="BranchID" ColumnName="BranchID" />
+          <ScalarProperty Name="MobileNo" ColumnName="MobileNo" />
+          <ScalarProperty Name="AcCompanyID" ColumnName="AcCompanyID" />
+          <ScalarProperty Name="StatusActive" ColumnName="StatusActive" />
+          <ScalarProperty Name="CurrencyID" ColumnName="CurrencyID" />
+          <ScalarProperty Name="WebSite" ColumnName="WebSite" />
+          <ScalarProperty Name="Email" ColumnName="Email" />
+          <ScalarProperty Name="Fax" ColumnName="Fax" />
+          <ScalarProperty Name="Phone" ColumnName="Phone" />
+          <ScalarProperty Name="Address2" ColumnName="Address2" />
+          <ScalarProperty Name="Address1" ColumnName="Address1" />
+          <ScalarProperty Name="ContactPerson" ColumnName="ContactPerson" />
+          <ScalarProperty Name="ReferenceCode" ColumnName="ReferenceCode" />
+          <ScalarProperty Name="SupplierName" ColumnName="SupplierName" />
+          <ScalarProperty Name="SupplierID" ColumnName="SupplierID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="CustomerInvoices">
+      <EntityTypeMapping TypeName="db_a69d99_airmech1Model.CustomerInvoice">
+        <MappingFragment StoreEntitySet="CustomerInvoice">
+          <ScalarProperty Name="DiscountAmountFC" ColumnName="DiscountAmountFC" />
+          <ScalarProperty Name="InvoiceTotalFC" ColumnName="InvoiceTotalFC" />
+          <ScalarProperty Name="DueDate" ColumnName="DueDate" />
+          <ScalarProperty Name="AcHeadId" ColumnName="AcHeadId" />
+          <ScalarProperty Name="PaymentModeId" ColumnName="PaymentModeId" />
+          <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
+          <ScalarProperty Name="ModifiedDate" ColumnName="ModifiedDate" />
+          <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+          <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+          <ScalarProperty Name="BranchID" ColumnName="BranchID" />
+          <ScalarProperty Name="AcFinancialYearID" ColumnName="AcFinancialYearID" />
+          <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
+          <ScalarProperty Name="InvoiceTotal" ColumnName="InvoiceTotal" />
+          <ScalarProperty Name="AcCompanyID" ColumnName="AcCompanyID" />
+          <ScalarProperty Name="StatusClose" ColumnName="StatusClose" />
+          <ScalarProperty Name="AcJournalID" ColumnName="AcJournalID" />
+          <ScalarProperty Name="DiscountAmount" ColumnName="DiscountAmount" />
+          <ScalarProperty Name="DiscountPercent" ColumnName="DiscountPercent" />
+          <ScalarProperty Name="TaxAmount" ColumnName="TaxAmount" />
+          <ScalarProperty Name="IGSTAmount" ColumnName="IGSTAmount" />
+          <ScalarProperty Name="CGSTAmount" ColumnName="CGSTAmount" />
+          <ScalarProperty Name="SGSTAmount" ColumnName="SGSTAmount" />
+          <ScalarProperty Name="Remarks" ColumnName="Remarks" />
+          <ScalarProperty Name="ReferenceNo" ColumnName="ReferenceNo" />
+          <ScalarProperty Name="ExRate" ColumnName="ExRate" />
+          <ScalarProperty Name="CurrencyID" ColumnName="CurrencyID" />
+          <ScalarProperty Name="SalesPersonID" ColumnName="SalesPersonID" />
+          <ScalarProperty Name="InvoiceType" ColumnName="InvoiceType" />
+          <ScalarProperty Name="CustomerEmailID" ColumnName="CustomerEmailID" />
+          <ScalarProperty Name="CustomerPhoneNo" ColumnName="CustomerPhoneNo" />
+          <ScalarProperty Name="CustomerAddress" ColumnName="CustomerAddress" />
+          <ScalarProperty Name="CustomerName" ColumnName="CustomerName" />
+          <ScalarProperty Name="CustomerID" ColumnName="CustomerID" />
+          <ScalarProperty Name="InvoiceDate" ColumnName="InvoiceDate" />
+          <ScalarProperty Name="CustomerInvoiceNo" ColumnName="CustomerInvoiceNo" />
+          <ScalarProperty Name="CustomerInvoiceID" ColumnName="CustomerInvoiceID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="CustomerInvoiceDetails">
+      <EntityTypeMapping TypeName="db_a69d99_airmech1Model.CustomerInvoiceDetail">
+        <MappingFragment StoreEntitySet="CustomerInvoiceDetails">
+          <ScalarProperty Name="ProductTypeID" ColumnName="ProductTypeID" />
+          <ScalarProperty Name="ForDEFRID" ColumnName="ForDEFRID" />
+          <ScalarProperty Name="DEFRID" ColumnName="DEFRID" />
+          <ScalarProperty Name="DiscountAmountFC" ColumnName="DiscountAmountFC" />
+          <ScalarProperty Name="Description" ColumnName="Description" />
+          <ScalarProperty Name="NetValue" ColumnName="NetValue" />
+          <ScalarProperty Name="DiscountAmount" ColumnName="DiscountAmount" />
+          <ScalarProperty Name="DiscountPercent" ColumnName="DiscountPercent" />
+          <ScalarProperty Name="TaxAmount" ColumnName="TaxAmount" />
+          <ScalarProperty Name="TaxPercent" ColumnName="TaxPercent" />
+          <ScalarProperty Name="IGSTAmt" ColumnName="IGSTAmt" />
+          <ScalarProperty Name="SGSTAmt" ColumnName="SGSTAmt" />
+          <ScalarProperty Name="CGSTAmt" ColumnName="CGSTAmt" />
+          <ScalarProperty Name="IGST" ColumnName="IGST" />
+          <ScalarProperty Name="CGST" ColumnName="CGST" />
+          <ScalarProperty Name="SGST" ColumnName="SGST" />
+          <ScalarProperty Name="SalesRateFC" ColumnName="SalesRateFC" />
+          <ScalarProperty Name="SalesRate" ColumnName="SalesRate" />
+          <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+          <ScalarProperty Name="UnitID" ColumnName="UnitID" />
+          <ScalarProperty Name="ProductID" ColumnName="ProductID" />
+          <ScalarProperty Name="CustomerInvoiceID" ColumnName="CustomerInvoiceID" />
+          <ScalarProperty Name="CustomerInvoiceDetailID" ColumnName="CustomerInvoiceDetailID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="SupplierTypes">
+      <EntityTypeMapping TypeName="db_a69d99_airmech1Model.SupplierType">
+        <MappingFragment StoreEntitySet="SupplierType">
+          <ScalarProperty Name="AcHeadID" ColumnName="AcHeadID" />
+          <ScalarProperty Name="SupplierType1" ColumnName="SupplierType" />
+          <ScalarProperty Name="SupplierTypeID" ColumnName="SupplierTypeID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="JobWarranties">
+      <EntityTypeMapping TypeName="db_a69d99_airmech1Model.JobWarranty">
+        <MappingFragment StoreEntitySet="JobWarranty">
+          <ScalarProperty Name="Remarks" ColumnName="Remarks" />
+          <ScalarProperty Name="ExpiryDate" ColumnName="ExpiryDate" />
+          <ScalarProperty Name="WarrantyID" ColumnName="WarrantyID" />
+          <ScalarProperty Name="JobHandOverID" ColumnName="JobHandOverID" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="PaymentInstruments">
+      <EntityTypeMapping TypeName="db_a69d99_airmech1Model.PaymentInstrument">
+        <MappingFragment StoreEntitySet="PaymentInstruments">
+          <ScalarProperty Name="Instruments" ColumnName="Instruments" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="JobPaymentTerms">
+      <EntityTypeMapping TypeName="db_a69d99_airmech1Model.JobPaymentTerm">
+        <MappingFragment StoreEntitySet="JobPaymentTerms">
+          <ScalarProperty Name="ModifiedDate" ColumnName="ModifiedDate" />
+          <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
+          <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+          <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+          <ScalarProperty Name="Terms" ColumnName="Terms" />
+          <ScalarProperty Name="Amount" ColumnName="Amount" />
+          <ScalarProperty Name="DueDays" ColumnName="DueDays" />
+          <ScalarProperty Name="PaymentID" ColumnName="PaymentID" />
+          <ScalarProperty Name="JobHandOverID" ColumnName="JobHandOverID" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="ProjectPrefixes">
+      <EntityTypeMapping TypeName="db_a69d99_airmech1Model.ProjectPrefix">
+        <MappingFragment StoreEntitySet="ProjectPrefix">
+          <ScalarProperty Name="ProjectPrefix1" ColumnName="ProjectPrefix" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="JobHandovers">
+      <EntityTypeMapping TypeName="db_a69d99_airmech1Model.JobHandover">
+        <MappingFragment StoreEntitySet="JobHandover">
+          <ScalarProperty Name="ModifiedDate" ColumnName="ModifiedDate" />
+          <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
+          <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+          <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+          <ScalarProperty Name="Completed" ColumnName="Completed" />
+          <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
+          <ScalarProperty Name="TotalValue" ColumnName="TotalValue" />
+          <ScalarProperty Name="VatAmount" ColumnName="VatAmount" />
+          <ScalarProperty Name="VatPercentage" ColumnName="VatPercentage" />
+          <ScalarProperty Name="MarginPercent" ColumnName="MarginPercent" />
+          <ScalarProperty Name="Margin" ColumnName="Margin" />
+          <ScalarProperty Name="JobCost" ColumnName="JobCost" />
+          <ScalarProperty Name="JobValue" ColumnName="JobValue" />
+          <ScalarProperty Name="Remarks" ColumnName="Remarks" />
+          <ScalarProperty Name="DeliveryLocation" ColumnName="DeliveryLocation" />
+          <ScalarProperty Name="Site" ColumnName="Site" />
+          <ScalarProperty Name="CompletionDate" ColumnName="CompletionDate" />
+          <ScalarProperty Name="ProjectTitle" ColumnName="ProjectTitle" />
+          <ScalarProperty Name="ClientID" ColumnName="ClientID" />
+          <ScalarProperty Name="EnquiryID" ColumnName="EnquiryID" />
+          <ScalarProperty Name="MaxVarNo" ColumnName="MaxVarNo" />
+          <ScalarProperty Name="ProjectNumber" ColumnName="ProjectNumber" />
+          <ScalarProperty Name="ProjectPrefix" ColumnName="ProjectPrefix" />
+          <ScalarProperty Name="JobDate" ColumnName="JobDate" />
+          <ScalarProperty Name="JobHandOverID" ColumnName="JobHandOverID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="SupplierInvoices">
+      <EntityTypeMapping TypeName="db_a69d99_airmech1Model.SupplierInvoice">
+        <MappingFragment StoreEntitySet="SupplierInvoice">
+          <ScalarProperty Name="CurrencyID" ColumnName="CurrencyID" />
+          <ScalarProperty Name="SupplierTypeId" ColumnName="SupplierTypeId" />
+          <ScalarProperty Name="ReferenceNo" ColumnName="ReferenceNo" />
+          <ScalarProperty Name="ModifiedDate" ColumnName="ModifiedDate" />
+          <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
+          <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+          <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+          <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
+          <ScalarProperty Name="InvoiceTotal" ColumnName="InvoiceTotal" />
+          <ScalarProperty Name="StatusClose" ColumnName="StatusClose" />
+          <ScalarProperty Name="BranchId" ColumnName="BranchId" />
+          <ScalarProperty Name="FyearID" ColumnName="FyearID" />
+          <ScalarProperty Name="AcHeadID" ColumnName="AcHeadID" />
+          <ScalarProperty Name="AcDiscJournalID" ColumnName="AcDiscJournalID" />
+          <ScalarProperty Name="AcJOurnalID" ColumnName="AcJOurnalID" />
+          <ScalarProperty Name="InvoiceNo" ColumnName="InvoiceNo" />
+          <ScalarProperty Name="AccompanyID" ColumnName="AccompanyID" />
+          <ScalarProperty Name="Remarks" ColumnName="Remarks" />
+          <ScalarProperty Name="InvoiceDate" ColumnName="InvoiceDate" />
+          <ScalarProperty Name="SupplierID" ColumnName="SupplierID" />
+          <ScalarProperty Name="SupplierInvoiceID" ColumnName="SupplierInvoiceID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="EquipmentTypes">
+      <EntityTypeMapping TypeName="db_a69d99_airmech1Model.EquipmentType">
+        <MappingFragment StoreEntitySet="EquipmentType">
+          <ScalarProperty Name="BrandID" ColumnName="BrandID" />
+          <ScalarProperty Name="EquipmentType1" ColumnName="EquipmentType" />
+          <ScalarProperty Name="ProductFamilyID" ColumnName="ProductFamilyID" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="EstimationCategories">
+      <EntityTypeMapping TypeName="db_a69d99_airmech1Model.EstimationCategory">
+        <MappingFragment StoreEntitySet="EstimationCategory">
+          <ScalarProperty Name="AutoCalc" ColumnName="AutoCalc" />
+          <ScalarProperty Name="CurrencyID" ColumnName="CurrencyID" />
+          <ScalarProperty Name="CategoryDescription" ColumnName="CategoryDescription" />
+          <ScalarProperty Name="CategoryName" ColumnName="CategoryName" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Equipments">
+      <EntityTypeMapping TypeName="db_a69d99_airmech1Model.Equipment">
+        <MappingFragment StoreEntitySet="Equipment">
+          <ScalarProperty Name="CreatedUserID" ColumnName="CreatedUserID" />
+          <ScalarProperty Name="BrandID" ColumnName="BrandID" />
+          <ScalarProperty Name="EfficientType" ColumnName="EfficientType" />
+          <ScalarProperty Name="Refrigerant" ColumnName="Refrigerant" />
+          <ScalarProperty Name="NominalCapacity" ColumnName="NominalCapacity" />
+          <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
+          <ScalarProperty Name="ModifiedDate" ColumnName="ModifiedDate" />
+          <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+          <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+          <ScalarProperty Name="QuotationId" ColumnName="QuotationId" />
+          <ScalarProperty Name="PurchaseOrderID" ColumnName="PurchaseOrderID" />
+          <ScalarProperty Name="EquipmentStatusID" ColumnName="EquipmentStatusID" />
+          <ScalarProperty Name="Amount" ColumnName="Amount" />
+          <ScalarProperty Name="UnitRate" ColumnName="UnitRate" />
+          <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+          <ScalarProperty Name="Model" ColumnName="Model" />
+          <ScalarProperty Name="Brand" ColumnName="Brand" />
+          <ScalarProperty Name="EquipmentName" ColumnName="EquipmentName" />
+          <ScalarProperty Name="EquipmentTypeID" ColumnName="EquipmentTypeID" />
+          <ScalarProperty Name="ProductFamilyID" ColumnName="ProductFamilyID" />
+          <ScalarProperty Name="EnquiryID" ColumnName="EnquiryID" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="SupplierInvoiceDetails">
+      <EntityTypeMapping TypeName="db_a69d99_airmech1Model.SupplierInvoiceDetail">
+        <MappingFragment StoreEntitySet="SupplierInvoiceDetails">
+          <ScalarProperty Name="ProjectID" ColumnName="ProjectID" />
+          <ScalarProperty Name="ProductID" ColumnName="ProductID" />
+          <ScalarProperty Name="ProductTypeID" ColumnName="ProductTypeID" />
+          <ScalarProperty Name="AcHeadID" ColumnName="AcHeadID" />
+          <ScalarProperty Name="Value" ColumnName="Value" />
+          <ScalarProperty Name="TaxPercentage" ColumnName="TaxPercentage" />
+          <ScalarProperty Name="Amount" ColumnName="Amount" />
+          <ScalarProperty Name="Rate" ColumnName="Rate" />
+          <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+          <ScalarProperty Name="Particulars" ColumnName="Particulars" />
+          <ScalarProperty Name="SupplierInvoiceID" ColumnName="SupplierInvoiceID" />
+          <ScalarProperty Name="SupplierInvoiceDetailID" ColumnName="SupplierInvoiceDetailID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="ItemUnits">
+      <EntityTypeMapping TypeName="db_a69d99_airmech1Model.ItemUnit">
+        <MappingFragment StoreEntitySet="ItemUnit">
+          <ScalarProperty Name="DefaultUnit" ColumnName="DefaultUnit" />
+          <ScalarProperty Name="StatusActive" ColumnName="StatusActive" />
+          <ScalarProperty Name="ItemUnit1" ColumnName="ItemUnit" />
+          <ScalarProperty Name="ItemUnitID" ColumnName="ItemUnitID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="EstimationMasters">
+      <EntityTypeMapping TypeName="db_a69d99_airmech1Model.EstimationMaster">
+        <MappingFragment StoreEntitySet="EstimationMaster">
+          <ScalarProperty Name="Remarks" ColumnName="Remarks" />
+          <ScalarProperty Name="Qty" ColumnName="Qty" />
+          <ScalarProperty Name="UnitID" ColumnName="UnitID" />
+          <ScalarProperty Name="OrderNo" ColumnName="OrderNo" />
+          <ScalarProperty Name="CurrencyID" ColumnName="CurrencyID" />
+          <ScalarProperty Name="TypeName" ColumnName="TypeName" />
+          <ScalarProperty Name="CategoryID" ColumnName="CategoryID" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Ports">
+      <EntityTypeMapping TypeName="db_a69d99_airmech1Model.Port">
+        <MappingFragment StoreEntitySet="Port">
+          <ScalarProperty Name="CityID" ColumnName="CityID" />
+          <ScalarProperty Name="PortType" ColumnName="PortType" />
+          <ScalarProperty Name="CountryID" ColumnName="CountryID" />
+          <ScalarProperty Name="Port1" ColumnName="Port" />
+          <ScalarProperty Name="PortCode" ColumnName="PortCode" />
+          <ScalarProperty Name="PortID" ColumnName="PortID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="EstimationDetails">
+      <EntityTypeMapping TypeName="db_a69d99_airmech1Model.EstimationDetail">
+        <MappingFragment StoreEntitySet="EstimationDetail">
+          <ScalarProperty Name="AppliedFactor" ColumnName="AppliedFactor" />
+          <ScalarProperty Name="SellingUnitRate" ColumnName="SellingUnitRate" />
+          <ScalarProperty Name="ExchangeRate" ColumnName="ExchangeRate" />
+          <ScalarProperty Name="EstimationMasterID" ColumnName="EstimationMasterID" />
+          <ScalarProperty Name="CurrencyID" ColumnName="CurrencyID" />
+          <ScalarProperty Name="LValue" ColumnName="LValue" />
+          <ScalarProperty Name="FValue" ColumnName="FValue" />
+          <ScalarProperty Name="Rate" ColumnName="Rate" />
+          <ScalarProperty Name="Qty" ColumnName="Qty" />
+          <ScalarProperty Name="UnitID" ColumnName="UnitID" />
+          <ScalarProperty Name="Model" ColumnName="Model" />
+          <ScalarProperty Name="Description" ColumnName="Description" />
+          <ScalarProperty Name="EquipmentID" ColumnName="EquipmentID" />
+          <ScalarProperty Name="EstimationCategoryID" ColumnName="EstimationCategoryID" />
+          <ScalarProperty Name="EstimationID" ColumnName="EstimationID" />
+          <ScalarProperty Name="EstimationDetailID" ColumnName="EstimationDetailID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="EquipmentExclusions">
+      <EntityTypeMapping TypeName="db_a69d99_airmech1Model.EquipmentExclusion">
+        <MappingFragment StoreEntitySet="EquipmentExclusions">
+          <ScalarProperty Name="ModifiedDate" ColumnName="ModifiedDate" />
+          <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
+          <ScalarProperty Name="Description" ColumnName="Description" />
+          <ScalarProperty Name="EquipmentTypeID" ColumnName="EquipmentTypeID" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="EquipmentScopeofworks">
+      <EntityTypeMapping TypeName="db_a69d99_airmech1Model.EquipmentScopeofwork">
+        <MappingFragment StoreEntitySet="EquipmentScopeofwork">
+          <ScalarProperty Name="OrderNo" ColumnName="OrderNo" />
+          <ScalarProperty Name="Model" ColumnName="Model" />
+          <ScalarProperty Name="ModifiedDate" ColumnName="ModifiedDate" />
+          <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
+          <ScalarProperty Name="Description" ColumnName="Description" />
+          <ScalarProperty Name="EquipmentTypeID" ColumnName="EquipmentTypeID" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="EquipmentWarranties">
+      <EntityTypeMapping TypeName="db_a69d99_airmech1Model.EquipmentWarranty">
+        <MappingFragment StoreEntitySet="EquipmentWarranty">
+          <ScalarProperty Name="WarrantyType" ColumnName="WarrantyType" />
+          <ScalarProperty Name="ModifiedDate" ColumnName="ModifiedDate" />
+          <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
+          <ScalarProperty Name="Description" ColumnName="Description" />
+          <ScalarProperty Name="EquipmentTypeID" ColumnName="EquipmentTypeID" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="QuotationExclusions">
+      <EntityTypeMapping TypeName="db_a69d99_airmech1Model.QuotationExclusion">
+        <MappingFragment StoreEntitySet="QuotationExclusions">
+          <ScalarProperty Name="EquipmentID" ColumnName="EquipmentID" />
+          <ScalarProperty Name="Description" ColumnName="Description" />
+          <ScalarProperty Name="QuotationID" ColumnName="QuotationID" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="QuotationScopeofworks">
+      <EntityTypeMapping TypeName="db_a69d99_airmech1Model.QuotationScopeofwork">
+        <MappingFragment StoreEntitySet="QuotationScopeofwork">
+          <ScalarProperty Name="client" ColumnName="client" />
+          <ScalarProperty Name="Airmech" ColumnName="Airmech" />
+          <ScalarProperty Name="OrderNo" ColumnName="OrderNo" />
+          <ScalarProperty Name="Model" ColumnName="Model" />
+          <ScalarProperty Name="EquipmentID" ColumnName="EquipmentID" />
+          <ScalarProperty Name="Description" ColumnName="Description" />
+          <ScalarProperty Name="QuotationID" ColumnName="QuotationID" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="TermsConditions">
+      <EntityTypeMapping TypeName="db_a69d99_airmech1Model.TermsCondition">
+        <MappingFragment StoreEntitySet="TermsConditions">
+          <ScalarProperty Name="Description" ColumnName="Description" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="PaymentTerms">
+      <EntityTypeMapping TypeName="db_a69d99_airmech1Model.PaymentTerm">
+        <MappingFragment StoreEntitySet="PaymentTerms">
+          <ScalarProperty Name="Description" ColumnName="Description" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="QuotationWarranties">
+      <EntityTypeMapping TypeName="db_a69d99_airmech1Model.QuotationWarranty">
+        <MappingFragment StoreEntitySet="QuotationWarranty">
+          <ScalarProperty Name="JobHandOverID" ColumnName="JobHandOverID" />
+          <ScalarProperty Name="JobPurchaseOrderDetailID" ColumnName="JobPurchaseOrderDetailID" />
+          <ScalarProperty Name="WarrantyType" ColumnName="WarrantyType" />
+          <ScalarProperty Name="EquipmentID" ColumnName="EquipmentID" />
+          <ScalarProperty Name="Description" ColumnName="Description" />
+          <ScalarProperty Name="QuotationID" ColumnName="QuotationID" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="JobBondDetails">
+      <EntityTypeMapping TypeName="db_a69d99_airmech1Model.JobBondDetail">
+        <MappingFragment StoreEntitySet="JobBondDetails">
+          <ScalarProperty Name="DeletedDate" ColumnName="DeletedDate" />
+          <ScalarProperty Name="DeletedBy" ColumnName="DeletedBy" />
+          <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
+          <ScalarProperty Name="ModifiedDate" ColumnName="ModifiedDate" />
+          <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
+          <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+          <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+          <ScalarProperty Name="CurrencyID" ColumnName="CurrencyID" />
+          <ScalarProperty Name="SalesValue" ColumnName="SalesValue" />
+          <ScalarProperty Name="Percentage" ColumnName="Percentage" />
+          <ScalarProperty Name="JobPurchaseOrderDetailID" ColumnName="JobPurchaseOrderDetailID" />
+          <ScalarProperty Name="BondExpiryDate" ColumnName="BondExpiryDate" />
+          <ScalarProperty Name="BondIssueDate" ColumnName="BondIssueDate" />
+          <ScalarProperty Name="BondValidity" ColumnName="BondValidity" />
+          <ScalarProperty Name="BondValue" ColumnName="BondValue" />
+          <ScalarProperty Name="BondTypeAdded" ColumnName="BondTypeAdded" />
+          <ScalarProperty Name="BondTypeID" ColumnName="BondTypeID" />
+          <ScalarProperty Name="JobHandOverID" ColumnName="JobHandOverID" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="JobPurchaseOrderDetails">
+      <EntityTypeMapping TypeName="db_a69d99_airmech1Model.JobPurchaseOrderDetail">
+        <MappingFragment StoreEntitySet="JobPurchaseOrderDetail">
+          <ScalarProperty Name="MRequestID" ColumnName="MRequestID" />
+          <ScalarProperty Name="Margin" ColumnName="Margin" />
+          <ScalarProperty Name="TotalCost" ColumnName="TotalCost" />
+          <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
+          <ScalarProperty Name="ModifiedDate" ColumnName="ModifiedDate" />
+          <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
+          <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+          <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+          <ScalarProperty Name="QuotationId" ColumnName="QuotationId" />
+          <ScalarProperty Name="VarNo" ColumnName="VarNo" />
+          <ScalarProperty Name="TotalValue" ColumnName="TotalValue" />
+          <ScalarProperty Name="VatAmount" ColumnName="VatAmount" />
+          <ScalarProperty Name="VatPercent" ColumnName="VatPercent" />
+          <ScalarProperty Name="OrderValue" ColumnName="OrderValue" />
+          <ScalarProperty Name="PODate" ColumnName="PODate" />
+          <ScalarProperty Name="PONumber" ColumnName="PONumber" />
+          <ScalarProperty Name="JobHandOverID" ColumnName="JobHandOverID" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="PurchaseOrderOtherDetails">
+      <EntityTypeMapping TypeName="db_a69d99_airmech1Model.PurchaseOrderOtherDetail">
+        <MappingFragment StoreEntitySet="PurchaseOrderOtherDetails">
+          <ScalarProperty Name="Remarks" ColumnName="Remarks" />
+          <ScalarProperty Name="ETA" ColumnName="ETA" />
+          <ScalarProperty Name="ETD" ColumnName="ETD" />
+          <ScalarProperty Name="ExFactoryDate" ColumnName="ExFactoryDate" />
+          <ScalarProperty Name="DrawingApprovalDate" ColumnName="DrawingApprovalDate" />
+          <ScalarProperty Name="PurchaseOrderID" ColumnName="PurchaseOrderID" />
+          <ScalarProperty Name="OrderDate" ColumnName="OrderDate" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="PurchaseOrderUserComments">
+      <EntityTypeMapping TypeName="db_a69d99_airmech1Model.PurchaseOrderUserComment">
+        <MappingFragment StoreEntitySet="PurchaseOrderUserComments">
+          <ScalarProperty Name="Comments" ColumnName="Comments" />
+          <ScalarProperty Name="UserID" ColumnName="UserID" />
+          <ScalarProperty Name="EntryDate" ColumnName="EntryDate" />
+          <ScalarProperty Name="PurchaseOrderID" ColumnName="PurchaseOrderID" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="POBanks">
+      <EntityTypeMapping TypeName="db_a69d99_airmech1Model.POBank">
+        <MappingFragment StoreEntitySet="POBank">
+          <ScalarProperty Name="Swiftcode" ColumnName="Swiftcode" />
+          <ScalarProperty Name="AccountNo" ColumnName="AccountNo" />
+          <ScalarProperty Name="Address2" ColumnName="Address2" />
+          <ScalarProperty Name="Address1" ColumnName="Address1" />
+          <ScalarProperty Name="BankName" ColumnName="BankName" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="POCompressorWarranties">
+      <EntityTypeMapping TypeName="db_a69d99_airmech1Model.POCompressorWarranty">
+        <MappingFragment StoreEntitySet="POCompressorWarranty">
+          <ScalarProperty Name="Type" ColumnName="Type" />
+          <ScalarProperty Name="CompressorWarranty" ColumnName="CompressorWarranty" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="PODeliveryTerms">
+      <EntityTypeMapping TypeName="db_a69d99_airmech1Model.PODeliveryTerm">
+        <MappingFragment StoreEntitySet="PODeliveryTerms">
+          <ScalarProperty Name="TermsText" ColumnName="TermsText" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="POINCOTerms">
+      <EntityTypeMapping TypeName="db_a69d99_airmech1Model.POINCOTerm">
+        <MappingFragment StoreEntitySet="POINCOTerms">
+          <ScalarProperty Name="TermsText" ColumnName="TermsText" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="POPaymentTerms">
+      <EntityTypeMapping TypeName="db_a69d99_airmech1Model.POPaymentTerm">
+        <MappingFragment StoreEntitySet="POPaymentTerms">
+          <ScalarProperty Name="TermsText" ColumnName="TermsText" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="PORegrigerants">
+      <EntityTypeMapping TypeName="db_a69d99_airmech1Model.PORegrigerant">
+        <MappingFragment StoreEntitySet="PORegrigerant">
+          <ScalarProperty Name="Regrigerant" ColumnName="Regrigerant" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="GRNs">
+      <EntityTypeMapping TypeName="db_a69d99_airmech1Model.GRN">
+        <MappingFragment StoreEntitySet="GRN">
+          <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
+          <ScalarProperty Name="Remarks" ColumnName="Remarks" />
+          <ScalarProperty Name="BranchID" ColumnName="BranchID" />
+          <ScalarProperty Name="FYearID" ColumnName="FYearID" />
+          <ScalarProperty Name="ModifiedDate" ColumnName="ModifiedDate" />
+          <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
+          <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+          <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+          <ScalarProperty Name="EmployeeID" ColumnName="EmployeeID" />
+          <ScalarProperty Name="PURCHASEORDERID" ColumnName="PURCHASEORDERID" />
+          <ScalarProperty Name="SUPPLIERID" ColumnName="SUPPLIERID" />
+          <ScalarProperty Name="GRNDATE" ColumnName="GRNDATE" />
+          <ScalarProperty Name="GRNNO" ColumnName="GRNNO" />
+          <ScalarProperty Name="GRNID" ColumnName="GRNID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="QuotationContacts">
+      <EntityTypeMapping TypeName="db_a69d99_airmech1Model.QuotationContact">
+        <MappingFragment StoreEntitySet="QuotationContact">
+          <ScalarProperty Name="PhoneNo" ColumnName="PhoneNo" />
+          <ScalarProperty Name="EmailID" ColumnName="EmailID" />
+          <ScalarProperty Name="ContactName" ColumnName="ContactName" />
+          <ScalarProperty Name="ClientID" ColumnName="ClientID" />
+          <ScalarProperty Name="QuotationID" ColumnName="QuotationID" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="EnquiryClients">
+      <EntityTypeMapping TypeName="db_a69d99_airmech1Model.EnquiryClient">
+        <MappingFragment StoreEntitySet="EnquiryClient">
+          <ScalarProperty Name="ClientType" ColumnName="ClientType" />
+          <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+          <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+          <ScalarProperty Name="ClientID" ColumnName="ClientID" />
+          <ScalarProperty Name="EnquiryID" ColumnName="EnquiryID" />
+          <ScalarProperty Name="EnquiryClientID" ColumnName="EnquiryClientID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="StockOpenings">
+      <EntityTypeMapping TypeName="db_a69d99_airmech1Model.StockOpening">
+        <MappingFragment StoreEntitySet="StockOpening">
+          <ScalarProperty Name="ModifiedDate" ColumnName="ModifiedDate" />
+          <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
+          <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+          <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+          <ScalarProperty Name="AsonDate" ColumnName="AsonDate" />
+          <ScalarProperty Name="Value" ColumnName="Value" />
+          <ScalarProperty Name="Rate" ColumnName="Rate" />
+          <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+          <ScalarProperty Name="ItemUnitID" ColumnName="ItemUnitID" />
+          <ScalarProperty Name="Model" ColumnName="Model" />
+          <ScalarProperty Name="EquipmentTypeID" ColumnName="EquipmentTypeID" />
+          <ScalarProperty Name="OpeningID" ColumnName="OpeningID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="GRNDetails">
+      <EntityTypeMapping TypeName="db_a69d99_airmech1Model.GRNDetail">
+        <MappingFragment StoreEntitySet="GRNDetail">
+          <ScalarProperty Name="ProjectNo" ColumnName="ProjectNo" />
+          <ScalarProperty Name="JobHandOverID" ColumnName="JobHandOverID" />
+          <ScalarProperty Name="Amount" ColumnName="Amount" />
+          <ScalarProperty Name="Rate" ColumnName="Rate" />
+          <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+          <ScalarProperty Name="ItemUnitID" ColumnName="ItemUnitID" />
+          <ScalarProperty Name="Model" ColumnName="Model" />
+          <ScalarProperty Name="Description" ColumnName="Description" />
+          <ScalarProperty Name="EquipmentTypeID" ColumnName="EquipmentTypeID" />
+          <ScalarProperty Name="EquipmentID" ColumnName="EquipmentID" />
+          <ScalarProperty Name="GRNID" ColumnName="GRNID" />
+          <ScalarProperty Name="GRNDetailID" ColumnName="GRNDetailID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="MaterialIssues">
+      <EntityTypeMapping TypeName="db_a69d99_airmech1Model.MaterialIssue">
+        <MappingFragment StoreEntitySet="MaterialIssue">
+          <ScalarProperty Name="RequestedBy" ColumnName="RequestedBy" />
+          <ScalarProperty Name="JobHandOverID" ColumnName="JobHandOverID" />
+          <ScalarProperty Name="ModifiedDate" ColumnName="ModifiedDate" />
+          <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
+          <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+          <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+          <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
+          <ScalarProperty Name="Remarks" ColumnName="Remarks" />
+          <ScalarProperty Name="ApprovedBy" ColumnName="ApprovedBy" />
+          <ScalarProperty Name="IssuedBy" ColumnName="IssuedBy" />
+          <ScalarProperty Name="RequestID" ColumnName="RequestID" />
+          <ScalarProperty Name="IssueDate" ColumnName="IssueDate" />
+          <ScalarProperty Name="IssueNo" ColumnName="IssueNo" />
+          <ScalarProperty Name="MIssueID" ColumnName="MIssueID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="MaterialIssueDetails">
+      <EntityTypeMapping TypeName="db_a69d99_airmech1Model.MaterialIssueDetail">
+        <MappingFragment StoreEntitySet="MaterialIssueDetail">
+          <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+          <ScalarProperty Name="ItemUnitID" ColumnName="ItemUnitID" />
+          <ScalarProperty Name="EquipmentTypeID" ColumnName="EquipmentTypeID" />
+          <ScalarProperty Name="Qty" ColumnName="Qty" />
+          <ScalarProperty Name="Model" ColumnName="Model" />
+          <ScalarProperty Name="EquipmentID" ColumnName="EquipmentID" />
+          <ScalarProperty Name="MIssueID" ColumnName="MIssueID" />
+          <ScalarProperty Name="IssueDetailID" ColumnName="IssueDetailID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="PurchaseOrderDetails">
+      <EntityTypeMapping TypeName="db_a69d99_airmech1Model.PurchaseOrderDetail">
+        <MappingFragment StoreEntitySet="PurchaseOrderDetail">
+          <ScalarProperty Name="MRequestID" ColumnName="MRequestID" />
+          <ScalarProperty Name="QuotationID" ColumnName="QuotationID" />
+          <ScalarProperty Name="EstimationID" ColumnName="EstimationID" />
+          <ScalarProperty Name="JobHandOverID" ColumnName="JobHandOverID" />
+          <ScalarProperty Name="ProjectNo" ColumnName="ProjectNo" />
+          <ScalarProperty Name="Amount" ColumnName="Amount" />
+          <ScalarProperty Name="Rate" ColumnName="Rate" />
+          <ScalarProperty Name="ItemUnitID" ColumnName="ItemUnitID" />
+          <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+          <ScalarProperty Name="Model" ColumnName="Model" />
+          <ScalarProperty Name="Description" ColumnName="Description" />
+          <ScalarProperty Name="EquipmentID" ColumnName="EquipmentID" />
+          <ScalarProperty Name="EquipmentTypeID" ColumnName="EquipmentTypeID" />
+          <ScalarProperty Name="PurchaseOrderID" ColumnName="PurchaseOrderID" />
+          <ScalarProperty Name="PurchaseOrderDetailID" ColumnName="PurchaseOrderDetailID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="MaterialRequests">
+      <EntityTypeMapping TypeName="db_a69d99_airmech1Model.MaterialRequest">
+        <MappingFragment StoreEntitySet="MaterialRequest">
+          <ScalarProperty Name="JobPurchaseOrderDetailID" ColumnName="JobPurchaseOrderDetailID" />
+          <ScalarProperty Name="JobHandOverID" ColumnName="JobHandOverID" />
+          <ScalarProperty Name="Remarks" ColumnName="Remarks" />
+          <ScalarProperty Name="DeletedDate" ColumnName="DeletedDate" />
+          <ScalarProperty Name="DeletedBy" ColumnName="DeletedBy" />
+          <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
+          <ScalarProperty Name="ModifiedDate" ColumnName="ModifiedDate" />
+          <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
+          <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+          <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+          <ScalarProperty Name="StoreKeeperID" ColumnName="StoreKeeperID" />
+          <ScalarProperty Name="RequestedBy" ColumnName="RequestedBy" />
+          <ScalarProperty Name="MRDate" ColumnName="MRDate" />
+          <ScalarProperty Name="MRNo" ColumnName="MRNo" />
+          <ScalarProperty Name="MRequestID" ColumnName="MRequestID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="PurchaseOrders">
+      <EntityTypeMapping TypeName="db_a69d99_airmech1Model.PurchaseOrder">
+        <MappingFragment StoreEntitySet="PurchaseOrder">
+          <ScalarProperty Name="AuthorizedBy" ColumnName="AuthorizedBy" />
+          <ScalarProperty Name="ApprovedBy" ColumnName="ApprovedBy" />
+          <ScalarProperty Name="ReviewedBy" ColumnName="ReviewedBy" />
+          <ScalarProperty Name="PreviousValue" ColumnName="PreviousValue" />
+          <ScalarProperty Name="RevisionRemarks" ColumnName="RevisionRemarks" />
+          <ScalarProperty Name="UnitWarrantyID" ColumnName="UnitWarrantyID" />
+          <ScalarProperty Name="FinancePercent" ColumnName="FinancePercent" />
+          <ScalarProperty Name="FinanceCharges" ColumnName="FinanceCharges" />
+          <ScalarProperty Name="OriginCharges" ColumnName="OriginCharges" />
+          <ScalarProperty Name="FreightCharges" ColumnName="FreightCharges" />
+          <ScalarProperty Name="Refrigerant" ColumnName="Refrigerant" />
+          <ScalarProperty Name="CompressorWarranty" ColumnName="CompressorWarranty" />
+          <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
+          <ScalarProperty Name="VATPercent" ColumnName="VATPercent" />
+          <ScalarProperty Name="VATAmount" ColumnName="VATAmount" />
+          <ScalarProperty Name="POValue" ColumnName="POValue" />
+          <ScalarProperty Name="Bank" ColumnName="Bank" />
+          <ScalarProperty Name="DeliveryTerms" ColumnName="DeliveryTerms" />
+          <ScalarProperty Name="TotalAmount" ColumnName="TotalAmount" />
+          <ScalarProperty Name="SONoRef" ColumnName="SONoRef" />
+          <ScalarProperty Name="ExchangeRate" ColumnName="ExchangeRate" />
+          <ScalarProperty Name="CurrencyID" ColumnName="CurrencyID" />
+          <ScalarProperty Name="DeliveryEx" ColumnName="DeliveryEx" />
+          <ScalarProperty Name="INCOTerms" ColumnName="INCOTerms" />
+          <ScalarProperty Name="OriginCountryID" ColumnName="OriginCountryID" />
+          <ScalarProperty Name="PaymentTerms" ColumnName="PaymentTerms" />
+          <ScalarProperty Name="Revision" ColumnName="Revision" />
+          <ScalarProperty Name="PortID" ColumnName="PortID" />
+          <ScalarProperty Name="FYearID" ColumnName="FYearID" />
+          <ScalarProperty Name="Remarks" ColumnName="Remarks" />
+          <ScalarProperty Name="Discount" ColumnName="Discount" />
+          <ScalarProperty Name="DeliveryDate" ColumnName="DeliveryDate" />
+          <ScalarProperty Name="EmployeeID" ColumnName="EmployeeID" />
+          <ScalarProperty Name="SupplierID" ColumnName="SupplierID" />
+          <ScalarProperty Name="PurchaseOrderDate" ColumnName="PurchaseOrderDate" />
+          <ScalarProperty Name="PurchaseOrderNo" ColumnName="PurchaseOrderNo" />
+          <ScalarProperty Name="PurchaseOrderID" ColumnName="PurchaseOrderID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="EmployeeMasters">
+      <EntityTypeMapping TypeName="db_a69d99_airmech1Model.EmployeeMaster">
+        <MappingFragment StoreEntitySet="EmployeeMaster">
+          <ScalarProperty Name="Approver" ColumnName="Approver" />
+          <ScalarProperty Name="RoleID" ColumnName="RoleID" />
+          <ScalarProperty Name="UserID" ColumnName="UserID" />
+          <ScalarProperty Name="BranchId" ColumnName="BranchId" />
+          <ScalarProperty Name="employeeprefix" ColumnName="employeeprefix" />
+          <ScalarProperty Name="UpdatedBy" ColumnName="UpdatedBy" />
+          <ScalarProperty Name="UpdatedOn" ColumnName="UpdatedOn" />
+          <ScalarProperty Name="CreatedOn" ColumnName="CreatedOn" />
+          <ScalarProperty Name="DepartmentID" ColumnName="DepartmentID" />
+          <ScalarProperty Name="DesignationID" ColumnName="DesignationID" />
+          <ScalarProperty Name="JoinDate" ColumnName="JoinDate" />
+          <ScalarProperty Name="PinCode" ColumnName="PinCode" />
+          <ScalarProperty Name="Location" ColumnName="Location" />
+          <ScalarProperty Name="CityID" ColumnName="CityID" />
+          <ScalarProperty Name="CountryID" ColumnName="CountryID" />
+          <ScalarProperty Name="StatusActive" ColumnName="StatusActive" />
+          <ScalarProperty Name="Email" ColumnName="Email" />
+          <ScalarProperty Name="Phone" ColumnName="Phone" />
+          <ScalarProperty Name="Address3" ColumnName="Address3" />
+          <ScalarProperty Name="Address2" ColumnName="Address2" />
+          <ScalarProperty Name="Address1" ColumnName="Address1" />
+          <ScalarProperty Name="LastName" ColumnName="LastName" />
+          <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+          <ScalarProperty Name="EmployeeCode" ColumnName="EmployeeCode" />
+          <ScalarProperty Name="EmployeeID" ColumnName="EmployeeID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="MaterialRequestDetails">
+      <EntityTypeMapping TypeName="db_a69d99_airmech1Model.MaterialRequestDetail">
+        <MappingFragment StoreEntitySet="MaterialRequestDetail">
+          <ScalarProperty Name="IssueApprovalLogID" ColumnName="IssueApprovalLogID" />
+          <ScalarProperty Name="POApprovalLogID" ColumnName="POApprovalLogID" />
+          <ScalarProperty Name="ReadytoPO" ColumnName="ReadytoPO" />
+          <ScalarProperty Name="ReadytoIssue" ColumnName="ReadytoIssue" />
+          <ScalarProperty Name="MaterialIssueID" ColumnName="MaterialIssueID" />
+          <ScalarProperty Name="PurchaseOrderID" ColumnName="PurchaseOrderID" />
+          <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+          <ScalarProperty Name="QuotationID" ColumnName="QuotationID" />
+          <ScalarProperty Name="EstimationID" ColumnName="EstimationID" />
+          <ScalarProperty Name="StockStatus" ColumnName="StockStatus" />
+          <ScalarProperty Name="ItemUnitID" ColumnName="ItemUnitID" />
+          <ScalarProperty Name="Model" ColumnName="Model" />
+          <ScalarProperty Name="Description" ColumnName="Description" />
+          <ScalarProperty Name="EquipmentTypeID" ColumnName="EquipmentTypeID" />
+          <ScalarProperty Name="EquipmentID" ColumnName="EquipmentID" />
+          <ScalarProperty Name="JobHandOverID" ColumnName="JobHandOverID" />
+          <ScalarProperty Name="MRequestID" ColumnName="MRequestID" />
+          <ScalarProperty Name="MRequestDetailID" ColumnName="MRequestDetailID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Notifications">
+      <EntityTypeMapping TypeName="db_a69d99_airmech1Model.Notification">
+        <MappingFragment StoreEntitySet="Notifications">
+          <ScalarProperty Name="PageUrl" ColumnName="PageUrl" />
+          <ScalarProperty Name="UpdatedAt" ColumnName="UpdatedAt" />
+          <ScalarProperty Name="UpdatedBy" ColumnName="UpdatedBy" />
+          <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+          <ScalarProperty Name="ExpiryAt" ColumnName="ExpiryAt" />
+          <ScalarProperty Name="DeliveryChannel" ColumnName="DeliveryChannel" />
+          <ScalarProperty Name="Priority" ColumnName="Priority" />
+          <ScalarProperty Name="ReadAt" ColumnName="ReadAt" />
+          <ScalarProperty Name="CreatedAt" ColumnName="CreatedAt" />
+          <ScalarProperty Name="IsRead" ColumnName="IsRead" />
+          <ScalarProperty Name="Message" ColumnName="Message" />
+          <ScalarProperty Name="Title" ColumnName="Title" />
+          <ScalarProperty Name="NotificationType" ColumnName="NotificationType" />
+          <ScalarProperty Name="TransactionId" ColumnName="TransactionId" />
+          <ScalarProperty Name="UserId" ColumnName="UserId" />
+          <ScalarProperty Name="NotificationId" ColumnName="NotificationId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="PurchaseOrderNotes">
+      <EntityTypeMapping TypeName="db_a69d99_airmech1Model.PurchaseOrderNote">
+        <MappingFragment StoreEntitySet="PurchaseOrderNote">
+          <ScalarProperty Name="Notes" ColumnName="Notes" />
+          <ScalarProperty Name="PurchaseOrderID" ColumnName="PurchaseOrderID" />
+          <ScalarProperty Name="NoteID" ColumnName="NoteID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="MaterialApprovals">
+      <EntityTypeMapping TypeName="db_a69d99_airmech1Model.MaterialApproval">
+        <MappingFragment StoreEntitySet="MaterialApproval">
+          <ScalarProperty Name="MRequestDetailID" ColumnName="MRequestDetailID" />
+          <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+          <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+          <ScalarProperty Name="MaterialRequestID" ColumnName="MaterialRequestID" />
+          <ScalarProperty Name="ApprovedFor" ColumnName="ApprovedFor" />
+          <ScalarProperty Name="ApprovedBy" ColumnName="ApprovedBy" />
+          <ScalarProperty Name="ApprovedDate" ColumnName="ApprovedDate" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="MaterialApprovalDetails">
+      <EntityTypeMapping TypeName="db_a69d99_airmech1Model.MaterialApprovalDetail">
+        <MappingFragment StoreEntitySet="MaterialApprovalDetail">
+          <ScalarProperty Name="MaterialRequestID" ColumnName="MaterialRequestID" />
+          <ScalarProperty Name="MRequestDetailID" ColumnName="MRequestDetailID" />
+          <ScalarProperty Name="ApprovalID" ColumnName="ApprovalID" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="PurchaseOrderApprovals">
+      <EntityTypeMapping TypeName="db_a69d99_airmech1Model.PurchaseOrderApproval">
+        <MappingFragment StoreEntitySet="PurchaseOrderApproval">
+          <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+          <ScalarProperty Name="EmployeeID" ColumnName="EmployeeID" />
+          <ScalarProperty Name="PurchaseOrderID" ColumnName="PurchaseOrderID" />
+          <ScalarProperty Name="Type" ColumnName="Type" />
+          <ScalarProperty Name="POApprovalID" ColumnName="POApprovalID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="EnquiryTypes">
+      <EntityTypeMapping TypeName="db_a69d99_airmech1Model.EnquiryType">
+        <MappingFragment StoreEntitySet="EnquiryType">
+          <ScalarProperty Name="EnquiryTypeName" ColumnName="EnquiryTypeName" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="AuditLogs">
+      <EntityTypeMapping TypeName="db_a69d99_airmech1Model.AuditLog">
+        <MappingFragment StoreEntitySet="AuditLog">
+          <ScalarProperty Name="ReferenceNo" ColumnName="ReferenceNo" />
+          <ScalarProperty Name="PageName" ColumnName="PageName" />
+          <ScalarProperty Name="LoginID" ColumnName="LoginID" />
+          <ScalarProperty Name="Remarks" ColumnName="Remarks" />
+          <ScalarProperty Name="TransDate" ColumnName="TransDate" />
+          <ScalarProperty Name="AuditLogID" ColumnName="AuditLogID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="EnquiryEmployees">
+      <EntityTypeMapping TypeName="db_a69d99_airmech1Model.EnquiryEmployee">
+        <MappingFragment StoreEntitySet="EnquiryEmployee">
+          <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+          <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+          <ScalarProperty Name="EmployeeShortName" ColumnName="EmployeeShortName" />
+          <ScalarProperty Name="EmployeeID" ColumnName="EmployeeID" />
+          <ScalarProperty Name="EnquiryID" ColumnName="EnquiryID" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Enquiries">
+      <EntityTypeMapping TypeName="db_a69d99_airmech1Model.Enquiry">
+        <MappingFragment StoreEntitySet="Enquiry">
+          <ScalarProperty Name="ClientID" ColumnName="ClientID" />
+          <ScalarProperty Name="EnquiryTypeID" ColumnName="EnquiryTypeID" />
+          <ScalarProperty Name="ProjectPrefix" ColumnName="ProjectPrefix" />
+          <ScalarProperty Name="JobHandOverID" ColumnName="JobHandOverID" />
+          <ScalarProperty Name="DeletedDate" ColumnName="DeletedDate" />
+          <ScalarProperty Name="DeletedBy" ColumnName="DeletedBy" />
+          <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
+          <ScalarProperty Name="UpdatedDate" ColumnName="UpdatedDate" />
+          <ScalarProperty Name="UpdatedBy" ColumnName="UpdatedBy" />
+          <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+          <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+          <ScalarProperty Name="AcFinancialYearID" ColumnName="AcFinancialYearID" />
+          <ScalarProperty Name="BranchID" ColumnName="BranchID" />
+          <ScalarProperty Name="CountryID" ColumnName="CountryID" />
+          <ScalarProperty Name="CityID" ColumnName="CityID" />
+          <ScalarProperty Name="EnquirySourceID" ColumnName="EnquirySourceID" />
+          <ScalarProperty Name="BuildingTypeID" ColumnName="BuildingTypeID" />
+          <ScalarProperty Name="EnquiryStatusID" ColumnName="EnquiryStatusID" />
+          <ScalarProperty Name="VerticalsID" ColumnName="VerticalsID" />
+          <ScalarProperty Name="PriorityID" ColumnName="PriorityID" />
+          <ScalarProperty Name="AssignedEmployees" ColumnName="AssignedEmployees" />
+          <ScalarProperty Name="EntityTypeIDs" ColumnName="EntityTypeIDs" />
+          <ScalarProperty Name="EnquiryStageID" ColumnName="EnquiryStageID" />
+          <ScalarProperty Name="DueDays" ColumnName="DueDays" />
+          <ScalarProperty Name="DueDate" ColumnName="DueDate" />
+          <ScalarProperty Name="ProjectDescription" ColumnName="ProjectDescription" />
+          <ScalarProperty Name="ProjectName" ColumnName="ProjectName" />
+          <ScalarProperty Name="EnquiryNo" ColumnName="EnquiryNo" />
+          <ScalarProperty Name="EnquiryDate" ColumnName="EnquiryDate" />
+          <ScalarProperty Name="EnquiryID" ColumnName="EnquiryID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Quotations">
+      <EntityTypeMapping TypeName="db_a69d99_airmech1Model.Quotation">
+        <MappingFragment StoreEntitySet="Quotation">
+          <ScalarProperty Name="ClientPOID" ColumnName="ClientPOID" />
+          <ScalarProperty Name="DirectQuotation" ColumnName="DirectQuotation" />
+          <ScalarProperty Name="SellingValue" ColumnName="SellingValue" />
+          <ScalarProperty Name="GrossAmount" ColumnName="GrossAmount" />
+          <ScalarProperty Name="Margin" ColumnName="Margin" />
+          <ScalarProperty Name="MarginPercent" ColumnName="MarginPercent" />
+          <ScalarProperty Name="ApplyMargin" ColumnName="ApplyMargin" />
+          <ScalarProperty Name="ProjectRef" ColumnName="ProjectRef" />
+          <ScalarProperty Name="DeliveryTerms" ColumnName="DeliveryTerms" />
+          <ScalarProperty Name="Validity" ColumnName="Validity" />
+          <ScalarProperty Name="VATAmount" ColumnName="VATAmount" />
+          <ScalarProperty Name="VATPercent" ColumnName="VATPercent" />
+          <ScalarProperty Name="DiscountAmount" ColumnName="DiscountAmount" />
+          <ScalarProperty Name="DiscountPercent" ColumnName="DiscountPercent" />
+          <ScalarProperty Name="QuotationTo" ColumnName="QuotationTo" />
+          <ScalarProperty Name="ModifiedDate" ColumnName="ModifiedDate" />
+          <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
+          <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+          <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+          <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
+          <ScalarProperty Name="Exclusions" ColumnName="Exclusions" />
+          <ScalarProperty Name="ClientID" ColumnName="ClientID" />
+          <ScalarProperty Name="ClientDetail" ColumnName="ClientDetail" />
+          <ScalarProperty Name="EngineerID" ColumnName="EngineerID" />
+          <ScalarProperty Name="QuotationStatusID" ColumnName="QuotationStatusID" />
+          <ScalarProperty Name="ScopeofWork" ColumnName="ScopeofWork" />
+          <ScalarProperty Name="Warranty" ColumnName="Warranty" />
+          <ScalarProperty Name="SubjectText" ColumnName="SubjectText" />
+          <ScalarProperty Name="QuotationValue" ColumnName="QuotationValue" />
+          <ScalarProperty Name="Remarks" ColumnName="Remarks" />
+          <ScalarProperty Name="Salutation" ColumnName="Salutation" />
+          <ScalarProperty Name="TermsandConditions" ColumnName="TermsandConditions" />
+          <ScalarProperty Name="PaymentTerms" ColumnName="PaymentTerms" />
+          <ScalarProperty Name="CurrencyId" ColumnName="CurrencyId" />
+          <ScalarProperty Name="MobileNumber" ColumnName="MobileNumber" />
+          <ScalarProperty Name="ContactPerson" ColumnName="ContactPerson" />
+          <ScalarProperty Name="Version" ColumnName="Version" />
+          <ScalarProperty Name="QuotationDate" ColumnName="QuotationDate" />
+          <ScalarProperty Name="QuotationNo" ColumnName="QuotationNo" />
+          <ScalarProperty Name="EnquiryID" ColumnName="EnquiryID" />
+          <ScalarProperty Name="QuotationID" ColumnName="QuotationID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="QuotationDetails">
+      <EntityTypeMapping TypeName="db_a69d99_airmech1Model.QuotationDetail">
+        <MappingFragment StoreEntitySet="QuotationDetail">
+          <ScalarProperty Name="AppliedFactor" ColumnName="AppliedFactor" />
+          <ScalarProperty Name="SellingUnitRate" ColumnName="SellingUnitRate" />
+          <ScalarProperty Name="EstimationID" ColumnName="EstimationID" />
+          <ScalarProperty Name="EstimationDetailID" ColumnName="EstimationDetailID" />
+          <ScalarProperty Name="EstimationMasterID" ColumnName="EstimationMasterID" />
+          <ScalarProperty Name="PurchaseOrderID" ColumnName="PurchaseOrderID" />
+          <ScalarProperty Name="EquipmentStatusID" ColumnName="EquipmentStatusID" />
+          <ScalarProperty Name="Amount" ColumnName="Amount" />
+          <ScalarProperty Name="UnitRate" ColumnName="UnitRate" />
+          <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+          <ScalarProperty Name="UnitID" ColumnName="UnitID" />
+          <ScalarProperty Name="Model" ColumnName="Model" />
+          <ScalarProperty Name="Description" ColumnName="Description" />
+          <ScalarProperty Name="EquipmentID" ColumnName="EquipmentID" />
+          <ScalarProperty Name="EstimationCategoryID" ColumnName="EstimationCategoryID" />
+          <ScalarProperty Name="QuotationID" ColumnName="QuotationID" />
+          <ScalarProperty Name="QuotationDetailID" ColumnName="QuotationDetailID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Estimations">
+      <EntityTypeMapping TypeName="db_a69d99_airmech1Model.Estimation">
+        <MappingFragment StoreEntitySet="Estimation">
+          <ScalarProperty Name="LandingCostOMR" ColumnName="LandingCostOMR" />
+          <ScalarProperty Name="TotalLandingCostOMR" ColumnName="TotalLandingCostOMR" />
+          <ScalarProperty Name="SoharValueOMR" ColumnName="SoharValueOMR" />
+          <ScalarProperty Name="SoharValue" ColumnName="SoharValue" />
+          <ScalarProperty Name="LandingCost" ColumnName="LandingCost" />
+          <ScalarProperty Name="SellingValue" ColumnName="SellingValue" />
+          <ScalarProperty Name="Margin" ColumnName="Margin" />
+          <ScalarProperty Name="MarginPercent" ColumnName="MarginPercent" />
+          <ScalarProperty Name="OtherChargesTotal" ColumnName="OtherChargesTotal" />
+          <ScalarProperty Name="LocalChargesTotal" ColumnName="LocalChargesTotal" />
+          <ScalarProperty Name="FinanceChargesTotal" ColumnName="FinanceChargesTotal" />
+          <ScalarProperty Name="FreightTotal" ColumnName="FreightTotal" />
+          <ScalarProperty Name="AccessoriesTotal" ColumnName="AccessoriesTotal" />
+          <ScalarProperty Name="EquipmentsTotal" ColumnName="EquipmentsTotal" />
+          <ScalarProperty Name="FinPerMonth" ColumnName="FinPerMonth" />
+          <ScalarProperty Name="FinPerMonthPercent" ColumnName="FinPerMonthPercent" />
+          <ScalarProperty Name="FinCharge" ColumnName="FinCharge" />
+          <ScalarProperty Name="FinChargePercent" ColumnName="FinChargePercent" />
+          <ScalarProperty Name="ChargeableMonth" ColumnName="ChargeableMonth" />
+          <ScalarProperty Name="FreeServiceDays" ColumnName="FreeServiceDays" />
+          <ScalarProperty Name="PaymentDays" ColumnName="PaymentDays" />
+          <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
+          <ScalarProperty Name="BranchID" ColumnName="BranchID" />
+          <ScalarProperty Name="FYearID" ColumnName="FYearID" />
+          <ScalarProperty Name="ModifiedDate" ColumnName="ModifiedDate" />
+          <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
+          <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+          <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+          <ScalarProperty Name="JobHandOverID" ColumnName="JobHandOverID" />
+          <ScalarProperty Name="TotalLCValue" ColumnName="TotalLCValue" />
+          <ScalarProperty Name="TotalFCValue" ColumnName="TotalFCValue" />
+          <ScalarProperty Name="ExchangeRate" ColumnName="ExchangeRate" />
+          <ScalarProperty Name="CurrencyID" ColumnName="CurrencyID" />
+          <ScalarProperty Name="Notes" ColumnName="Notes" />
+          <ScalarProperty Name="EmployeeID" ColumnName="EmployeeID" />
+          <ScalarProperty Name="EnquiryID" ColumnName="EnquiryID" />
+          <ScalarProperty Name="VarNo" ColumnName="VarNo" />
+          <ScalarProperty Name="EstimationDate" ColumnName="EstimationDate" />
+          <ScalarProperty Name="EstimationNo" ColumnName="EstimationNo" />
+          <ScalarProperty Name="EstimationID" ColumnName="EstimationID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+  </EntityContainerMapping>
+</Mapping>

@@ -1,0 +1,88 @@
+﻿@model HVAC.Models.JobHandOverVM
+@{
+    Layout = null;
+    var i = 0;
+}
+<style>
+    ul.ui-front {
+        z-index: 1100;
+    }
+</style>
+<script type="text/javascript">
+    $(document).ready(function () {
+      
+    });
+
+</script>
+<table class="table table-datatable dataTable tblfont table-bordered table-striped mb-0" id="DetailTable2" style="width: 100% !important;">
+
+    <thead class="table-light" style="text-align:center">
+        <tr>
+            <th></th>
+            <th width="10%">Equipment Name</th>
+            <th width="10%">Warranty</th>
+            <th width="75%">Description</th>
+            <th width="5%">Action</th>
+
+        </tr>
+    </thead>
+    <tbody class="" style="text-align:center">
+
+        @foreach (var item1 in Model.WarrantyDetails)
+        {
+
+            <tr id="quodtr_@i">
+                <td>
+                    @Html.HiddenFor(modelitem => item1.ID, new { @id = "QWarrantyID_" + @i, @class = "form-control", @readonly = "readonly" })
+
+
+                    @Html.HiddenFor(modelitem => item1.EquipmentID, new { @id = "QWarrantyEquipmentID_" + @i, @class = "form-control", @readonly = "readonly" })
+
+                    @{
+                        if (item1.Checked)
+                        {
+                            <input type="checkbox" id="chkWarranty_@i" checked />
+                        }
+                        else
+                        {
+                            <input type="checkbox" id="chkWarranty_@i" checked />
+                        }
+                    }
+
+                </td>
+                <td style="text-align:left">
+
+
+                    @Html.HiddenFor(modelitem => item1.EquipmentName, new { @id = "txtEquipmentName2_" + @i, @class = " form-control-sm", @style = "width:200px" })
+
+                    <span id="QWarrantyEquipment_@i">@item1.EquipmentName</span>
+
+                </td>
+                <td style="text-align:left">
+                    @Html.HiddenFor(modelitem => item1.WarrantyType, new { @id = "txtWarranty_" + @i, @class = " form-control-sm", @style = "width:100%" })
+                    <span id="Qwarrantytype_@i">@item1.WarrantyType</span>
+                </td>
+                <td style="text-align:left" class="editable">
+
+
+                    @Html.HiddenFor(modelitem => item1.Description, new { @id = "QtxtWarrantyDescription_" + @i, @class = " form-control-sm", @style = "width:200px" })
+
+                    <span id="QwarrantyDescription_@i">@item1.Description</span>
+
+                </td>
+
+
+
+
+                <td>
+                    <a onclick="EditWarrantyetailEntry('@i')" href="javascript:void(0);" title="Edit Item" class="edit-btn text-success"><i class="mdi mdi-pencil font-size-18"></i></a>
+                    <a onclick="SaveWarrantyDetailEntry('@i')" href="javascript:void(0);" style="display:none" title="Save Item" class="text-success save-btn"><i class="mdi mdi-content-save-edit font-size-18"></i></a>
+
+
+                </td>
+            </tr>
+            i++;
+        }
+    </tbody>
+
+</table>

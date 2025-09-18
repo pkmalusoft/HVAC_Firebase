@@ -1,0 +1,133 @@
+﻿@model HVAC.Models.QuotationVM
+@{
+    var i = 0;
+    var _decimal = @Session["Decimal"].ToString();
+    Layout = null;
+}
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+
+        $('#DetailTable2').DataTable({
+            paging: false,           // disable pagination
+            searching: true,         // enable the search box
+            info: false,             // hide "Showing X of Y entries"
+            sPaginationType: "simple"
+        });
+    });
+
+
+</script>
+<table class="table table-condensed-custom table-striped" id="DetailTable2" style="width: 100% !important;">
+
+    <thead class="table-secondary" style="text-align:center">
+        <tr>
+            <th></th>
+            <th width="10%">Equipment Name</th>
+            <th width="10%">Warranty</th>
+            <th width="600px">Description</th>
+            <th width="5%">Action</th>
+
+        </tr>
+    </thead>
+    <tbody class="" style="text-align:center">
+
+        @foreach (var item1 in Model.QuotationWarrantyDetails)
+        {
+
+        <tr id="quodtr_@i">
+            <td>
+                @Html.HiddenFor(modelitem => item1.ID, new { @id = "QWarrantyID_" + @i, @class = "form-control", @readonly = "readonly" })
+
+
+                @Html.HiddenFor(modelitem => item1.EquipmentID, new { @id = "QWarrantyEquipmentID_" + @i, @class = "form-control", @readonly = "readonly" })
+
+                @*@{
+                    if (item1.Checked)
+                    {
+                        <input type="checkbox" id="chkWarranty_@i" checked />
+                    }
+                    else
+                    {
+                        <input type="checkbox" id="chkWarranty_@i" checked />
+                    }
+                }*@
+                @(i+1)
+
+            </td>
+            <td style="text-align:left">
+
+
+                @Html.HiddenFor(modelitem => item1.EquipmentName, new { @id = "txtEquipmentName2_" + @i, @class = " form-control-sm", @style = "width:200px" })
+
+                <span id="QWarrantyEquipment_@i">@item1.EquipmentName</span>
+
+            </td>
+            <td style="text-align:left">
+                @Html.HiddenFor(modelitem => item1.WarrantyType, new { @id = "txtWarranty_" + @i, @class = " form-control-sm", @style = "width:100%" })
+                <span id="Qwarrantytype_@i">@item1.WarrantyType</span>
+            </td>
+            <td style="text-align:left" class="editable">
+
+
+                @Html.HiddenFor(modelitem => item1.Description, new { @id = "QtxtWarrantyDescription_" + @i, @class = " form-control-sm", @style = "width:200px" })
+
+                <span id="QwarrantyDescription_@i">@Html.Raw(@item1.Description)</span>
+
+            </td>
+
+
+
+
+            <td>
+                <a onclick="AddWarranty('@item1.ID')" href="javascript:void(0);" title="Edit Item" class="text-success"><i class="mdi mdi-pencil font-size-18"></i></a>
+                @*<a onclick="SaveWarrantyDetailEntry('@i')" href="javascript:void(0);" style="display:none" title="Save Item" class="text-success save-btn"><i class="mdi mdi-content-save-edit font-size-18"></i></a>*@
+                <a onclick="DeleteWarrantyDetailEntry('@i')" href="javascript:void(0);" scopeoworkid="@item1.ID" title="Delete Item" class="text-danger"><i class="mdi mdi-delete font-size-18"></i></a>
+
+            </td>
+        </tr>
+            i++;
+        }
+    </tbody>
+
+</table>
+<script>
+    $(document).ready(function () {
+        $('.edit-btn').on('click', function () {
+            var $row = $(this).closest('tr');
+
+            $row.find('.editable').each(function () {
+                var _text = $(this).find('input');
+                var _span = $(this).find('span');
+                $(_text).attr('type', 'text');
+                $(_span).css('display', 'none');
+
+            });
+
+            $row.find('.edit-btn').hide();
+            $row.find('.save-btn').show();
+            $row.find('.editable input:first').focus().select();
+        });
+
+        $('.save-btn').on('click', function () {
+            var $row = $(this).closest('tr');
+
+            $row.find('.editable').each(function () {
+                var inputVal = $(this).find('input').val();
+                var _text = $(this).find('input');
+                var _span = $(this).find('span');
+                $(_text).attr('type', 'hidden');
+                $(_span).html(inputVal);
+                $(_span).css('display', 'block');
+
+            });
+
+            $row.find('.save-btn').hide();
+            $row.find('.edit-btn').show();
+
+            // You can add AJAX here to save the changes to the server
+        });
+    });
+</script>

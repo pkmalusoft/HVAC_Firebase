@@ -1,0 +1,95 @@
+﻿ @model HVAC.Models.CurrentMonthSecuredJobsViewModel
+@{
+    ViewBag.Title = "Secured Jobs Register";
+    if (Model.ReportClass!="")
+    {
+        Layout = null;
+    }
+    else {
+        Layout = "~/Views/Shared/_Layout.cshtml";
+    }
+
+}
+
+<style>
+    .pdfenable {
+        display: none;
+    }
+</style>
+
+@using (Html.BeginForm("SecuredJobsDetail", "Reports", FormMethod.Post, new { @id = "report" }))
+{
+    @Html.AntiForgeryToken()
+
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    <div class="row @Model.ReportClass">
+        <div class="col-md-2">
+            <lable class="col-form-label">Select Year</lable>
+            @Html.DropDownListFor(m => m.SelectedYear, new SelectList(@Model.Years, @Model.SelectedYear),
+                  "Select Year", new { @class = "form-select", onchange = "this.form.submit();" })
+        </div>
+        <div class="col-md-2">
+            <lable class="col-form-label">Select Month</lable>
+            @Html.DropDownListFor(m => m.SelectedMonth, Model.Months, "-- Select Month --", new { @class = "form-control", onchange = "this.form.submit();" })
+        </div>
+        <div class="col-md-8 text-md-end">
+            <a href="@Url.Action("SecuredJobsDetailExcel", "Reports",new { SelectedMonth = Model.SelectedMonth, SelectedYear = Model.SelectedYear })" class="btn btn-success">Download Excel</a>
+            <a href="@Url.Action("SecuredJobsDetailPrint","Reports",new { SelectedMonth = Model.SelectedMonth, SelectedYear = Model.SelectedYear })"
+               class="btn btn-warning" target="_blank">
+                <i class="fa fa-file-download" style="font-size:18px"></i> Download PDF
+            </a>
+        </div>
+    </div>
+    <div class="row">
+        <div class="mt-2 text-center">
+            <h3 id="reporttitle">Secured Jobs Register  @Model.SelectedMonthName @Model.SelectedYear</h3>
+        </div>
+    </div>
+    <table style="width:100%; border:1px solid #ddd; border-collapse:collapse; font-family:Arial, sans-serif; font-size:14px;">
+        <thead>
+            <tr style="background:#808080;color:white; border-bottom:2px solid #fff;">
+                <th style="width:40px; padding:8px; text-align:center; border:1px solid #ddd;">Sl No.</th>
+                <th style="width:80px; padding:8px; text-align:center; border:1px solid #ddd;">Job No.</th>
+                <th style="width:100px; padding:8px; text-align:center; border:1px solid #ddd;">PO Reference</th>
+                <th style="width:100px; padding:8px; text-align:center; border:1px solid #ddd;">PO Date</th>
+                <th style="width:250px; padding:8px; text-align:left; border:1px solid #ddd;">Project Title</th>
+                <th style="padding: 8px; width: 100px; text-align: center; border: 1px solid #ddd;">Order Value</th>
+                <th style="padding: 8px; width: 80px; text-align: center; border: 1px solid #ddd;">VAT</th>
+                <th style="padding: 8px; width: 100px; text-align: center; border: 1px solid #ddd;">Total Value</th>
+                <th style="padding: 8px; width: 80px; text-align: center; border: 1px solid #ddd;">Margin</th>
+                <th style="width:150px; padding:8px; text-align:center; border:1px solid #ddd;">Quoted By</th>
+            </tr>
+        </thead>
+
+        <tbody>
+
+
+
+            @foreach (dynamic job in Model.JobDetail)
+            {
+                <tr style="border-bottom:1px solid #eee;">
+                    <td style="padding:8px; text-align:center; border:1px solid #ddd;">@job.SLNo</td>
+                    <td style="padding:8px; text-align:center; border:1px solid #ddd;">@job.JobNo</td>
+                    <td style="padding:8px; text-align:center; border:1px solid #ddd;">@job.POReference</td>
+                    <td style="padding:8px; text-align:center; border:1px solid #ddd;">@job.PODate.ToShortDateString()</td>
+                    <td style="padding:8px; text-align:left; border:1px solid #ddd;">@job.ProjectTitle</td>
+                    <td style="padding:8px; text-align:right; border:1px solid #ddd;">@job.OrderValue.ToString("N3")</td>
+                    <td style="padding:8px; text-align:right; border:1px solid #ddd;">@job.VAT.ToString("N3")</td>
+                    <td style="padding:8px; text-align:right; border:1px solid #ddd;">@job.POValue.ToString("N3")</td>
+                    <td style="padding:8px; text-align:right; border:1px solid #ddd;">@job.EstimateMargin.ToString("N3")</td>
+                    <td style="padding:8px; text-align:center; border:1px solid #ddd;">@job.QuotedBy</td>
+                </tr>
+
+            }
+
+            <!-- Grand Total -->
+            <tr style="background:#a9a5a5; font-weight:bold; font-size:15px;">
+                <td colspan="5" style="padding:8px; text-align:right; border:1px solid #ddd;">GRAND TOTAL</td>
+                <td style="padding:8px; text-align:right; border:1px solid #ddd;">@Model.GrandOrderValue.ToString("N3")</td>
+                <td style="padding:8px; text-align:right; border:1px solid #ddd;">@Model.GrandVAT.ToString("N3")</td>
+                <td style="padding:8px; text-align:right; border:1px solid #ddd;">@Model.GrandTotal.ToString("N3")</td>
+                <td colspan="2" style="border:1px solid #ddd;"></td>
+            </tr>
+        </tbody>
+    </table>
+}

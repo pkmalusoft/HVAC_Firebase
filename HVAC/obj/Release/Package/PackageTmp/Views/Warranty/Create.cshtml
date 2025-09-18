@@ -1,0 +1,175 @@
+﻿@model HVAC.Models.Warranty
+
+@{
+
+    ViewBag.pTitle = "Warranty - Create";
+    ViewBag.pageTitle = "Setup";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<script>
+
+    function SaveWarranty() {
+        debugger;
+        var id = 0;
+        if ($('#WarrantyID').val() > 0) {
+            id = $('#WarrantyID').val();
+
+        }
+        var protypeobj = {
+            WarrantyID: id,
+            WarrantyType: $('#WarrantyType').val()
+
+
+        }
+        debugger;
+        $.ajax({
+            type: "POST",
+            url: '/Warranty/SaveWarranty/',
+            datatype: "html",
+            data: { ProType: protypeobj },
+            success: function (response) {
+                if (response.status == "OK") {
+                    Swal.fire("Save Status!", response.message, "success");
+                    setTimeout(function () {
+                        window.location.href = "/Warranty/Index";
+                    }, 100)
+
+
+                }
+                else {
+                    Swal.fire("Save Status!", response.message, "warning");
+                }
+
+
+            }
+        });
+    }
+
+    function CheckWarrantyExist(type, id, callback) {
+
+
+        $.ajax({
+            type: "Get",
+            url: '/Warranty/WarrantyExist',
+            datatype: "Json",
+            data: {
+                PType: type,
+                ID: id
+            },
+
+            success: function (data) {
+
+                if (data == "true") {
+
+                    callback(true);
+                }
+                else {
+                    callback(false);
+                }
+
+            }
+        });
+
+
+    }
+
+
+</script>
+
+<script>
+
+    $(document).on("submit", ".needs-validation", function (e) {
+
+        e.preventDefault();
+        var id = 0;
+                    if (@Model.WarrantyID > 0) {
+
+                  $('#btnsave').html('Update');
+            id =@Model.WarrantyID;
+}
+
+
+
+
+        var type = $('#WarrantyType').val();
+
+
+
+        if (!type || type === ' ') {
+            Swal.fire("Validation Error", "Please Enter Warranty.", "error");
+            return;
+        }
+
+        //if (!describtion || describtion === ' ') {
+        //    Swal.fire("Validation Error", "Please Enter Describtion.", "error");
+        //    return;
+        //}
+
+
+        CheckWarrantyExist(type, id, function (exists) {
+            if (exists) {
+                Swal.fire("Save Status!", "Warranty Already Exist", "warning");
+            } else if (!exists) {
+
+                SaveWarranty();
+            }
+        });
+    });
+
+</script>
+
+
+
+
+@using (Html.BeginForm("Create", "Warranty", FormMethod.Post, new { @class = "needs-validation ", @novalidate = "novalidate" }))
+{
+@Html.AntiForgeryToken()
+@Html.ValidationSummary(true)
+<div id="validations" style="color:red;margin-left:7px;display:none">* Please fill mandatory fields</div>
+<fieldset>
+    <div class="card">
+        <div class="card-body">
+            <div class="row">
+
+                <div class="col-md-4">
+                    <div class="mb-2">
+                        @Html.HiddenFor(mode => Model.WarrantyID)
+                        <label class="col-form-label required">Warranty Type</label>
+                        @Html.TextBoxFor(model => model.WarrantyType, new { @class = "form-control txttarget", @required = "required" })
+                        @Html.ValidationMessageFor(model => model.WarrantyType)
+
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="mb-2">
+                        @Html.HiddenFor(mode => Model.WarrantyID)
+                        <label class="col-form-label required">Warranty Description</label>
+                        @Html.TextBoxFor(model => model.WarrantyDescription, new { @class = "form-control txttarget", @required = "required" })
+                        @Html.ValidationMessageFor(model => model.WarrantyDescription)
+
+                    </div>
+                </div>
+
+                <div class="col-md-12 text-md-end">
+                    <input type="submit" value="Save" class="btn btn-success" id="btnsave" />
+
+                    <a href='@Url.Action("Index", "Warranty", new { id = 0 })' class="btn btn-secondary" data-toggle="tooltip" data-placement="right" title="Click here">Cancel</a>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</fieldset>
+}
+
+
+
+
+@*@section Scripts {
+        @Scripts.Render("~/bundles/jqueryval")
+    }*@

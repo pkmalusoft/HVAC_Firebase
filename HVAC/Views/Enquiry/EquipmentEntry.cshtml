@@ -1,0 +1,322 @@
+﻿@model HVAC.Models.EnquiryEquipmentVM
+@{
+    Layout = null;
+    var _decimal = @Session["Decimal"].ToString();
+}
+<style>
+    ul.ui-front {
+        z-index: 1100;
+    }
+ /*   .select2-dropdown select2-dropdown--below {
+        z-index: 999999 !important;
+    }
+
+    .select2-container {
+        z-index: 999998 !important;
+    }*/
+</style>
+<script type="text/javascript">
+    function calculatevalue() {
+
+        var _eqty = $('#eQuantity').val();
+        var _rate = $('#eUnitRate').val();
+        if (_eqty == '')
+            _eqty = 0;
+        if (_rate == '') {
+            _rate = 0;
+        }
+
+        var _amt = parseFloat(_eqty) * parseFloat(_rate);
+        $('#eAmount').val(parseFloat(_amt).toFixed(_decimal));
+    }
+    $(document).ready(function () {
+    
+
+        $("#eBrand").autocomplete({
+            source: function (request, response) {
+                $.ajax({
+                    url: '/Enquiry/GetBrand',
+                    datatype: "json",
+                    data: {
+                        term: request.term
+                    },
+                    success: function (data) {
+                        response($.map(data, function (val, item) {
+                            return {
+                                label: val.BrandName,
+                                value: val.ID
+
+
+                            }
+                        }))
+                    }
+                })
+            },
+            minLength: 1,
+            autoFocus: false,
+            focus: function (e, ui) {
+                e.preventDefault();
+                $('#eBrand').val(ui.item.label);
+                $('#BrandID').val(ui.item.value);
+
+            },
+            select: function (e, ui) {
+                e.preventDefault();
+                $('#eBrand').val(ui.item.label);
+                $('#BrandID').val(ui.item.value);
+
+            },
+
+        });
+
+        //$("#eEquipmentType").autocomplete({
+        //    source: function (request, response) {
+        //        $.ajax({
+        //            url: '/Enquiry/GetEquipmentType',
+        //            datatype: "json",
+        //            data: {
+        //                term: request.term,BrandID: $('#BrandID').val()
+        //            },
+        //            success: function (data) {
+        //                response($.map(data, function (val, item) {
+        //                    return {
+        //                        label: val.EquipmentType,
+        //                        ProductFamilyName:val.ProductFamilyName,
+        //                        value: val.ID,
+        //                        ProductFamilyID: val.ProductFamilyID
+
+
+        //                    }
+        //                }))
+        //            }
+        //        })
+        //    },
+        //    minLength: 1,
+        //    autoFocus: false,
+        //    focus: function (e, ui) {
+        //        e.preventDefault();
+        //        $('#eEquipmentType').val(ui.item.label);
+        //        $('#ProductFamilyID').val(ui.item.ProductFamilyID);
+        //        $('#eEquipmentTypeID').val(ui.item.value);
+        //        $('#eProductFamilyName').val(ui.item.ProductFamilyName)
+
+        //    },
+        //    select: function (e, ui) {
+        //        e.preventDefault();
+        //        $('#eProductFamilyName').val(ui.item.ProductFamilyName)
+        //        $('#ProductFamilyID').val(ui.item.ProductFamilyID);
+        //        $('#eEquipmentType').val(ui.item.label)
+        //        $('#eProductFamilyName').val(ui.item.ProductFamilyName)
+        //        $('#eEquipmentTypeID').val(ui.item.value);
+
+        //    },
+
+        //});
+        var suppressOpenOnClear = false;
+        $('.equipment-select').each(function () {
+            var $select = $(this);
+
+            // Handle the clear event
+            $select.on('select2:select2-selection__arrow', function () {
+                suppressOpenOnClear = true;
+
+                // Remove focus from both the hidden <select> and visible Select2 box
+                setTimeout(() => {
+                    $select.blur();
+                    $select.next('.select2-container').find('.select2-selection').blur();
+                }, 0);
+            });
+
+            // Prevent dropdown from reopening immediately after clear
+            $select.on('select2:opening', function (e) {
+                if (suppressOpenOnClear) {
+                    e.preventDefault(); // Stop it from opening
+                    suppressOpenOnClear = false;
+                }
+            });
+            var defaultOption = new Option($select.attr('boxname'), $select.attr('boxid'), true, true);
+            $select.append(defaultOption);
+            //// Append it to the select
+            $select.append('<option id="" value=""></option>').trigger('change');
+            $select.select2({
+                dropdownParent: $('#equipmentpopup'),
+                width: 'resolve', // respects width set in the HTML
+                placeholder: 'Select a Equipment Type',
+                allowClear: false,
+                minLength: 1,
+                ajax: {
+                    url: '/Enquiry/GetEquipmentType',
+                    dataType: 'json',
+                    delay: 250,
+                    data: function (params) {
+                        // var category = $select.closest('tr').find('.category').val();
+                        return {
+                            term: params.term, BrandID: $('#BrandID').val()
+                        };
+                    },
+                    processResults: function (data) {
+                        return {
+                            results: data.map(function (item) {
+                                return { id: item.ID, text: item.EquipmentType };                                
+                            })
+                        };
+                    },
+                    cache: true
+                }
+            });
+
+            $select.change(function () {
+                 
+
+               
+
+                    $.ajax({
+                        url: '/Enquiry/GetProductFamily',
+                        datatype: "json",
+                        data: {
+                            EquipmentTypeID: $('#eEquipmentType').val()
+                        },
+                        success: function (data) {
+                            
+                            if (data != null) {
+                                if (data.ProductFamilyID > 0) {
+                                    $('#ProductFamilyID').val(data.ProductFamilyID);
+                                    $('#eProductFamilyName').val(data.ProductFamilyName);
+                                }
+                                else {
+                                    $('#ProductFamilyID').val(0);
+                                    $('#eProductFamilyName').val('');
+                                }
+                            }
+                            else {
+                                $('#ProductFamilyID').val(0);
+                                $('#eProductFamilyName').val('');
+                            }
+
+                        }
+
+                    })
+              
+            });
+            
+        });
+
+        $("#eModel").autocomplete({
+            source: function (request, response) {
+                $.ajax({
+                    url: '/Enquiry/GetModel',
+                    datatype: "json",
+                    data: {
+                        term: request.term
+                    },
+                    success: function (data) {
+                        response($.map(data, function (val, item) {
+                            return {
+                                label: val.ModelName,
+                                value: val.ID
+
+
+                            }
+                        }))
+                    }
+                })
+            },
+            minLength: 1,
+            autoFocus: false,
+            focus: function (e, ui) {
+                e.preventDefault();
+                $('#eModel').val(ui.item.label);
+
+
+            },
+            select: function (e, ui) {
+                e.preventDefault();
+                $('#eModel').val(ui.item.label);
+
+            },
+
+        });
+
+        $('#BrandID').blur(function () {
+            
+            $('#eEquipmentType').select2('open');
+        })
+        
+    });
+
+</script>
+@using (Html.BeginForm("Equipment", "Enquiry", FormMethod.Post, new { @class = "clientneeds-validation", @novalidate = "novalidate", @id = "formclientEntry" }))
+{
+    
+<div class="row">
+    <div class="col-md-12">
+        <div class="mb-2">
+            <label class="col-form-label">Brand</label>
+            @*@Html.TextBoxFor(model => model.Brand, new { @class = "form-select txttarget", @id = "eBrand" })*@
+            @Html.DropDownListFor(model => model.BrandID, new SelectList(ViewBag.Brand, "BrandID", "BrandName"), "Select", new { @class = "form-select", @required = "required" })
+            @*@Html.HiddenFor(model => model.BrandID, new { @class = "form-control txttarget" })*@
+            @Html.ValidationMessageFor(model => model.Brand)
+        </div>
+    </div>
+    <div class="col-md-12">
+        <div class="mb-2">
+
+            <label class="col-form-label required">Product Type</label>
+            <select id="eEquipmentType" class="form-select form-control equipment-select"  style="width:100%"></select>
+            @*@Html.TextBoxFor(model => model.EquipmentType, new { @class = "form-select txttarget", @autocomplete = "off", @required = "required", @id = "eEquipmentType" })*@
+            @Html.HiddenFor(model => model.EquipmentTypeID, new { @class = "form-control txttarget", @id = "eEquipmentTypeID" })
+            @Html.ValidationMessageFor(model => model.EquipmentName)
+        </div>
+    </div>
+    <div class="col-md-12">
+        <div class="mb-2">
+            @Html.HiddenFor(model => model.ID, new { @id = "EquipmentID" })
+            @Html.HiddenFor(model => model.EnquiryID, new { @id = "eEnquiryID" })
+            @Html.HiddenFor(model => model.ProductFamilyID, new { @id = "ProductFamilyID" })
+            <label class="col-form-label">Product Family</label>
+            @Html.TextBoxFor(model => model.ProductFamilyName, new { @class = "form-control txttarget", @autocomplete = "off", @required = "required", @id = "eProductFamilyName",@readonly="readonly" })
+            @*@Html.DropDownListFor(model => model.ProductFamilyID, new SelectList(ViewBag.ProductFamily, "ID", "ProductFamilyName"), "Select", new { @class = "form-select", @required = "required" })*@
+            @Html.ValidationMessageFor(model => model.ProductFamilyID)
+        </div>
+    </div>
+</div>
+    @*<div class="row">
+       
+        <div class="col-md-4">
+            <div class="mb-2">
+                <label class="required col-form-label">Model</label>
+                @Html.TextBoxFor(model => model.Model, new { @class = "form-control",@id="eModel" })
+                @Html.ValidationMessageFor(model => model.Model)
+            </div>
+        </div>
+        
+    </div>*@
+
+    @*<div class="row">
+        <div class="col-md-4">
+            <label class="col-form-label">Quantity</label>
+            @Html.TextBoxFor(model => model.Quantity, new { @class = "form-control txttarget", @id = "eQuantity", @onchange = "calculatevalue()" })
+            @Html.ValidationMessageFor(model => model.Quantity)
+        </div>
+        <div class="col-md-4">
+            <label class="col-form-label">Unit Rate</label>
+            @Html.TextBoxFor(model => model.UnitRate, new { @class = "form-control txttarget", @id = "eUnitRate" ,@onchange= "calculatevalue()" })
+            @Html.ValidationMessageFor(model => model.UnitRate)
+        </div>
+        <div class="col-md-4">
+            <label class="col-form-label">Amount</label>
+            @Html.TextBoxFor(model => model.Amount, new { @class = "form-control txttarget", @id = "eAmount" ,@readonly="readonly" })
+            @Html.ValidationMessageFor(model => model.Amount)
+        </div>
+        <div class="col-md-4">
+            <div class="mb-2">                
+                <label class="col-form-label">Status</label>
+                @Html.DropDownListFor(model => model.EquipmentStatusID, new SelectList(ViewBag.EquipmentStatus, "EquipmentStatusID", "EquipmentStatus"), "Select", new { @class = "form-select", @required = "required",@id="eEquipmentStatusID" })
+                @Html.ValidationMessageFor(model => model.EquipmentStatusID)
+
+            </div>
+        </div>
+
+    </div>*@
+     
+}

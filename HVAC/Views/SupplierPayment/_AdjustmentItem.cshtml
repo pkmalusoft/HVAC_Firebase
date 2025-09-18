@@ -1,0 +1,174 @@
+﻿@model HVAC.Models.CustomerRcieptVM
+@{
+    var citemcount = 0;
+}
+<script>
+    function CloseItemPopup() {
+        debugger;
+        var balance = parseFloat($('#txtbalance_' + $('#ParentRowCount').val()).val());
+        var allocate = parseFloat($('#txtinvoice_' + $('#ParentRowCount').val()).val());
+        var totaladjustment = parseFloat($('#txtadjust_' + $('#ParentRowCount').val()).val());
+        var acheadid = $("#OAdjustmentAcHeadID").val();
+        var Amount = $("#OAdjustmentAmount").val();
+        var parentrow=$('#ParentRowCount').val();
+        if (acheadid != "") {
+            Swal.fire('Data Validation', 'Please Save Adjustment Item or Click Clear to Skip this item!','warning');
+            $("#OAdjustmentAcHeadID").focus();
+            return false;
+        }
+        else if (parseFloat(balance) < (parseFloat(allocate) + parseFloat(totaladjustment)))
+        {
+            Swal.fire('Data Validation', 'Total Adjustment and Allocation should not exceed the Outstanding!','warning');
+            return false;
+        }
+        else {
+            getTotalAdjustment(parentrow);
+            ValidateTotal();
+            $('#itempopup').modal('hide');
+            $('#txtinvoice_' + parentrow).focus();
+        }
+    }
+
+    function AdjusmentdeleteItemtrans(obj) {
+        debugger;
+        var parentrow = $('#ParentRowCount').val();
+        var rowindex = $(obj).attr('id').split('_')[1];
+        $('#str_' + rowindex).addClass('hide');
+        $('#hdnAdjustmentdeleted_' + rowindex).val(true);
+        //$(obj).parent().parent().addClass('hide');
+        //var obj1 = $(obj).parent().parent().find('.hdndeleted');
+        //$(obj1).val(true);
+        getTotalAdjustment(parentrow);
+        return;
+
+
+
+
+    }
+    $(document).ready(function () {
+
+    });
+</script>
+
+<div class="modal fade" id="itempopup" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+
+    <div class="modal-dialog modal-dialog-centered" style="min-width:600px">
+
+        <div class="modal-content" style="border-radius:5px;">
+
+            <div class="modal-header">
+
+                <h4 class="modal-title" id="h4PackListTitle">
+                    Item  List
+                </h4>
+                @*<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>*@
+
+            </div>
+
+
+            <div class="modal-body">
+
+                <div class="container-fluid">
+
+                    <div class="row">
+                        <input type="hidden" value="" id="SubItemRowCount" />
+                        <input type="hidden" value="" id="ParentRowCount" />
+                        <table id="ItemTable" class="table table-bordered">
+
+                            <thead class="table-light">
+
+                                <tr>
+
+
+                                    <th style="width:50%">Chart of Account</th>
+                                    
+                                    <th>Amount</th>
+                                    <th>Action </th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody id="PackItemBody">
+                                @foreach (var item in Model.AdjustmentDetails)
+                                {
+                                    <tr id="str_@citemcount" parentrowindex="@item.ParentRowNo">
+                                        <td>
+
+                                            <input type="hidden" class="OShipmentId" name="packingListVM[@citemcount].ID" value="@item.ID" id="OAdjustmentID_@citemcount" />
+
+                                            <input type="hidden" id="OhdnInvoiceType_@citemcount" value="@item.InvoiceType" />
+                                            <input type="hidden" id="OhdnAcOpInvoiceDetailD_@citemcount" value="@item.AcOpInvoiceDetailD" />
+                                            <input type="hidden" id="OhdnCreditNoteID_@citemcount" value="@item.CreditNoteID" />
+                                            <input type="hidden" id="OhdnInvoiceID_@citemcount" value="@item.InvoiceID" />
+                                            <input type="hidden" class="hdndeleted" id="hdnAdjustmentdeleted_@citemcount" value="@item.Deleted" />
+                                            <input type="hidden" class="form-control" parentrowindex="@item.ParentRowNo" value="@item.AcHead" id="OAdjustmentAchead_@citemcount" />
+                                            <input type="hidden" class="form-control" parentrowindex="@item.ParentRowNo" value="@item.AcHeadID" id="OAdjustmentAcheadID_@citemcount" />
+                                            @item.AcHead
+                                        </td>
+
+                                        <td>
+                                            <input type="text" class="text-right form-control textrightamount"  id="OAdjustmentAmount_@citemcount" value="@HVAC.Models.CommonFunctions.GetFormatNumber(@item.Amount,"")" />
+                                        </td>
+                                        <td style="text-align: center;">
+
+                                            <a href="javascript:void(0)" class="text-danger" id="packdel_@citemcount" onclick="AdjusmentdeleteItemtrans(this)"><i class="mdi mdi-delete font-size-18"></i></a>
+
+                                        </td>
+                                    </tr>
+                                    citemcount++;
+                                }
+                            </tbody>
+                            <tfoot>
+                                <tr class="newrow">
+                                    <td>
+                                        @Html.DropDownList("OAdjustmentAcHeadID", new SelectList(@ViewBag.AcHeadAdjust, "AcHeadID", "AcHead1"), "Select", new { @class = "form-select", @id = "OAdjustmentAcHeadID" })
+                                        
+                                    </td>
+                                    <td>
+                                        <input type="text" class="textrightamount form-control" id="OAdjustmentAmount" value="0" />
+                                    </td>
+                                    <td style="text-align:center;">
+                                        <div class="d-flex gap-3">
+
+                                            <button type="button" id="PackAddItem" class="btn btn-primary waves-effect waves-light filter" title="Add & Save">
+                                                <i class="bx bx-save mt-1"></i>
+                                            </button>
+                                            <button type="button" id="PackClearItem" class="btn btn-warning waves-effect waves-light filter" title="Clear Item">
+                                                <i class="mdi mdi-eraser  mt-1"></i>
+                                            </button>
+                                        </div>
+                                        
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="text-align:right;font-weight:bold">
+
+
+
+                                        Total
+                                    </td>
+
+                                    <td style="text-align:right;font-weight:bold">
+                                        <span id="spanTotalAdjustment" style="text-align:right">0</span>
+                                    </td>
+                                    
+                                    <td style="text-align:center;">
+ 
+                                    </td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+
+
+                </div>
+            </div>
+            <div class="modal-footer" style="padding-top: 5px">
+                <label id="lbltotalweight" style="color:red"></label>
+                @*<button type="button" id="ItemClose" class="btn btn-default" data-dismiss="modal">Close</button>*@
+                <button type="button" class="btn btn-secondary" id="btnClosePackItem" onclick="CloseItemPopup()" >Close</button>
+            </div>
+        </div>
+        </div>
+</div>

@@ -1,0 +1,102 @@
+﻿@model HVAC.Models.EquipmentTypeVM
+@{
+    var i = 0;
+    var _decimal = @Session["Decimal"].ToString();
+    Layout = null;
+}
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+
+    });
+
+
+</script>
+<table class="table table-sm m-0" id="DetailTable3" style="width: 100% !important;">
+
+    <thead class="table-light" style="text-align:center">
+        <tr>
+
+            <th width="90%">Description</th>
+            <th width="10%">Action</th>
+
+        </tr>
+    </thead>
+    <tbody class="" >
+
+        @foreach (var item1 in Model.Exclusions)
+        {
+             
+                if (item1.Deleted == true)
+                {
+                    item1.deletedclass= "hide";
+                }
+            
+        <tr id="quodtr_@i" class="@item1.deletedclass">
+            <td style="text-align:left">
+                @Html.HiddenFor(modelitem => item1.ID, new { @id = "QExclusionID_" + @i, @class = "form-control", @readonly = "readonly" })
+
+
+                @Html.HiddenFor(modelitem => item1.Deleted, new { @id = "QExclusionDeleted_" + @i })
+
+                @Html.HiddenFor(modelitem => item1.Description, new { @id = "QtxtExDescription_" + @i, @class = " form-control-sm", @style = "width:200px" })
+
+                @Html.Raw(@item1.Description)
+            </td>
+
+
+
+
+            <td>
+                <a onclick="AddExclusion(@item1.ID)" href="javascript:void(0);" title="Edit Item" class="text-success"><i class="mdi mdi-pencil font-size-18"></i></a>
+                    @*<a onclick="SaveExclusionDetailEntry('@i')" href="javascript:void(0);" style="display:none" title="Save Item" class="text-success save-btn"><i class="mdi mdi-content-save-edit font-size-18"></i></a>*@
+                <a onclick="DeleteExclusionDetailEntry('@i')" href="javascript:void(0);" title="Delete Item" class="text-danger"><i class="mdi mdi-delete font-size-18"></i></a>
+
+
+            </td>
+        </tr>
+            i++;
+        }
+    </tbody>
+
+</table>
+<script>
+    $(document).ready(function () {
+        $('.edit-btn').on('click', function () {
+            var $row = $(this).closest('tr');
+
+            $row.find('.editable').each(function () {
+                var _text = $(this).find('input');
+                var _span = $(this).find('span');
+                $(_text).attr('type', 'text');
+                $(_span).css('display', 'none');
+
+            });
+
+            $row.find('.edit-btn').hide();
+            $row.find('.save-btn').show();
+            $row.find('.editable input:first').focus().select();
+        });
+
+        $('.save-btn').on('click', function () {
+            var $row = $(this).closest('tr');
+
+            $row.find('.editable').each(function () {
+                var inputVal = $(this).find('input').val();
+                var _text = $(this).find('input');
+                var _span = $(this).find('span');
+                $(_text).attr('type', 'hidden');
+                $(_span).html(inputVal);
+                $(_span).css('display', 'block');
+
+            });
+
+            $row.find('.save-btn').hide();
+            $row.find('.edit-btn').show();
+
+            // You can add AJAX here to save the changes to the server
+        });
+    });
+</script>

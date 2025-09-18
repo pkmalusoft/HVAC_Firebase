@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="NewDataSet" xmlns="" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+  <xs:element name="NewDataSet" msdata:IsDataSet="true" msdata:UseCurrentLocale="true">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="PurchaseOrderPrint">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="PurchaseOrderID" type="xs:int" minOccurs="0" />
+              <xs:element name="PurchaseOrderNo" type="xs:string" minOccurs="0" />
+              <xs:element name="PurchaseOrderDate" type="xs:dateTime" minOccurs="0" />
+              <xs:element name="SupplierID" type="xs:int" minOccurs="0" />
+              <xs:element name="SupplierName" type="xs:string" minOccurs="0" />
+              <xs:element name="Remarks" type="xs:string" minOccurs="0" />
+              <xs:element name="SONoRef" type="xs:string" minOccurs="0" />
+              <xs:element name="Revision" type="xs:int" minOccurs="0" />
+              <xs:element name="RevisionRemarks" type="xs:string" minOccurs="0" />
+              <xs:element name="TotalAmount" type="xs:decimal" minOccurs="0" />
+              <xs:element name="Port" type="xs:string" minOccurs="0" />
+              <xs:element name="INCOTerms" type="xs:string" minOccurs="0" />
+              <xs:element name="PaymentTerms" type="xs:string" minOccurs="0" />
+              <xs:element name="DeliveryTerms" type="xs:string" minOccurs="0" />
+              <xs:element name="BankName" type="xs:string" minOccurs="0" />
+              <xs:element name="FreightCharges" type="xs:decimal" minOccurs="0" />
+              <xs:element name="OriginCharges" type="xs:decimal" minOccurs="0" />
+              <xs:element name="FinanceCharges" type="xs:decimal" minOccurs="0" />
+              <xs:element name="FinancePercent" type="xs:decimal" minOccurs="0" />
+              <xs:element name="POValue" type="xs:decimal" minOccurs="0" />
+              <xs:element name="VATAmount" type="xs:decimal" minOccurs="0" />
+              <xs:element name="VATPercent" type="xs:decimal" minOccurs="0" />
+              <xs:element name="SupplierAddress1" type="xs:string" minOccurs="0" />
+              <xs:element name="SupplierAddress2" type="xs:string" minOccurs="0" />
+              <xs:element name="SupplierCityName" type="xs:string" minOccurs="0" />
+              <xs:element name="SupplierCountryName" type="xs:string" minOccurs="0" />
+              <xs:element name="SupplierContact" type="xs:string" minOccurs="0" />
+              <xs:element name="CountryName" type="xs:string" minOccurs="0" />
+              <xs:element name="CurrencyName" type="xs:string" minOccurs="0" />
+              <xs:element name="Equipmenttotal" type="xs:decimal" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="PurchaseOrderPrint1">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="JobHandOverID" type="xs:int" minOccurs="0" />
+              <xs:element name="ProjectNumber" type="xs:string" minOccurs="0" />
+              <xs:element name="ProjectTitle" type="xs:string" minOccurs="0" />
+              <xs:element name="PurchaseOrderDetailID" type="xs:int" minOccurs="0" />
+              <xs:element name="EquipmentTypeID" type="xs:int" minOccurs="0" />
+              <xs:element name="EquipmentType" type="xs:string" minOccurs="0" />
+              <xs:element name="Model" type="xs:string" minOccurs="0" />
+              <xs:element name="Quantity" type="xs:decimal" minOccurs="0" />
+              <xs:element name="Amount" type="xs:decimal" minOccurs="0" />
+              <xs:element name="ProductFamilyName" type="xs:string" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="PurchaseOrderPrint2">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="OrderNo" type="xs:int" minOccurs="0" />
+              <xs:element name="TermsText" type="xs:string" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="PurchaseOrderPrint3">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="OrderNo" type="xs:int" minOccurs="0" />
+              <xs:element name="TermsText" type="xs:string" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="PurchaseOrderPrint4">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="Revision" type="xs:int" minOccurs="0" />
+              <xs:element name="RevisionRemarks" type="xs:string" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="PurchaseOrderPrint5">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="ID" type="xs:int" minOccurs="0" />
+              <xs:element name="BankName" type="xs:string" minOccurs="0" />
+              <xs:element name="Address1" type="xs:string" minOccurs="0" />
+              <xs:element name="Address2" type="xs:string" minOccurs="0" />
+              <xs:element name="AccountNo" type="xs:string" minOccurs="0" />
+              <xs:element name="Swiftcode" type="xs:string" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

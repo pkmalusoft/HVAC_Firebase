@@ -1,0 +1,247 @@
+﻿@model HVAC.Models.QuotationVM
+@{
+    var i = 0;
+    var _decimal = @Session["Decimal"].ToString();
+    Layout = null;
+}
+
+@*<style>
+        tfoot {
+            display: table-header-group;
+        }
+        #CargodataTables tbody tr.selected {
+            color: white;
+            background-color: #eeeeee;
+        }
+        .dataTables_filter{
+            display:none;
+        }
+        .Qqty {
+            width: 120px;
+        }
+        .container-fluid {
+            padding-left: 0px !important;
+            padding-right: 0px !important;
+        }
+    </style>*@
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        checkdeletedentry();
+        setTimeout(function () {
+            setUOMcombo();
+        }, 100)
+
+        // var table1 = $('#AccdataTables').DataTable({ "paging": false, "sPaginationType": "simple" });
+
+        //table1.columns().every(function () {
+        //    var that = this;
+
+        //    $('input', this.footer()).on('keyup change', function () {
+        //        if (that.search() !== this.value) {
+        //            that
+        //                .search(this.value)
+        //                .draw();
+        //        }
+        //    });
+        //});
+    });
+
+
+</script>
+<div class="table-responsive">
+    <table class="table table-condensed-custom table-striped" id="QuotationDetailTables" style="width: 100% !important;">
+
+        <thead class="table-secondary" style="text-align:center">
+            <tr>
+                <th width="20%">Category</th>
+                <th width="35%">Equipment/Description</th>
+                <th width="15%">Model/Unit</th>
+                <th width="5%">Unit</th>
+                <th width="5%">Qty</th>
+                <th width="5%">Rate</th>
+                <th id="thfvalue">Value</th>
+                <th>Action</th>
+
+            </tr>
+        </thead>
+        <tbody class="" style="text-align:center">
+
+            @foreach (var item1 in Model.QuotationDetails)
+            {
+
+                <tr id="quodtr_@i" class="@item1.displayclass">
+                    @*<td id="row_@i">@(i+1)</td>*@
+                    <td style="text-align:left">
+                        @Html.HiddenFor(modelitem => item1.EquipmentID, new { @id = "QEquipmentID_" + @i, @class = "form-control", @readonly = "readonly" })
+                        @Html.HiddenFor(modelitem => item1.EstimationCategoryID, new { @id = "QEstimationCategoryID_" + @i, @class = "form-control", @readonly = "readonly" })
+                        @Html.HiddenFor(modelitem => item1.EstimationMasterID, new { @id = "QEstimationMasterID_" + @i, @class = "form-control", @readonly = "readonly" })
+                        @Html.HiddenFor(modelitem => item1.Deleted, new { @id = "QDeleted_" + @i })
+                        @*@Html.HiddenFor(modelitem => item1.Roworder, new { @id = "QRoworder_" + @i })*@
+                        @Html.HiddenFor(modelitem => item1.UnitID, new { @id = "QUnitID_" + @i })
+                        @Html.HiddenFor(modelitem => item1.EstimationDetailID, new { @id = "QEstimationDetailID_" + @i })
+                        @Html.HiddenFor(modelitem => item1.EstimationID, new { @id = "QEstimationID_" + @i })
+                        @Html.HiddenFor(modelitem => item1.EstimationNo, new { @id = "QEstimationNo_" + @i })
+                        @Html.HiddenFor(modelitem => item1.CategoryName, new { @id = "QtxtCategoryName_" + @i, @class = " form-control-sm", @style = "width:200px" })
+
+                        @item1.CategoryName
+                        @{
+                            if (item1.EstimationNo != null)
+                            {
+                                if (item1.EstimationID != null && item1.EstimationID != 0)
+                                {
+                                    <a target="_blank" style="color:blue" href="/Estimation/Create?id=@item1.EstimationID">@item1.EstimationNo</a>
+                                }
+                                else
+                                { <span style="color:pink">@item1.EstimationNo</span>
+                            }
+
+                        }
+                        }
+
+                    </td>
+                    <td style="text-align:left"> 
+                        @Html.HiddenFor(modelitem => item1.Description, new { @id = "QtxtDescription_" + @i, @class = " form-control-sm", @style = "width:200px" })
+                        @item1.Description
+
+                    </td>
+                    <td class="editable" style="text-align:left"> 
+                        @Html.HiddenFor(modelitem => item1.Model, new { @id = "QtxtModel_" + @i, @class = "form-control-sm" })
+                         
+                        <span id="QspanModel_@i">@item1.Model</span>
+
+                    </td>
+                    <td>
+
+                        @item1.UnitName
+                        @Html.HiddenFor(modelitem => item1.UnitName, new { @id = "QUnitName_" + @i, @class = "form-control" })
+                    </td>
+
+                    <td style="text-align:right" class="editable">
+                        @Html.HiddenFor(modelitem => item1.Quantity, new { @id = "QtxtQty_" + @i, @class = "textright form-control-sm", @onchange = "calculatevalue(" + @i + ")", @style = "width:100px" })
+
+                        
+                        <span id="QspanQty_@i" style="color:dodgerblue">@HVAC.Models.CommonFunctions.GetBranchFormatNumber(item1.Quantity, "2")</span>
+
+                    </td>
+
+                    <td style="text-align:right" class="editable">
+                        @Html.HiddenFor(modelitem => item1.UnitRate, new { @Value = Convert.ToDecimal(item1.UnitRate).ToString("N2"), @id = "QtxtUnitRate_" + @i, @class = "textrightamount form-control-sm", @style = "width:100px", @onchange = "calculatevalue(" + @i + ")" })
+                        
+                        <span id="QspanRate_@i" style="color:dodgerblue">@HVAC.Models.CommonFunctions.GetBranchFormatNumber(item1.UnitRate, "3")</span>
+                    </td>
+                    <td style="text-align:right">
+                        @Html.HiddenFor(modelitem => item1.Amount, new { @Value = Convert.ToDecimal(item1.Amount).ToString("N3"), @id = "QtxtAmount_" + @i, @class = "textrightamount form-control-sm", @style = "width:100px", @readonly = "readonly" })
+                        <span id="QspanAmount_@i" style="color:dodgerblue">@HVAC.Models.CommonFunctions.GetBranchFormatNumber(item1.Amount, "3")</span>
+
+                    </td>
+
+                    <td>
+                        <a onclick="EditDetailEntry('@i')" href="javascript:void(0);" title="Edit Item" class="edit-btn text-success"><i class="mdi mdi-pencil font-size-18"></i></a>
+                        <a onclick="SaveDetailEntry('@i')" href="javascript:void(0);" style="display:none" title="Save Item" class="text-success save-btn"><i class="mdi mdi-content-save-edit font-size-18"></i></a>
+                        <a onclick="DeleteQuotationDetailEntry('@i')" href="javascript:void(0);" title="Delete Item" class="text-danger"><i class="mdi mdi-delete font-size-18"></i></a>
+
+
+                    </td>
+                </tr>
+                i++;
+            }
+        </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="4" style="font-weight:bold;text-align:right">Gross Total</td>
+                <td colspan="2"></td>
+
+                <td style="text-align:right"><span id="QspanGrossAmount" style="font-weight:bold;text-align:right">@HVAC.Models.CommonFunctions.GetBranchFormatNumber(Model.GrossAmount, "3")</span></td>
+                <td></td>
+
+            </tr>
+            <tr id="trmargin" class="d-xl-none">
+                <td colspan="4" style="font-weight:bold;text-align:right">Margin</td>
+                <td width="5%" colspan="2"><span id="spanmarginpercent" style="color:blue"></span></td>
+                <td style="text-align:right"><span id="spanMargin" style="color:blue;margin-right:1px;font-weight:bold"></span> </td>
+                <td></td>
+            </tr>
+            <tr id="trselling" class="d-xl-none clsselling">                
+                <td colspan="4" style="font-weight:bold;text-align:right">Sales Value</td>
+                <td style="text-align:right;" colspan="2"></td>
+                <td style="text-align:right"><span id="spanSellingValue" style="color:black; margin-right: 1px; font-weight: bold"></span> </td>
+                <td></td>
+            </tr>
+            <tr style="text-align:right">
+                <td colspan="4" style="font-weight: bold; text-align: right">Discount &nbsp;&nbsp;</td>
+                <td colspan="2" style="text-align:right;font-weight:bold">
+                    <div class="input-group">
+                        <input type="text" id="DiscountPercent" value="@Convert.ToDecimal(@Model.DiscountPercent).ToString("N0")" class="form-Control form-control-sm" onchange="calculatequotationvalue()">
+                        @*@Html.TextBoxFor(mode => mode.DiscountPercent, new { @class = "form-control-sm textright0", @onchange = "calculatequotationvalue()", @placefolder = "Discount %" })*@
+                    </div>
+                </td>
+
+                <td style="text-align:right">@Html.TextBoxFor(mode => mode.DiscountAmount, new { @class = "form-control form-control-sm textright", @onchange = "calculatequotationvalue()" })</td>
+                <td></td>
+
+            </tr>
+            <tr style="text-align:right">
+                <td colspan="4" style="font-weight: bold; text-align: right">VAT &nbsp;&nbsp;&nbsp;&nbsp;</td>
+                <td colspan="2" style="font-weight: bold; text-align: right">
+                    <div class="input-group">
+
+
+                        @Html.TextBoxFor(mode => mode.VATPercent, new { @class = "form-control-sm textright", @onchange = "calculatequotationvalue()", @placefolder = "VAT %" })
+                    </div>
+                </td>
+                <td style="text-align:right"><span id="QspanVATAmount" style="font-weight:bold;text-align:right">@HVAC.Models.CommonFunctions.GetBranchFormatNumber(Model.VATAmount, "3")</span></td>
+                <td></td>
+
+            </tr>
+            <tr style="background-color:dodgerblue">
+                <td colspan="4" style="font-weight: bold; text-align: right;color:white">Net Total &nbsp;</td>
+                <td colspan="2"></td>
+
+                <td style="text-align: right; color: white;"><span id="QspanQuotationNetValue" style="font-weight:bold;text-align:right">@HVAC.Models.CommonFunctions.GetBranchFormatNumber(Model.QuotationValue, "3")</span></td>
+                <td></td>
+
+            </tr>
+        </tfoot>
+
+    </table>
+
+</div>
+<script>
+    $(document).ready(function () {
+        $('.edit-btn').on('click', function () {
+            var $row = $(this).closest('tr');
+
+            $row.find('.editable').each(function () {
+                var _text = $(this).find('input');
+                var _span = $(this).find('span');
+                $(_text).attr('type', 'text');
+                $(_span).css('display', 'none');                
+                
+            });
+
+            $row.find('.edit-btn').hide();
+            $row.find('.save-btn').show();
+            $row.find('.editable input:first').focus().select();
+        });
+
+        $('.save-btn').on('click', function () {
+            var $row = $(this).closest('tr');
+
+            $row.find('.editable').each(function () {
+                var inputVal = $(this).find('input').val();
+                var _text = $(this).find('input');
+                var _span = $(this).find('span');
+                $(_text).attr('type', 'hidden');
+                $(_span).html(inputVal);
+                $(_span).css('display', 'block');
+                
+            });
+
+            $row.find('.save-btn').hide();
+            $row.find('.edit-btn').show();
+
+            // You can add AJAX here to save the changes to the server
+        });
+    });
+</script>

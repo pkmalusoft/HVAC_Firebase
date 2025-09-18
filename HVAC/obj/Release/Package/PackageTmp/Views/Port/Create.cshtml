@@ -1,0 +1,180 @@
+﻿@model HVAC.Models.PortVM
+@{
+    //ViewBag.Title = "Port-Create";
+    ViewBag.pTitle = "Port";
+    ViewBag.pageTitle = "Setup";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+
+
+    .searchdiv {
+        background-color: #fff;
+        width: 100%;
+        margin: 0 auto;
+        max-width: 400px;
+        padding: 20px;
+        margin-top: 20px;
+        border-radius: 10px;
+        box-shadow: 0 9px 23px rgba(0, 0, 0, 0.09), 0 5px 5px rgba(0, 0, 0, 0.06) !important;
+    }
+</style>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $(":text").css({ "border-radius": "5px" });
+        $("select").css({ "border-radius": "5px" });
+        $("#PortType").focus();
+
+        //$("#btnsave").click(function () {
+        //    var prttype = $("#PortType").val();
+        //    var prtcode = $("#PortCode").val();
+        //    var port = $("#Port1").val();
+        //    var cityid = $("#CityID").val();
+        //    var couid = $("#CountryID").val();
+
+        //    if (prttype == "") {
+        //        $("#alert").show();
+        //        return false;
+        //    }else if (prtcode == "") {
+        //        $("#alert").show();
+        //        return false;
+        //    }
+        //    else if (port == "") {
+        //        $("#alert").show();
+        //        return false;
+        //    }
+        //    else if (cityid == "") {
+        //        $("#alert").show();
+        //        return false;
+        //    }
+        //    else if (couid == "") {
+        //        $("#alert").show();
+        //        return false;
+        //    }
+        //    else {
+        //        $("#alert").hide();
+        //        return true;
+        //    }
+        //});
+        if ($("#hfPortType").val() != "") {
+            $("#PortType").val(@Model.PortType).change();
+        }
+        $('#OriginCity').autocomplete({
+            source: function (request, response) {
+                $.ajax({
+                    url: "/LocationMaster/GetCityName",
+                    data: { term: request.term },
+                    dataType: "json",
+                    type: "GET",
+                    success: function (data) {
+                        response($.map(data, function (val, item) {
+                            return {
+                                label: val.CityName,
+                                value: val.Id,
+                                Country: val.CountryName,
+                                CountryId: val.CountryID
+                            }
+                        }))
+                    }
+                });
+            },
+            minLength: 1,
+            autoFocus: false,
+            select: function (event, ui) {
+                event.preventDefault();
+                $('#OriginCity').val(ui.item.label);
+                $('#CityID').val(ui.item.value);
+                $('#OriginCountry').val(ui.item.Country);
+                $('#CountryID').val(ui.item.CountryId);
+
+            },
+            focus: function (event, ui) {
+                event.preventDefault();
+                $('#OriginCity').val(ui.item.label);
+                $('#CityID').val(ui.item.value);
+                $('#OriginCountry').val(ui.item.Country);
+                $('#CountryID').val(ui.item.CountryId);
+            }
+        });
+    });
+</script>
+<div class="row">
+    <div class="col-xl-12">
+        <div class="card">
+            <div class="card-body">
+
+               
+
+                @using (Html.BeginForm("Create", "Port", FormMethod.Post, new { @class = "needs-validation ", @novalidate = "novalidate" }))
+                {
+                    @Html.AntiForgeryToken()
+                    @Html.ValidationSummary(true)
+                    <div class="searchdiv">
+                        <div id="alert" style="color:red;display:none;margin-left:10px;">*Please fill mandatory fields</div>
+                        <fieldset>
+                            <div class="row no-margin">
+                                <div class="col-md-12 mb-2">
+                                    <label class="required headinglabel">Port Type</label>
+                                    <select class="form-select" selected="@Model.PortType" id="PortType" name="PortType" required svalue="@Model.PortType">
+                                        <option value="1">AirPort</option>
+                                        <option value="2">SeaPort</option>
+                                        <option value="3">LandPort</option>
+                                        <option value="0">General</option>
+                                    </select>
+                                    @Html.HiddenFor(model => model.PortType, new { @id = "hfPortType",@required="required" })
+                                    @Html.ValidationMessageFor(model => model.PortType)
+                                </div>
+
+                                <div class="col-md-12 mb-2">
+                                    <label class="required headinglabel">Port Name</label>
+                                    @Html.TextBoxFor(model => model.Port1, new { @class = "form-control txttarget", @required = "required" })
+                                    @Html.ValidationMessageFor(model => model.Port1)
+                                    @Html.HiddenFor(model => model.PortID)
+                                </div>
+
+                                <div class="col-md-12 mb-2">
+                                    <label class="required headinglabel">Port Code</label>
+                                    @Html.TextBoxFor(model => model.PortCode, new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(model => model.PortCode)
+                                </div>
+
+                                <div class="col-md-12 mb-2">
+                                    <label class="required headinglabel">Port City</label>
+                                    @Html.TextBoxFor(model => model.OriginCity, new { @class = "form-control", @required = "required" })
+                                    @Html.HiddenFor(model => model.CityID, new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(model => model.OriginCity)
+
+                                </div>
+
+                                <div class="col-md-12 mb-2">
+                                    <label class="required headinglabel">Country</label>
+                                    @*@Html.DropDownListFor(model => model.CountryID, (IEnumerable<SelectListItem>)ViewBag.country, "Select", new { @class = "form-control" })*@
+                                    @*@Html.DropDownListFor(model => model.CountryID, new SelectList(ViewBag.country, "CountryID", "CountryName"), "Select Carrier", new { @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.CountryID)*@
+                                    @Html.TextBoxFor(model => model.OriginCountry, new { @class = "form-control", @readonly = "readonly", @required = "required" })
+                                    @Html.HiddenFor(model => model.CountryID, new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(model => model.OriginCountry)
+                                </div>
+                            </div>
+
+                            <div class="row mt-3">
+                                <div class="col-xs-12 butdivs">
+                                    <a href='@Url.Action("Index", "Port", new { id = 0 })' class="float-right btn btn-secondary">Cancel</a>
+                                    <input type="submit" value="Save" class="btn btn-success waves-effect waves-light float-right me-2" id="btnsave" />
+
+
+
+                                </div>
+                            </div>
+                        </fieldset>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts {
+
+    <script src="~/Scripts/NewJS/PortCreate.js"></script>
+}

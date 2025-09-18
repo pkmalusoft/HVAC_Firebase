@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="NewDataSet" xmlns="" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+  <xs:element name="NewDataSet" msdata:IsDataSet="true" msdata:UseCurrentLocale="true">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="EstimationPrint">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="EstimationNo" type="xs:string" minOccurs="0" />
+              <xs:element name="EnquiryNo" type="xs:string" minOccurs="0" />
+              <xs:element name="EmployeeName" type="xs:string" minOccurs="0" />
+              <xs:element name="Notes" type="xs:string" minOccurs="0" />
+              <xs:element name="VarNo" type="xs:int" minOccurs="0" />
+              <xs:element name="EstimationDate" type="xs:dateTime" minOccurs="0" />
+              <xs:element name="ProjectName" type="xs:string" minOccurs="0" />
+              <xs:element name="ProjectDescription" type="xs:string" minOccurs="0" />
+              <xs:element name="ClientName" type="xs:string" minOccurs="0" />
+              <xs:element name="Margin" type="xs:decimal" minOccurs="0" />
+              <xs:element name="MarginPercent" type="xs:decimal" minOccurs="0" />
+              <xs:element name="SellingValue" type="xs:decimal" minOccurs="0" />
+              <xs:element name="PaymentDays" type="xs:int" minOccurs="0" />
+              <xs:element name="FreeServiceDays" type="xs:int" minOccurs="0" />
+              <xs:element name="ChargeableMonth" type="xs:int" minOccurs="0" />
+              <xs:element name="ExchangeRate" type="xs:decimal" minOccurs="0" />
+              <xs:element name="FinChargePercent" type="xs:decimal" minOccurs="0" />
+              <xs:element name="EstimationDetailID" type="xs:int" minOccurs="0" />
+              <xs:element name="EstimationID" type="xs:int" minOccurs="0" />
+              <xs:element name="EstimationCategoryID" type="xs:int" minOccurs="0" />
+              <xs:element name="EquipmentID" type="xs:int" minOccurs="0" />
+              <xs:element name="Description" type="xs:string" minOccurs="0" />
+              <xs:element name="Model" type="xs:string" minOccurs="0" />
+              <xs:element name="UnitID" type="xs:int" minOccurs="0" />
+              <xs:element name="Qty" type="xs:decimal" minOccurs="0" />
+              <xs:element name="Rate" type="xs:decimal" minOccurs="0" />
+              <xs:element name="FValue" type="xs:decimal" minOccurs="0" />
+              <xs:element name="LValue" type="xs:decimal" minOccurs="0" />
+              <xs:element name="ItemUnit" type="xs:string" minOccurs="0" />
+              <xs:element name="CategoryName" type="xs:string" minOccurs="0" />
+              <xs:element name="EstimationMasterID" type="xs:int" minOccurs="0" />
+              <xs:element name="CurrencyID" type="xs:int" minOccurs="0" />
+              <xs:element name="CurrencyCode" type="xs:string" minOccurs="0" />
+              <xs:element name="ExchangeRate1" type="xs:decimal" minOccurs="0" />
+              <xs:element name="AutoCalc" type="xs:int" minOccurs="0" />
+              <xs:element name="OrderNo" type="xs:double" minOccurs="0" />
+              <xs:element name="RowType" type="xs:string" minOccurs="0" />
+              <xs:element name="SellingUnitRate" type="xs:decimal" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

@@ -1,0 +1,78 @@
+﻿@model HVAC.Models.ProductGroupVM
+
+@{
+
+    ViewBag.pTitle = "Product Group";
+    ViewBag.pageTitle = "Setup";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+
+    .searchdiv {
+        background-color: #fff;
+        width: 100%;
+        margin: 0 auto;
+        max-width: 600px;
+        padding: 20px;
+        margin-top: 50px;
+        border-radius: 10px;
+        box-shadow: 0 9px 23px rgba(0, 0, 0, 0.09), 0 5px 5px rgba(0, 0, 0, 0.06) !important;
+    }
+</style>
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $(":text").css({ "border-radius": "5px" });
+        $("select").css({ "border-radius": "5px" });
+
+
+
+    });
+</script>
+
+<div class="searchdiv">
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        @Html.ValidationSummary(true)
+
+
+        <div id="validations" style="color:red;margin-left:7px;display:none">* Please fill mandatory fields</div>
+        <fieldset>
+            <div class="card">
+                <div class="card-body">
+                    <div class="row">
+
+
+                        <div class="col-md-6">
+                            <div class="mb-2">
+                                <label class="col-form-label required">Group Name</label>
+                                @Html.HiddenFor(model => model.ProductGroupID)
+                                @Html.TextBoxFor(model => model.ProductGroupName, new { @class = "form-control", @required = "required" })
+
+
+                            </div>
+
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-2">
+                                <label class="col-form-label required">Product Category</label>
+                                @Html.DropDownListFor(model => model.ProductCategoryID, new SelectList(@ViewBag.ProductCategory, "ProductCategoryID", "ProductCategoryName"), "Select", new { @class = "form-select", @required = "required" })
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12 text-md-end btn_top">
+                                <input type="submit" value="Save" class="btn btn-success" data-toggle="tooltip" title="Click here" id="btnsave" />
+                                <a href='@Url.Action("Index", "ProductGroup", new { id = 0 })' class="btn btn-secondary" data-toggle="tooltip" data-placement="right" title="">Cancel</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </fieldset>
+    }
+
+
+   </div>

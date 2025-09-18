@@ -1,0 +1,80 @@
+﻿@model HVAC.Models.JobPurchaseOrderVM
+@{
+    Layout = null;
+    var i = 0;
+}
+<style>
+    ul.ui-front {
+        z-index: 1100;
+    }
+</style>
+<script type="text/javascript">
+    $(document).ready(function () {
+      
+    });
+
+</script>
+<div class="row no-margin" style="padding-top:0px">
+    <div class="col-md-12 tblbackground">
+        <table class="table table-datatable dataTable tblfont table-bordered table-striped mb-0" id="ContainerTables">
+            <thead class="table-light">
+                <tr>
+                    <th>S.No</th>
+                    <th>Bond</th>
+                    <th>Sales value</th>
+                    <th>Percentage</th>
+                    <th>Bond Value</th>
+                    <th>Bond Issue Date</th>
+                    <th>Validity</th>
+                    <th>Expiry Date</th>
+
+                    <th></th>
+
+
+                </tr>
+            </thead>
+            <tbody id="tbodyclient">
+
+                @foreach (var item in Model.BondDetails)
+                {
+                <tr id="trclient_@i">
+                    <td id="row_@i">
+                        @(i+1)
+                        @Html.HiddenFor(model => model.BondDetails[i].ID, new { @Value = @item.ID, @id = "hdnBondID_" + @i })
+                        @Html.HiddenFor(model => model.BondDetails[i].JobHandOverID, new { @Value = @item.JobHandOverID, @id = "hdnJobHandOverID_" + @i })
+                    </td>
+                    <td>
+                        @item.BondName
+                    </td>
+                    <td style="text-align:right" >
+                        @HVAC.Models.CommonFunctions.GetBranchFormatNumber(@item.SalesValue,"3")
+                        
+                    </td>
+                    <td>@item.Percentage %</td>
+                    <td style="text-align:right">
+                        @HVAC.Models.CommonFunctions.GetBranchFormatNumber(@item.BondValue, "3")
+                    </td>
+                    <td>
+                        @HVAC.Models.CommonFunctions.GetShortDateFormat(@item.BondIssueDate)
+                    </td>
+                    <td>
+                        @item.BondValidity
+                    </td>
+                    <td>
+                        @HVAC.Models.CommonFunctions.GetShortDateFormat(@item.BondExpiryDate)
+                        
+                    </td>
+                    <td>
+                        @*<a onclick="EditDetailEntry('@i')" href="javascript:void(0);" title="Edit Item" class="edit-btn text-success"><i class="mdi mdi-pencil font-size-18"></i></a>
+                        <a onclick="SaveDetailEntry('@i')" href="javascript:void(0);" style="display:none" title="Save Item" class="text-success save-btn"><i class="mdi mdi-content-save-edit font-size-18"></i></a>*@
+                        <a onclick="DeleteBondEntry('@i')" href="javascript:void(0);" title="Delete Item" class="text-danger"><i class="mdi mdi-delete font-size-18"></i></a>
+
+                    </td>
+
+                </tr>
+                    i++;
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

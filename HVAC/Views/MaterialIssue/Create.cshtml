@@ -1,0 +1,230 @@
+﻿@model  HVAC.Models.MaterialIssueSaveRequest
+@using Newtonsoft.Json
+@{
+    ViewBag.Title = "Create";
+    ViewBag.pTitle = "Material Issue";
+    ViewBag.pageTitle = "Material Issue";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var _decimal = @Session["Decimal"].ToString();
+    int i = 0;
+    HVAC.Models.HVACEntities db = new HVAC.Models.HVACEntities();
+}
+
+
+@section styles{
+    <link href="~/assets/libs/select2/css/select2.min.css" rel="stylesheet" type="text/css" />
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <!-- Select2 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
+    <!-- Select2 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+}
+
+
+<style>
+    /*select.select2-hidden-accessible {
+        display: block !important;
+        height: 0;
+        padding: 0;
+        width: 0;
+        position: absolute;
+        opacity: 0;
+        pointer-events: none;
+    }*/
+    /* More specific and with !important to override conflicting styles */
+
+    .field-validation-error {
+        color: red;
+    }
+
+    .input-validation-error {
+        border-color: red !important;
+    }
+</style>
+
+
+@using (Html.BeginForm("Create", "MaterialIssue", FormMethod.Post, new { enctype = "multipart/form-data", @class = "needs-validation ", @novalidate = "novalidate" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+
+    <div class="card">
+        <div class="card-body">
+            @Html.AntiForgeryToken()
+            @Html.ValidationSummary(true)
+
+
+            <input type="hidden" id="Id" name="Id" value="@Model.mi.MIssueID" />
+            <div class="row">
+                <div class="col-md-8">
+                    <div id="validations" style="color:red;margin-left:7px;display:none">* Please fill mandatory fields!</div>
+                </div>
+                <div class="col-md-4 text-md-end mb-1">
+
+                    <button type="submit" class="btn btn-success" id="btnsave" tabindex="50">Save</button>
+
+                    <a href='@Url.Action("Index", "MaterialIssue", new { id = 0 })' class="btn btn-secondary" data-toggle="tooltip" data-placement="right" title="Click here">Cancel</a>
+
+                    <div id="divothermenu" class="btn-group hide">
+                        @*<button type="submit" class="btn btn-primary">Menu</button>*@
+                        <span class="btn btn-primary"><i class="bx bx-cog bx-spin me-2"></i>Sub Menu</span>
+                        <button type="button" class="btn btn-primary dropdown-toggle-split border_right" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="mdi mdi-chevron-down"></i>
+                        </button>
+                        <div class="dropdown-menu" id="divsubmenu">
+
+                            <a class="dropdown-item" target="_blank" href="InvoicePrint?id=@Model.mi.MIssueID" title="Invoice Printing">Invoice Print</a>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-2">
+                    <label class="col-form-label required">Issue No.</label>
+                    @Html.TextBoxFor(model => model.mi.IssueNo, new { @class = "form-control", @required = "true", @readonly = "readonly", @tabindex = "1" })
+
+                </div>
+                <div class="col-md-2">
+                    @Html.HiddenFor(model => model.mi.MIssueID, new { @class = "form-control" })
+                    @Html.HiddenFor(model => model.mi.RequestID, new { @class = "form-control" })
+                    @Html.HiddenFor(model => model.mi.RequestedBy, new { @class = "form-control" })
+                    @Html.HiddenFor(model => model.mi.IssuedBy, new { @class = "form-control" })
+                    @Html.HiddenFor(model => model.ProjectNo, new { @class = "form-control" })
+                    @Html.HiddenFor(model => model.mi.ApprovedBy, new { @class = "form-control" })
+                    @Html.HiddenFor(model => model.mi.JobHandOverID, new { @class = "form-control" })
+                    @Html.HiddenFor(model => model.ApprovedByName, new { @class = "form-control" })
+                    @Html.HiddenFor(model => model.RequestNo, new { @class = "form-control" })
+                    @Html.HiddenFor(model => model.IssuedByname, new { @class = "form-control" })
+
+                    <label class="col-form-label required"> Issue Date</label>
+                    <div class="docs-datepicker">
+                        <div class="input-group">
+                            <input type="text" class="form-control docs-date" name="IssueDate" id="IssueDate" data-date-format="dd/MM/yyyy" data-date-autoclose="true" data-provide="datepicker" value="@Model.mi.IssueDate.Value.ToShortDateString()"
+                                   placeholder="Pick a date" autocomplete="off" tabindex="1">
+                            <button type="button"
+                                    class="btn btn-secondary docs-datepicker-trigger"
+                                    disabled>
+                                <i class="mdi mdi-calendar" aria-hidden="true"></i>
+                            </button>
+                        </div>
+                        <div class="docs-datepicker-container"></div>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <label class="col-form-label required">Select Project No.</label>
+
+                    <select id="drpProjectNo" name="drpProjectNo" style="width:100%" class="select2 form-select-sm project-select"
+                            data-placeholder="Choose Project..." tabindex="11">
+                    </select>
+
+                </div>
+                <div class="col-md-2">
+                    <label class="col-form-label">Material Request</label>
+                    <div class="input-group">
+                        <select id="drpRequestID" name="drpRequestID" class="select2 form-control" data-placeholder="Choose Material Request..." tabindex="2"></select>
+                        <button type="button" class="btn btn-sm btn-success" id="btnShowMRDetails" style="" tabindex="5"> <i class="mdi mdi-refresh" style="font-size: 18px;"></i></button>
+                    </div>
+                </div>
+
+                <div class="col-md-2">
+                    <label class="col-form-label required">Requested By</label>
+                    @Html.TextBoxFor(model => model.RequestedByName, new { @class = "form-control", @required = "true", @readonly = "readonly",@tabindex = "4" })
+                    @Html.ValidationMessageFor(model => model.RequestedByName)
+                </div>
+
+                <div class="col-md-2">
+                    <label class="col-form-label required">Issued By</label>
+                    <select id="drpIssuedBy" name="drpIssuedBy" class="select2 form-control" required="required"
+                            data-placeholder="Choose Employee..." tabindex="5">
+                    </select>
+                    @Html.ValidationMessageFor(model => model.mi.IssuedBy)
+                </div>
+                <div class="col-md-2">
+                    <label class="col-form-label required">Approved By</label>
+                    <select id="drpApprovedBy" name="drpApprovedBy" class="select2 form-control" required="required"
+                            data-placeholder="Choose Approved By..." tabindex="5">
+                    </select>
+                    @Html.ValidationMessageFor(model => model.mi.ApprovedBy)
+                </div>
+                <div class="col-md-2">
+                    <label class="col-form-label">Remarks</label>
+                    @Html.TextBoxFor(model => model.mi.Remarks, new { @class = "form-control", @tabindex = "6" })
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+           
+               
+
+             
+                      
+                        <div class="row">
+                            <div class="col-md-12" id="GRNContainer">
+                                @{Html.RenderPartial("DetailList", Model);}
+                            </div>
+                        </div>
+                      
+                    </div>
+           
+            </div>
+       
+    <input type="hidden" value="" id="hdnHidden" />
+}
+
+
+
+@section scripts{
+    <script src="~/assets/libs/select2/js/select2.min.js"></script>
+    <script src="~/Scripts/JS/MaterialIssue.js"></script>
+    <script type="text/javascript">
+        var materialIssueDetailsArray = [];
+        var equipmentCache = {}; // Cache for equipment data
+        var editRowIndex = null; // Track which row is in edit mode
+
+        $(document).ready(function () {
+            // Set logged in user name in Requested By field
+           // $('#mi_RequestedBy').val('@ViewBag.LoggedInEmployeeName');
+
+          
+            
+            // Set dropdown values for edit mode
+            @*@if (ViewBag.SelectedMaterialRequestID != null)
+            {
+                <text>
+                var materialRequestOption = new Option('@ViewBag.SelectedMaterialRequestText', '@ViewBag.SelectedMaterialRequestID', true, true);
+                $('#RequestID').append(materialRequestOption).trigger('change');
+                </text>
+            }
+
+            @if (ViewBag.SelectedIssuedByID != null)
+            {
+                <text>
+                var issuedByOption = new Option('@ViewBag.SelectedIssuedByText', '@ViewBag.SelectedIssuedByID', true, true);
+                $('#IssuedBy').append(issuedByOption).trigger('change');
+                </text>
+            }*@
+
+          
+
+          
+        });
+
+     
+     
+
+     
+      
+    </script>
+}
+
+ 

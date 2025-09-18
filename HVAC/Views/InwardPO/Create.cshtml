@@ -1,0 +1,378 @@
+﻿@model HVAC.Models.JobPurchaseOrderVM
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+    ul.ui-front {
+        z-index: 1100;
+    }
+
+    .disabled-link {
+        pointer-events: none;
+        background-color: #dedede;
+    }
+
+    .form-select-sm {
+        border: 1px solid #dedede;
+    }
+</style>
+
+@{
+
+    ViewBag.pTitle = "Client PO";
+    ViewBag.pageTitle = "HVAC";
+}
+
+@using (Html.BeginForm("Create", "InwardPO", FormMethod.Post, new { @class = "needs-validation ", @novalidate = "novalidate" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true, "", new { @class = "needs-validation" })
+
+
+
+    <div class="card">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-8">  <div id="validations" style="color: red; margin-left: 7px; display: none">* Please fill mandatory fields</div></div>
+                <div class="col-md-4 text-md-end">
+                    <input type="submit" value="Save" class="btn btn-success" id="btnSavePO" />
+                    <a href='@Url.Action("Index", "InwardPO", new { id = 0 })' class="btn btn-secondary" data-placement="right">Cancel</a>
+                    <div id="divothermenu2" class="btn-group">
+                        @*<button type="submit" class="btn btn-primary">Menu</button>*@
+                        <span class="btn btn-primary"><i class="bx bx-cog bx-spin me-2"></i>Sub Menu</span>
+                        <button type="button" class="btn btn-primary dropdown-toggle-split border_right" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="mdi mdi-chevron-down"></i>
+                        </button>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item" target="_blank" href="/JobHandover/Create?id=@Model.JobHandOverID">Goto Job Profile</a>
+                            <a class="dropdown-item"  href="javascript:void(0)" onclick="GenerateMRequest()">Generate Material Request</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+            <div class="row">
+                <h4 class="card-title">Project Detail 
+                
+                 @{ 
+                     if (Model.MRequestNo != "")
+                        {
+                            <a href="/MaterialRequest/Create?id=@Model.MRequestID" target="_blank" style="color:blue">MR No.: @Model.MRequestNo</a>
+                        }
+                 }
+                
+                </h4>
+                <div class="col-md-2">
+                    <label class="col-form-label required">Enquiry No.</label> <br />
+                    @Html.HiddenFor(mode => mode.QuotationId, new { @class = "form-control" })
+                    @Html.HiddenFor(mode => mode.ID, new { @class = "form-control" })
+                    @Html.HiddenFor(mode => mode.JobHandOverID, new { @class = "form-control" })
+                    <span style="color:blue">@Model.EnquiryNo</span>
+                </div>
+                <div class="col-md-2">
+                    <div class="mb-2">
+                        <label class="col-form-label required">Project Number </label><br />
+                        <span style="color:blue">@Model.ProjectNumber</span>
+                        @*@Html.TextBoxFor(mode => mode.ProjectNumber, new { @class = "form-control", @required = "required" })*@
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="mb-2">
+                        <label class="col-form-label">Job Date</label><br />
+                        <span style="color:blue">@Model.JobDate.ToShortDateString()</span>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="mb-2">
+                        <label class="col-form-label required">Project Title</label><br />
+                        <span style="color:blue">@Model.ProjectName</span>
+                        @*@Html.TextBoxFor(mode => mode.ProjectName, new { @class = "form-control", @required = "required" })*@
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <label class="col-form-label required">Client</label><br />
+                    <span style="color:blue">@Model.ClientName</span>
+                    @*@Html.TextBoxFor(mode => mode.ClientName, new { @class = "form-control", @required = "required" })*@
+                </div>
+                <div class="col-md-2">
+                    <div class="mb-2">
+                        <label class="col-form-label">Job Quotation No.</label><br />
+
+                        <span style="color:blue">@Model.QuotationNo</span>
+                    </div>
+                </div>
+
+
+            </div>
+            <hr />
+            <div class="row">
+
+                <div class="col-md-2">
+                    <label class="col-form-label required">PO No.</label>
+                    @Html.TextBoxFor(mode => mode.PONumber, new { @class = "form-control", @required = "required" })
+                </div>
+
+                <div class="col-md-2">
+
+                    <div class="mb-2">
+                        <label class="col-form-label required">PO Date</label>
+                        <div class="docs-datepicker">
+                            <div class="input-group">
+                                <input type="text" class="form-control docs-date" name="PODate" id="PODate" required value="@Convert.ToDateTime(@Model.PODate).ToShortDateString()"
+                                       placeholder="Pick a From Date" autocomplete="off">
+                                <button type="button"
+                                        class="btn btn-secondary docs-datepicker-trigger"
+                                        disabled>
+                                    <i class="mdi mdi-calendar" aria-hidden="true"></i>
+                                </button>
+                            </div>
+                            <div class="docs-datepicker-container"></div>
+                        </div>
+                        <div class="invalid-feedback">
+                            Please enter PO Date
+                        </div>
+
+
+
+                    </div>
+
+                </div>
+                <div class="col-md-2">
+                    <label class="col-form-label required">Variation No.</label>
+                    @Html.TextBoxFor(mode => mode.VarNo, new { @class = "form-control", @required = "required" })
+                </div>
+                <div class="col-md-2">
+                    <label class="col-form-label required">Order Value</label>
+                    @Html.TextBoxFor(mode => mode.OrderValue, new { @class = "form-control textright3", @required = "required" })
+                </div>
+                <div class="col-md-1">
+                    <label class="col-form-label required">VAT %</label>
+                    @Html.TextBoxFor(mode => mode.VatPercent, new { @class = "form-control textright", @required = "required" })
+                </div>
+                <div class="col-md-1">
+                    <label class="col-form-label required">VAT Amout</label>
+                    @Html.TextBoxFor(mode => mode.VatAmount, new { @class = "form-control textright3", @required = "required", @readonly = "readonly" })
+                </div>
+
+                <div class="col-md-2">
+                    <label class="col-form-label required">Total Value</label>
+                    @Html.TextBoxFor(mode => mode.TotalValue, new { @class = "form-control textright3", @required = "required", @readonly = "readonly" })
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-body">
+
+
+
+
+            <div class="row">
+                <ul class="nav nav-tabs nav-tabs-custom nav-justified" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <a class="nav-link active" data-bs-toggle="tab" href="#po1" role="tab" aria-selected="true">
+                            <span class="d-block d-sm-none"><i class="fas fa-home"></i></span>
+                            <span class="d-none d-sm-block">Order Detail</span>
+                        </a>
+                    </li>
+                    @{
+                        if (Model.ID > 0)
+                        {
+                            <li class="nav-item" role="presentation">
+                                <a class="nav-link" data-bs-toggle="tab" href="#bond1" role="tab" aria-selected="false" tabindex="-1">
+                                    <span class="d-block d-sm-none"><i class="far fa-user"></i></span>
+                                    <span class="d-none d-sm-block">Bond Details</span>
+                                </a>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <a class="nav-link" data-bs-toggle="tab" href="#messages1" role="tab" aria-selected="false" tabindex="-1">
+                                    <span class="d-block d-sm-none"><i class="far fa-envelope"></i></span>
+                                    <span class="d-none d-sm-block">Warranty</span>
+                                </a>
+                            </li>
+                        }
+                    }
+
+                </ul>
+                <div class="tab-content p-3 text-muted">
+
+                    <div class="tab-pane active" id="po1" role="tabpanel">
+
+                        @{Html.RenderPartial("DetailList", Model);}
+
+                    </div>
+                    <div class="tab-pane" id="bond1" role="tabpanel">
+                        <div class="row">
+                            <div class="col-md-2">
+                                <div class="mb-2">
+                                    <input type="hidden" id="BondID" value="0" />
+                                    <label class="form-label">Bond Type</label> <br />
+                                    @Html.DropDownList("BondyTypeId", new SelectList(@ViewBag.BondType, "ID", "BondType1"), "Select", new { id = "BondTypeId", @class = "form-select-sm", @style = "width:200px" })
+                                </div>
+                            </div>
+                            <div class="col-md-10">
+                                <div class="row">
+                                    <div class="col-md-2">
+                                        <div class="mb-2">
+                                            <label class="form-label">Sales Value</label>
+                                            <input type="text" class="form-control-sm textright3" readonly value="@Model.OrderValue" id="txtSalesValue" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <div class="mb-2">
+                                            <label class="form-label">Percentage</label>
+                                            <input type="text" class="form-control-sm textright" id="txtPercentage" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <div class="mb-2">
+                                            <label class="form-label">Bond Value</label>
+                                            <input type="text" class="form-control-sm textright3" id="txtBondValue" readonly />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <div class="mb-2">
+                                            <label for="txtIssueDate" class="form-label">Issue Date</label>
+                                            <div class="docs-datepicker">
+                                                <div class="input-group input-group-sm">
+                                                    <input type="text"
+                                                           class="form-control docs-date"
+                                                           name="txtIssueDate"
+                                                           id="txtIssueDate"
+                                                           placeholder="Pick an Issue Date"
+                                                           autocomplete="off" />
+
+                                                    <!-- Wrap calendar icon in a div for alignment -->
+                                                    <div class="input-group-text docs-datepicker-trigger" style="cursor: pointer;">
+                                                        <i class="mdi mdi-calendar" aria-hidden="true" title="Open calendar"></i>
+                                                    </div>
+                                                </div>
+                                                <div class="docs-datepicker-container"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-3">
+                                        <div class="mb-2">
+                                            <div class="row g-2">
+                                                <div class="col-md-6">
+                                                    <label for="txtDueDays" class="form-label">Due Days</label>
+                                                    <input type="text" class="form-control form-control-sm" id="txtDueDays" />
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label for="txtExpiryDate" class="form-label">Expiry Date</label>
+                                                    <input type="text" class="form-control form-control-sm" id="txtExpiryDate" readonly />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-1">
+                                        <div class="mb-2 mt-4">
+                                            <button type="button"
+                                                    class="btn btn-sm btn-success"
+                                                    id="btnaddbond"
+                                                    title="Add Bond"
+                                                    onclick="SaveBondItem()" style="font-size:10px">
+                                                Save Bond
+                                                @*<i class="dripicons-plus" style="font-size:13px;"></i>*@
+                                            </button>
+                                        </div>
+                                    </div>
+
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row" id="DetailContainer1">
+                            @{Html.RenderPartial("BondList", Model);}
+                        </div>
+                    </div>
+
+                    <div class="tab-pane" id="messages1" role="tabpanel">
+                        <!--<div class="row">
+
+
+                            <div class="col-md-2">
+                                <label class="col-form-label required">Equipment</label>
+                                <select id="drpEquipment2" class="equipment-select form-select" style="width:200px"></select>
+
+                            </div>
+                            <div class="col-md-2">
+                                <label class="col-form-label">Type</label>
+                                <div class="input-group">
+                                    <select id="drpwarrantytype" class="form-select">
+                                        <option value="Unit Warranty">Unit Warranty</option>
+                                        <option value="Compressor Warranty">Compressor Warranty</option>
+                                    </select>-->
+                        @*<button type="button" class="btn btn-primary waves-effect waves-light filter" id="btnmasteradditem2" title="Insert into Grid" onclick="AddMasterDetail2(this)">
+                                <i class="dripicons-enter" style="font-size: 18px;"></i>
+                            </button>*@
+                        <!--</div>
+                            </div>
+                            <div class="col-md-5">
+                                <label class="col-form-label required">Enter Warranty Description</label>
+                                <textarea rows="1" cols="50" type="text" class="form-control" id="txtDescription2" value="" placeholder="Enter Description"></textarea>
+                            </div>
+                            <div class="col-md-1">
+                                <button type="button" class="btn btn-success waves-effect waves-light filter" style="margin-top:37px;" id="btnadditem2" title="Insert into Grid" onclick="AddDetail2(this)">
+                                    <i class="dripicons-enter" style="font-size: 18px;"></i>
+                                </button>
+                            </div>
+                            <div class="col-md-2">
+                                <input type="button" value="Save Warranty" class="btn btn-success" style="margin-top:30px" id="btnsave2" onclick="SaveWarrantyItem(this)" />
+                            </div>
+
+                        </div>-->
+                        <div class="row" id="DetailContainer2">
+                            @{Html.RenderPartial("WarrantyDetailList", Model);}
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+<div class="modal fade" id="mrpopup" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">
+                    Add Material Request
+                </h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body">
+                <div class="container-fluid" id="estimationdetailContainer">
+                    <div class="col-md-12">
+                        <label class="col-form-label required">Notify To</label>
+                        @Html.DropDownList("StoreKeeperID", new SelectList(ViewBag.EmployeeMaster, "ID", "Text"), "Select Engineer", new { @class = "form-select", @id = "StoreKeeperID", @required = "required", @tabindex = "2" })
+                    </div>
+
+                </div>
+            </div>
+            <div class="modal-footer" style="padding-top: 5px">
+                <span class="error text-left" id="spanequiperror"></span>
+                <button type="button" class="btn btn-primary" id="btnAddRequest" onclick="SaveMRequest()">Add Material Request</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+@section scripts{
+
+    <!-- init js -->
+    <script src="~/Scripts/JS/JobPOCreate.js?v=1"></script>
+
+
+}
+
+
+
+<script type="text/javascript">
+
+
+</script>

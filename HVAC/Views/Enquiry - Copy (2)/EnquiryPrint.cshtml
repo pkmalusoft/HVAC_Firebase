@@ -1,0 +1,376 @@
+﻿@model HVAC.Models.EnquiryPrintVM
+@using System.Globalization
+@functions {
+    public string OMR(decimal? v)
+    {
+        return v.HasValue ? string.Format("OMR {0:N3}", v.Value) : "—";
+    }
+
+    public string D(DateTime? dt)
+    {
+        return dt.HasValue ? dt.Value.ToString("dd-MM-yyyy") : "—";
+    }
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Enquiry - @Model.EnquiryNo</title>
+    <style>
+        @@page {
+            size: A4;
+            margin: 15mm 12mm 15mm 12mm;
+        }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Segoe UI", Arial, sans-serif;
+            font-size: 12px;
+            line-height: 1.4;
+            color: #222;
+        }
+
+        /* HEADER */
+        .header {
+            display: flex;
+            align-items: center;
+            padding-bottom: 8px;
+            margin-bottom: 12px;
+            border-bottom: 1px solid #444;
+        }
+
+        .logo {
+            height: 50px;
+        }
+
+        .company {
+            font-weight: 700;
+            font-size: 18px;
+            margin-bottom: 2px;
+        }
+
+        .meta {
+            font-size: 10px;
+            color: #555;
+            line-height: 1.3;
+        }
+
+        .header-right {
+            margin-left: auto;
+            text-align: right;
+            font-size: 10px;
+            color: #666;
+            line-height: 1.3;
+        }
+
+        /* TITLE */
+        .title {
+            text-align: center;
+            font-size: 16px;
+            font-weight: 700;
+            margin: 10px 0 15px;
+            color: #222;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* BASE TABLES */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        td, th {
+            padding: 6px 6px;
+        }
+
+        .grid td {
+            border: 1px solid #ddd;
+        }
+
+        .lbl {
+            font-weight: 600;
+            background: #f9f9f9;
+            width: 150px;
+            padding: 6px;
+        }
+
+        .val {
+            font-weight: 500;
+        }
+
+        /* Section */
+        .section {
+            margin-top: 2px;
+        }
+
+            .section h3 {
+                font-size: 13px;
+                margin: 0 0 6px;
+                color: #333;
+                border-bottom: 1px solid #ccc;
+                padding-bottom: 3px;
+            }
+
+        /* Key-Value tables */
+        .kv td {
+            border-bottom: 1px dashed #ccc;
+            padding: 2px 2px;
+        }
+
+        .kv .k {
+            width: 160px;
+            font-weight: 600;
+            color: #444;
+        }
+
+        .kv .v {
+            color: #222;
+        }
+
+        /* Items */
+        .items {
+            margin-top: 2px;
+        }
+
+            .items th, .items td {
+                border: 1px solid #bbb;
+                padding: 6px 8px;
+            }
+
+            .items th {
+                background: #f3f3f3;
+                font-weight: 600;
+                text-align: center;
+                font-size: 11px;
+            }
+
+            .items td.num, .right {
+                text-align: right;
+                white-space: nowrap;
+            }
+
+            .items tfoot th {
+                background: #f9f9f9;
+                font-weight: 700;
+                font-size: 12px;
+                padding-top: 6px;
+                padding-bottom: 3px;
+            }
+
+        /* Notes */
+        .note {
+            background: #fcfcfc;
+            border: 1px dashed #bbb;
+            padding: 2px 2px;
+            margin-top: 2px;
+            font-size: 11px;
+            line-height: 1.4;
+            white-space: pre-wrap;
+        }
+
+        /* Flex Layout */
+        .flex {
+            display: flex;
+            gap: 8px; /* reduced gap */
+        }
+
+        .col {
+            flex: 1;
+        }
+
+        /* Signatures */
+        .sign {
+            height: 30px;
+            border-bottom: 1px solid #666;
+            margin-bottom: 4px;
+        }
+
+        .small {
+            font-size: 10px;
+            color: #555;
+        }
+
+        /* Footer */
+        .footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            font-size: 9px;
+            color: #555;
+            display: flex;
+            justify-content: space-between;
+            border-top: 1px solid #ccc;
+            padding: 2px 6px;
+        }
+
+        .page-break {
+            page-break-after: always;
+        }
+
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">
+        @if (!string.IsNullOrEmpty(Model.CompanyLogoUrl))
+        {
+            <img class="logo" src="@Model.CompanyLogoUrl" alt="Logo" />
+        }
+        <div>
+            <div class="company">@Model.CompanyName</div>
+            <div class="meta">
+                @Model.CompanyAddressLine1<br />
+                @Model.CompanyAddressLine2
+            </div>
+        </div>
+        <div class="header-right">
+            <div>Generated: @DateTime.Now.ToString("dd-MM-yyyy HH:mm")</div>
+            <div>User: @Model.GeneratedBy</div>
+        </div>
+    </div>
+
+    <div class="title">Enquiry</div>
+
+    <!-- Enquiry Info -->
+    <table class="grid">
+        <tr>
+            <td class="lbl">Enquiry No.</td>
+            <td class="val">@Model.EnquiryNo</td>
+            <td class="lbl">Enquiry Date</td>
+            <td class="val">@D(Model.EnquiryDate)</td>
+        </tr>
+        <tr>
+            <td class="lbl">Due Date</td>
+            <td class="val">@D(Model.DueDate)</td>
+            <td class="lbl">Due Days</td>
+            <td class="val">@Model.DueDays</td>
+        </tr>
+        <tr>
+            <td class="lbl">Stage</td>
+            <td class="val">@Model.EnquiryStage</td>
+            <td class="lbl">Prefix</td>
+            <td class="val">@Model.Prefix</td>
+        </tr>
+    </table>
+
+    <!-- Project Details -->
+    <div class="section">
+        <h3>Project Details</h3>
+        <table class="kv">
+            <tr><td class="k">Project Name</td><td class="v">@Model.ProjectName</td></tr>
+            <tr><td class="k">Project Details</td><td class="v">@Model.ProjectDetails</td></tr>
+            <tr><td class="k">Entity Type Applied</td><td class="v">@string.Join(", ", Model.EntityTypes ?? new List<string>())</td></tr>
+            <tr><td class="k">Project Location</td><td class="v">@Model.ProjectLocation</td></tr>
+            <tr><td class="k">Assigned To</td><td class="v">@string.Join(", ", Model.AssignedToNames ?? new List<string>())</td></tr>
+        </table>
+    </div>
+
+    <!-- Items -->
+    @if (Model.Items != null && Model.Items.Any())
+    {
+        <div class="section">
+            <h3>Items / Scope of Supply</h3>
+            <table class="items">
+                <thead>
+                    <tr>
+                        <th style="width:36px;">#</th>
+                        <th>Equipment Type</th>
+                        <th>Equipment Name</th>
+                        <th>Model</th>
+                        <th>Description / Specs</th>
+                        <th style="width:70px;">Qty</th>
+                        <th style="width:60px;">Unit</th>
+                        <th style="width:90px;">Unit Price</th>
+                        <th style="width:100px;">Line Value</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{
+                        var i = 0;
+                        foreach (var it in Model.Items)
+                        {
+                            i++;
+                            <tr>
+                                <td>@i</td>
+                                <td>@it.EquipmentType</td>
+                                <td>@it.EquipmentName</td>
+                                <td>@it.Model</td>
+                                <td>@it.Description</td>
+                                <td class="num">@it.Qty</td>
+                                <td>@it.Unit</td>
+                                <td class="num">@OMR(it.UnitPrice)</td>
+                                <td class="num">@OMR((it.UnitPrice ?? 0m) * (decimal)(it.Qty ?? 0))</td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <th colspan="8" class="right">Estimated Total</th>
+                        <th class="num">@OMR(Model.EstimatedTotal)</th>
+                    </tr>
+                </tfoot>
+            </table>
+
+            @if (!string.IsNullOrWhiteSpace(Model.ItemNotes))
+            {
+                <div class="note">@Model.ItemNotes</div>
+            }
+        </div>
+    }
+
+    <!-- Notes -->
+    @*<div class="section flex">
+        <div class="col">
+            <h3>Commercial Notes</h3>
+            <div class="note">@Model.CommercialNotes</div>
+        </div>
+        <div class="col">
+            <h3>Technical Notes</h3>
+            <div class="note">@Model.TechnicalNotes</div>
+        </div>
+    </div>*@
+
+    <!-- Signatures -->
+    <div class="section flex">
+        <div class="col">
+            <h3>Prepared By</h3>
+
+            <div class="small">@Model.PreparedByName (@D(Model.PreparedOn))</div>
+            <div class="sign"></div>
+        </div>
+        <div class="col">
+            <h3>Reviewed By</h3>
+
+            <div class="small">@Model.ReviewedByName (@D(Model.ReviewedOn))</div>
+            <div class="sign"></div>
+        </div>
+        <div class="col">
+            <h3>Approved By</h3>
+
+            <div class="small">@Model.ApprovedByName (@D(Model.ApprovedOn))</div>
+            <div class="sign"></div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        <div>Enquiry: @Model.EnquiryNo</div>
+        <div>Page <span class="pageNumber"></span> of <span class="totalPages"></span></div>
+    </div>
+
+    <script>
+        // wkhtmltopdf will override these placeholders in PDF
+        (function () {
+            var pages = document.querySelectorAll('.pageNumber, .totalPages');
+            for (var i = 0; i < pages.length; i++) pages[i].textContent = '';
+        })();
+    </script>
+</body>
+</html>

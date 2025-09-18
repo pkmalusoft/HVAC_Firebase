@@ -1,0 +1,93 @@
+﻿@model HVAC.Models.QuotationWarrantyVM
+@{
+    var i = 0;
+    var _decimal = @Session["Decimal"].ToString();
+    Layout = null;
+}
+
+
+@using (Html.BeginForm("AddWarrantyDetail", "Quotations", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(m => m.ID , new { @id = "warrantyid" })
+
+<div class="row">
+    <div class="col-md-4">
+        <div class="mb-2">
+            <label class="col-form-label required">Equipment</label>
+            @*<select id="drpEquipment1" style="width:200px" class="form-select equipment-select"></select>*@
+            @Html.DropDownListFor(mode => mode.EquipmentID, new SelectList(ViewBag.Equipments, "ID", "Text"), "Select Equipment", new { @class = "form-select", @id = "drpEquipment2", @required = "required", @tabindex = "1" })
+        </div>
+    </div>
+    
+    <div class="col-md-2">
+        <div class="mb-2">
+            <label class="col-form-label required">Type</label>
+            <select id="drpwarrantytype" class="form-select">
+                <option value="Unit Warranty">Unit Warranty</option>
+                <option value="Compressor Warranty">Compressor Warranty</option>
+            </select>
+        </div>
+        </div>
+    </div>
+     
+ 
+        <div class="row">
+            <div class="mb-2">
+                <label class="col-form-label">Description</label>
+ 
+
+                @Html.TextAreaFor(m => m.Description, new
+                {
+                    @class = "form-control",
+                    rows = "5",
+                    id = "txtDescription2"
+
+                })
+            </div>
+            @*<small class="text-muted d-block mt-1">
+                    Allowed: &lt;b&gt; &lt;i&gt; &lt;u&gt; &lt;br/&gt;
+                </small>*@
+
+            @*<div class="mt-3">
+                    <div class="text-muted small mb-1">Live Preview</div>
+                    <div id="remarksPreview" class="p-2 border rounded bg-light"></div>
+                </div>*@
+        </div>
+
+
+        }
+
+        <script src="~/assets/libs/tinymce/tinymce.min.js"></script>*
+
+
+
+        <script type="text/javascript">
+
+
+            tinymce.init({
+                selector: "textarea#txtDescription2",
+                height: 300,
+                plugins: [
+                    "advlist autolink link image lists charmap print preview hr anchor pagebreak spellchecker",
+                    "searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking",
+                    "save table contextmenu directionality emoticons template paste textcolor",
+                ],
+                toolbar: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | l      ink image | print preview media fullpage | forecolor backcolor emoticons",
+                style_formats: [
+                    { title: "Bold text", inline: "b" },
+                    { title: "Red text", inline: "span", styles: { color: "#ff0000" } },
+                    { title: "Red header", block: "h1", styles: { color: "#ff0000" } },
+                    { title: "Example 1", inline: "span", classes: "example1" },
+                    { title: "Example 2", inline: "span", classes: "example2" },
+                    { title: "Table styles" },
+                    { title: "Table row 1", selector: "tr", classes: "tablerow1" },
+                ],
+            });
+
+
+        </script>
+
+        <script>
+
+        </script>

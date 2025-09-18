@@ -1,0 +1,341 @@
+﻿@model HVAC.Models.ClientVM
+@{
+    Layout = null;
+}
+<style>
+    ul.ui-front {
+        z-index: 1100;
+    }
+</style>
+<script type="text/javascript">
+    $(document).ready(function () {
+       $("#cCountryName").autocomplete({
+            source: function (request, response) {
+                $.ajax({
+                    url: '/LocationMaster/GetCountryName',
+                    datatype: "json",
+                    data: {
+                        term: request.term
+                    },
+                    success: function (data) {
+                        response($.map(data, function (val, item) {
+                            return {
+                                label: val.CountryName,
+                                value: val.Id
+                            }
+                        }))
+                    }
+                })
+            },
+            minLength: 1,
+            autoFocus: false,
+            focus: function (e, ui) {
+                e.preventDefault();
+                $('#cCountryID').val(ui.item.value);
+                $('#cCountryName').val(ui.item.label);
+                $('#cCountryName').attr('portname', ui.item.label);
+
+            },
+            select: function (e, ui) {
+
+                e.preventDefault();
+                $('#cCountryID').val(ui.item.value);
+                $('#cCountryName').val(ui.item.label);
+                $('#cCountryName').attr('portname', ui.item.label);
+
+            },
+
+        });
+
+        $('#cCityName').autocomplete({
+            source: function (request, response) {
+                $.ajax({
+                    url: "@Url.Action("GetCityName", "LocationMaster")",
+                    data: { term: request.term },
+                    dataType: "json",
+                    type: "GET",
+                    success: function (data) {
+                        response($.map(data, function (val, item) {
+                            return {
+                                label: val.CityName,
+                                value: val.Id,
+                                Country: val.CountryName
+                            }
+                        }))
+                    }
+                });
+            },
+            minLength: 1,
+            autoFocus: false,
+            select: function (event, ui) {
+                event.preventDefault();
+                $('#cCityID').val(ui.item.value);
+                $('#cCityName').val(ui.item.label);
+                $('#cCountryName').val(ui.item.Country);
+                return false;
+            },
+            focus: function (event, ui) {
+                $('#cCityID').val(ui.item.value);
+                $('#cCityName').val(ui.item.label);
+                $('#cCountryName').val(ui.item.Country);
+                return false;
+            }
+        });
+
+
+        @*$('#LocationName').autocomplete({
+            source: function (request, response) {
+                $.ajax({
+                    url: "@Url.Action("GetLocation", "LocationMaster")",
+                    data: { term: request.term },
+                    dataType: "json",
+                    type: "GET",
+                    success: function (data) {
+                        response($.map(data, function (val, item) {
+                            return {
+                                label: val.Location,
+                                value: val.Location,
+                                City: val.CityName,
+                                Country: val.CountryName
+                            }
+                        }))
+                    }
+                })
+            },
+            minLength: 1,
+            autoFocus: false,
+            select: function (e, ui) {
+                e.preventDefault();
+                $('#LocationName').val(ui.item.label);
+                $('#CityName').val(ui.item.City);
+                $('#CountryName').val(ui.item.Country);
+                return false;
+            },
+            focus: function (event, ui) {
+                $('#LocationName').val(ui.item.label);
+                $('#CityName').val(ui.item.City);
+                $('#CountryName').val(ui.item.Country);
+                return false;
+            }
+        });*@
+
+
+    });
+    $(document).ready(function () {
+       $("#cCountryName").autocomplete({
+            source: function (request, response) {
+                $.ajax({
+                    url: '/LocationMaster/GetCountryName',
+                    datatype: "json",
+                    data: {
+                        term: request.term
+                    },
+                    success: function (data) {
+                        response($.map(data, function (val, item) {
+                            return {
+                                label: val.CountryName,
+                                value: val.Id
+                            }
+                        }))
+                    }
+                })
+            },
+            minLength: 1,
+            autoFocus: false,
+            focus: function (e, ui) {
+                e.preventDefault();
+                $('#cCountryID').val(ui.item.value);
+                $('#cCountryName').val(ui.item.label);
+                $('#cCountryName').attr('portname', ui.item.label);
+
+            },
+            select: function (e, ui) {
+
+                e.preventDefault();
+                $('#cCountryID').val(ui.item.value);
+                $('#cCountryName').val(ui.item.label);
+                $('#cCountryName').attr('portname', ui.item.label);
+
+            },
+
+        });
+
+        $('#cCityName').autocomplete({
+            source: function (request, response) {
+                $.ajax({
+                    url: "@Url.Action("GetCityName", "LocationMaster")",
+                    data: { term: request.term },
+                    dataType: "json",
+                    type: "GET",
+                    success: function (data) {
+                        response($.map(data, function (val, item) {
+                            return {
+                                label: val.CityName,
+                                value: val.Id,
+                                Country: val.CountryName
+                            }
+                        }))
+                    }
+                });
+            },
+            minLength: 1,
+            autoFocus: false,
+            select: function (event, ui) {
+                event.preventDefault();
+                $('#cCityID').val(ui.item.value);
+                $('#cCityName').val(ui.item.label);
+                $('#cCountryName').val(ui.item.Country);
+                return false;
+            },
+            focus: function (event, ui) {
+                $('#cCityID').val(ui.item.value);
+                $('#cCityName').val(ui.item.label);
+                $('#cCountryName').val(ui.item.Country);
+                return false;
+            }
+        });
+
+
+        @*$('#LocationName').autocomplete({
+            source: function (request, response) {
+                $.ajax({
+                    url: "@Url.Action("GetLocation", "LocationMaster")",
+                    data: { term: request.term },
+                    dataType: "json",
+                    type: "GET",
+                    success: function (data) {
+                        response($.map(data, function (val, item) {
+                            return {
+                                label: val.Location,
+                                value: val.Location,
+                                City: val.CityName,
+                                Country: val.CountryName
+                            }
+                        }))
+                    }
+                })
+            },
+            minLength: 1,
+            autoFocus: false,
+            select: function (e, ui) {
+                e.preventDefault();
+                $('#LocationName').val(ui.item.label);
+                $('#CityName').val(ui.item.City);
+                $('#CountryName').val(ui.item.Country);
+                return false;
+            },
+            focus: function (event, ui) {
+                $('#LocationName').val(ui.item.label);
+                $('#CityName').val(ui.item.City);
+                $('#CountryName').val(ui.item.Country);
+                return false;
+            }
+        });*@
+
+
+    });
+
+</script>
+@using (Html.BeginForm("ClientEntry", "Enquiry", FormMethod.Post, new { @class = "clientneeds-validation", @novalidate = "novalidate", @id = "formclientEntry" }))
+{
+    
+<div class="row">
+    <div class="col-md-4">
+        <div class="mb-2">
+            @Html.HiddenFor(model => model.ClientID)
+            @Html.HiddenFor(model => model.ClientType)
+            @Html.HiddenFor(model => model.CityID, new { @id = "cCityID" })
+            @Html.HiddenFor(model => model.CountryID, new { @id = "cCountryID" })
+            <label class="col-form-label required">Type</label>
+            @Html.DropDownList("CustomerType1", new List<SelectListItem>
+        {
+            new SelectListItem{ Text="Client", Value = "Client" },
+            new SelectListItem{ Text="Contractor", Value = "Contractor" },
+            new SelectListItem{ Text="Consultant", Value = "Consultant" },
+         }, new { @class = "form-select" })
+
+            @Html.ValidationMessageFor(model => model.ClientType)
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="mb-2">
+            <input type="hidden" id="TargetCustomerName" />
+            <input type="hidden" id="TargetCustomerId" />
+            <label class="col-form-label required">Name</label>
+            @Html.TextBoxFor(model => model.ClientName, new { @class = "form-control txttarget", @autocomplete = "off", @required = "required", @id = "cClientName" })
+            @Html.ValidationMessageFor(model => model.ClientName)
+        </div>
+    </div>
+    <div class="col-md-2">
+        <div class="mb-2">
+            
+            <label class="col-form-label">Client Code</label>
+            @Html.TextBoxFor(model => model.ClientPrefix, new { @class = "form-control txttarget", @autocomplete = "off", @required = "required", @id = "cClientPrefix",@maxlength="10" })
+            @Html.ValidationMessageFor(model => model.ClientPrefix)
+        </div>
+    </div>
+</div>
+    <div class="row">
+        <div class="col-md-4">
+            <div class="mb-2">
+                <label class="col-form-label">Contact Name</label>
+                @Html.TextBoxFor(model => model.ContactName, new { @class = "form-control txttarget", @id = "cContactName" })
+                @Html.ValidationMessageFor(model => model.ContactName)
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="mb-2">
+                <label class="col-form-label">Phone No.</label>
+                @Html.TextBoxFor(model => model.ContactNo, new { @class = "form-control",@id="cContactNo" })
+                @Html.ValidationMessageFor(model => model.ContactNo)
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="mb-2">
+                <label class="col-form-label">Email</label>
+                @Html.TextBoxFor(model => model.Email, new { @class = "form-control", @id = "cEmail" })
+                @Html.ValidationMessageFor(model => model.Email)
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-4">
+            <label class="col-form-label">Office</label>
+            @Html.TextBoxFor(model => model.Address1, new { @class = "form-control txttarget", @id = "cAddress1" })
+            @Html.ValidationMessageFor(model => model.Address1)
+        </div>
+        <div class="col-md-4">
+            <label class="col-form-label">Building</label>
+            @Html.TextBoxFor(model => model.Address2, new { @class = "form-control txttarget", @id = "cAddress2" })
+            @Html.ValidationMessageFor(model => model.Address2)
+        </div>
+        <div class="col-md-4">
+            <label class="col-form-label">Street</label>
+            @Html.TextBoxFor(model => model.Address3, new { @class = "form-control txttarget", @id = "cAddress3" })
+            @Html.ValidationMessageFor(model => model.Address2)
+        </div>
+
+
+    </div>
+    <div class="row">
+
+        <div class="col-md-4">
+            <label class="col-form-label">Location</label>
+            @Html.TextBoxFor(mode => Model.LocationName, new { @class = "form-select", @id = "cLocationName" })
+            @Html.ValidationMessageFor(model => model.LocationName)
+        </div>
+        <div class="col-md-4">
+            <label class="required col-form-label">City</label>
+            @Html.TextBoxFor(model => model.CityName, new { @class = "form-select" ,@required="required",@id="cCityName"})
+            @Html.ValidationMessageFor(model => model.CityName)
+        </div>
+        <div class="col-md-4">
+            <label class="col-form-label required">Country</label>
+            @Html.TextBoxFor(model => model.CountryName, new { @class = "form-select", @id = "cCountryName" })
+            @Html.ValidationMessageFor(model => model.CountryName)
+        </div>
+       
+    </div>
+}

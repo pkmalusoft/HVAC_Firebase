@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="951ff56258bf4ae790973aaeec67ea07" Name="Diagram1" ZoomLevel="86">
+        <EntityTypeShape EntityType="db_a69d99_airmech1Model.AcCompany" Width="1.5" PointX="2.75" PointY="7.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="db_a69d99_airmech1Model.AcFinancialYear" Width="1.5" PointX="5.75" PointY="4.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="db_a69d99_airmech1Model.BondType" Width="1.5" PointX="5.75" PointY="1.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="db_a69d99_airmech1Model.BranchMaster" Width="1.5" PointX="7.75" PointY="4.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="db_a69d99_airmech1Model.Brand" Width="1.5" PointX="9.75" PointY="4.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="db_a69d99_airmech1Model.BuildingType" Width="1.5" PointX="9.75" PointY="7.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="db_a69d99_airmech1Model.BusinessType" Width="1.5" PointX="10.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="db_a69d99_airmech1Model.CityMaster" Width="1.5" PointX="9.75" PointY="10.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="db_a69d99_airmech1Model.ClientMaster" Width="1.5" PointX="11.75" PointY="3.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="db_a69d99_airmech1Model.CountryMaster" Width="1.5" PointX="0.75" PointY="2.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="db_a69d99_airmech1Model.CurrencyMaster" Width="1.5" PointX="11.75" PointY="8.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="db_a69d99_airmech1Model.CustomerMaster" Width="1.5" PointX="11.75" PointY="12.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="db_a69d99_airmech1Model.DashBoardInfo" Width="1.5" PointX="13.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="db_a69d99_airmech1Model.Department" Width="1.5" PointX="0.75" PointY="7.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="db_a69d99_airmech1Model.Designation" Width="1.5" PointX="13.75" PointY="6.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="db_a69d99_airmech1Model.DocumentMaster" Width="1.5" PointX="7.75" PointY="13.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="db_a69d99_airmech1Model.DocumentNoSetup" Width="1.5" PointX="13.75" PointY="9.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="db_a69d99_airmech1Model.DocumentType" Width="1.5" PointX="13.75" PointY="12.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="db_a69d99_airmech1Model.EnquirySource" Width="1.5" PointX="15.75" PointY="7.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="db_a69d99_airmech1Model.EnquiryStage" Width="1.5" PointX="15.75" PointY="10.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="db_a69d99_airmech1Model.EnquiryStatu" Width="1.5" PointX="15.75" PointY="13.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="db_a69d99_airmech1Model.EntityType" Width="1.5" PointX="4.75" PointY="16.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="db_a69d99_airmech1Model.EquipmentStatu" Width="1.5" PointX="15.75" PointY="16.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="db_a69d99_airmech1Model.LocationMaster" Width="1.5" PointX="17.75" PointY="11.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="db_a69d99_airmech1Model.Log" Width="1.5" PointX="17.75" PointY="15.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="db_a69d99_airmech1Model.MenuAccessLevel" Width="1.5" PointX="6.75" PointY="18.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="db_a69d99_airmech1Model.Priority" Width="1.5" PointX="8.75" PointY="18.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="db_a69d99_airmech1Model.ProductFamily" Width="1.5" PointX="17.75" PointY="18.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="db_a69d99_airmech1Model.QuotationStatu" Width="1.5" PointX="19.75" PointY="7.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="db_a69d99_airmech1Model.QuotationTemplate" Width="1.5" PointX="19.75" PointY="10.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="db_a69d99_airmech1Model.RoleMaster" Width="1.5" PointX="19.75" PointY="14.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="db_a69d99_airmech1Model.UserInBranch" Width="1.5" PointX="19.75" PointY="20.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="db_a69d99_airmech1Model.UserRegistration" Width="1.5" PointX="21.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="db_a69d99_airmech1Model.Vertical" Width="1.5" PointX="21.75" PointY="4.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="db_a69d99_airmech1Model.Warranty" Width="1.5" PointX="21.75" PointY="7.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="db_a69d99_airmech1Model.Menu" Width="1.5" PointX="16.375" PointY="21.75" />
+        <EntityTypeShape EntityType="db_a69d99_airmech1Model.BriefScope" Width="1.5" PointX="22.375" PointY="10.75" />
+        <EntityTypeShape EntityType="db_a69d99_airmech1Model.PeriodLock" Width="1.5" PointX="22.375" PointY="13.75" />
+        <EntityTypeShape EntityType="db_a69d99_airmech1Model.GeneralSetup" Width="1.5" PointX="22.375" PointY="17.75" />
+        <EntityTypeShape EntityType="db_a69d99_airmech1Model.GeneralSetupType" Width="1.5" PointX="22.375" PointY="21.75" />
+        <EntityTypeShape EntityType="db_a69d99_airmech1Model.CurrencyRate" Width="1.5" PointX="0.75" PointY="23.75" />
+        <EntityTypeShape EntityType="db_a69d99_airmech1Model.Model" Width="1.5" PointX="3.375" PointY="23.75" />
+        <EntityTypeShape EntityType="db_a69d99_airmech1Model.AcHead" Width="1.5" PointX="5.375" PointY="23.75" />
+        <EntityTypeShape EntityType="db_a69d99_airmech1Model.AssignedStatu" Width="1.5" PointX="7.375" PointY="23.75" />
+        <EntityTypeShape EntityType="db_a69d99_airmech1Model.ProductType" Width="1.5" PointX="24.375" PointY="17.75" />
+        <EntityTypeShape EntityType="db_a69d99_airmech1Model.SupplierMaster" Width="1.5" PointX="24.375" PointY="9.25" />
+        <EntityTypeShape EntityType="db_a69d99_airmech1Model.CustomerInvoice" Width="1.5" PointX="24.375" PointY="20.75" />
+        <EntityTypeShape EntityType="db_a69d99_airmech1Model.CustomerInvoiceDetail" Width="1.5" PointX="20.375" PointY="24.75" />
+        <EntityTypeShape EntityType="db_a69d99_airmech1Model.SupplierType" Width="1.5" PointX="9.375" PointY="25.75" />
+        <EntityTypeShape EntityType="db_a69d99_airmech1Model.JobWarranty" Width="1.5" PointX="15.375" PointY="27.75" />
+        <EntityTypeShape EntityType="db_a69d99_airmech1Model.PaymentInstrument" Width="1.5" PointX="17.375" PointY="27.75" />
+        <EntityTypeShape EntityType="db_a69d99_airmech1Model.JobPaymentTerm" Width="1.5" PointX="3.375" PointY="28.75" />
+        <EntityTypeShape EntityType="db_a69d99_airmech1Model.ProjectPrefix" Width="1.5" PointX="28.375" PointY="5.75" />
+        <EntityTypeShape EntityType="db_a69d99_airmech1Model.JobHandover" Width="1.5" PointX="26.375" PointY="16.75" />
+        <EntityTypeShape EntityType="db_a69d99_airmech1Model.SupplierInvoice" Width="1.5" PointX="26.625" PointY="10.375" />
+        <AssociationConnector Association="db_a69d99_airmech1Model.FK_SupplierInvoice_SupplierMaster" />
+        <EntityTypeShape EntityType="db_a69d99_airmech1Model.EquipmentType" Width="1.5" PointX="28.375" PointY="16.75" />
+        <EntityTypeShape EntityType="db_a69d99_airmech1Model.EstimationCategory" Width="1.5" PointX="28.375" PointY="26.75" />
+        <EntityTypeShape EntityType="db_a69d99_airmech1Model.Equipment" Width="1.5" PointX="0.75" PointY="17.75" />
+        <EntityTypeShape EntityType="db_a69d99_airmech1Model.SupplierInvoiceDetail" Width="1.5" PointX="5.375" PointY="28.75" />
+        <EntityTypeShape EntityType="db_a69d99_airmech1Model.ItemUnit" Width="1.5" PointX="28.375" PointY="19.75" />
+        <EntityTypeShape EntityType="db_a69d99_airmech1Model.EstimationMaster" Width="1.5" PointX="28.375" PointY="0.75" />
+        <EntityTypeShape EntityType="db_a69d99_airmech1Model.Port" Width="1.5" PointX="24.375" PointY="0.75" />
+        <EntityTypeShape EntityType="db_a69d99_airmech1Model.EstimationDetail" Width="1.5" PointX="18.375" PointY="0.75" />
+        <EntityTypeShape EntityType="db_a69d99_airmech1Model.EquipmentExclusion" Width="1.5" PointX="26.375" PointY="29.75" />
+        <EntityTypeShape EntityType="db_a69d99_airmech1Model.EquipmentScopeofwork" Width="1.5" PointX="28.375" PointY="29.75" />
+        <EntityTypeShape EntityType="db_a69d99_airmech1Model.EquipmentWarranty" Width="1.5" PointX="30.375" PointY="0.75" />
+        <EntityTypeShape EntityType="db_a69d99_airmech1Model.QuotationExclusion" Width="1.5" PointX="30.375" PointY="3.75" />
+        <EntityTypeShape EntityType="db_a69d99_airmech1Model.QuotationScopeofwork" Width="1.5" PointX="13.375" PointY="30.75" />
+        <EntityTypeShape EntityType="db_a69d99_airmech1Model.TermsCondition" Width="1.5" PointX="15.375" PointY="30.75" />
+        <EntityTypeShape EntityType="db_a69d99_airmech1Model.PaymentTerm" Width="1.5" PointX="28.375" PointY="23.75" />
+        <EntityTypeShape EntityType="db_a69d99_airmech1Model.QuotationWarranty" Width="1.5" PointX="24.375" PointY="3.75" />
+        <EntityTypeShape EntityType="db_a69d99_airmech1Model.JobBondDetail" Width="1.5" PointX="17.375" PointY="30.75" />
+        <EntityTypeShape EntityType="db_a69d99_airmech1Model.JobPurchaseOrderDetail" Width="1.5" PointX="30.375" PointY="14.75" />
+        <EntityTypeShape EntityType="db_a69d99_airmech1Model.PurchaseOrderOtherDetail" Width="1.5" PointX="31.375" PointY="9.75" />
+        <EntityTypeShape EntityType="db_a69d99_airmech1Model.PurchaseOrderUserComment" Width="1.5" PointX="19.375" PointY="31.75" />
+        <EntityTypeShape EntityType="db_a69d99_airmech1Model.POBank" Width="1.5" PointX="32.75" PointY="0.75" />
+        <EntityTypeShape EntityType="db_a69d99_airmech1Model.POCompressorWarranty" Width="1.5" PointX="0.75" PointY="32.75" />
+        <EntityTypeShape EntityType="db_a69d99_airmech1Model.PODeliveryTerm" Width="1.5" PointX="2.75" PointY="32.75" />
+        <EntityTypeShape EntityType="db_a69d99_airmech1Model.POINCOTerm" Width="1.5" PointX="32.75" PointY="3.75" />
+        <EntityTypeShape EntityType="db_a69d99_airmech1Model.POPaymentTerm" Width="1.5" PointX="32.75" PointY="13.75" />
+        <EntityTypeShape EntityType="db_a69d99_airmech1Model.PORegrigerant" Width="1.5" PointX="32.75" PointY="16.75" />
+        <EntityTypeShape EntityType="db_a69d99_airmech1Model.GRN" Width="1.5" PointX="26.375" PointY="32.75" />
+        <EntityTypeShape EntityType="db_a69d99_airmech1Model.QuotationContact" Width="1.5" PointX="32.375" PointY="27.75" />
+        <EntityTypeShape EntityType="db_a69d99_airmech1Model.EnquiryClient" Width="1.5" PointX="28.375" PointY="32.75" />
+        <EntityTypeShape EntityType="db_a69d99_airmech1Model.StockOpening" Width="1.5" PointX="13.375" PointY="33.75" />
+        <EntityTypeShape EntityType="db_a69d99_airmech1Model.GRNDetail" Width="1.5" PointX="11.375" PointY="25.75" />
+        <EntityTypeShape EntityType="db_a69d99_airmech1Model.MaterialIssue" Width="1.5" PointX="32.375" PointY="30.75" />
+        <EntityTypeShape EntityType="db_a69d99_airmech1Model.MaterialIssueDetail" Width="1.5" PointX="3.375" PointY="19.75" />
+        <EntityTypeShape EntityType="db_a69d99_airmech1Model.PurchaseOrderDetail" Width="1.5" PointX="33.375" PointY="6.75" />
+        <EntityTypeShape EntityType="db_a69d99_airmech1Model.MaterialRequest" Width="1.5" PointX="5.375" PointY="33.75" />
+        <EntityTypeShape EntityType="db_a69d99_airmech1Model.PurchaseOrder" Width="1.5" PointX="34.75" PointY="19.75" />
+        <EntityTypeShape EntityType="db_a69d99_airmech1Model.EmployeeMaster" Width="1.5" PointX="30.75" PointY="20.75" />
+        <EntityTypeShape EntityType="db_a69d99_airmech1Model.MaterialRequestDetail" Width="1.5" PointX="19.75" PointY="34.75" />
+        <EntityTypeShape EntityType="db_a69d99_airmech1Model.Notification" Width="1.5" PointX="34.375" PointY="28.75" />
+        <EntityTypeShape EntityType="db_a69d99_airmech1Model.PurchaseOrderNote" Width="1.5" PointX="0.75" PointY="29.75" />
+        <EntityTypeShape EntityType="db_a69d99_airmech1Model.MaterialApproval" Width="1.5" PointX="34.375" PointY="33.75" />
+        <EntityTypeShape EntityType="db_a69d99_airmech1Model.MaterialApprovalDetail" Width="1.5" PointX="0.75" PointY="26.75" />
+        <EntityTypeShape EntityType="db_a69d99_airmech1Model.PurchaseOrderApproval" Width="1.5" PointX="35.375" PointY="0.75" />
+        <EntityTypeShape EntityType="db_a69d99_airmech1Model.EnquiryType" Width="1.5" PointX="0.75" PointY="35.75" />
+        <EntityTypeShape EntityType="db_a69d99_airmech1Model.AuditLog" Width="1.5" PointX="35.375" PointY="3.75" />
+        <EntityTypeShape EntityType="db_a69d99_airmech1Model.EnquiryEmployee" Width="1.5" PointX="35.375" PointY="6.75" />
+        <EntityTypeShape EntityType="db_a69d99_airmech1Model.Enquiry" Width="1.5" PointX="35.375" PointY="9.75" />
+        <EntityTypeShape EntityType="db_a69d99_airmech1Model.Quotation" Width="1.5" PointX="22.375" PointY="29.75" />
+        <EntityTypeShape EntityType="db_a69d99_airmech1Model.QuotationDetail" Width="1.5" PointX="28.375" PointY="35.75" />
+        <EntityTypeShape EntityType="db_a69d99_airmech1Model.Estimation" Width="1.5" PointX="7.375" PointY="28.75" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

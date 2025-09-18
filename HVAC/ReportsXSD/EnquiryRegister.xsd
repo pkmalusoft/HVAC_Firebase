@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="NewDataSet" xmlns="" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+  <xs:element name="NewDataSet" msdata:IsDataSet="true" msdata:UseCurrentLocale="true">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="EnquiryRegister">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="EnquiryID" type="xs:int" minOccurs="0" />
+              <xs:element name="EnquiryNo" type="xs:string" minOccurs="0" />
+              <xs:element name="EnquiryDate" type="xs:dateTime" minOccurs="0" />
+              <xs:element name="DueDate" type="xs:dateTime" minOccurs="0" />
+              <xs:element name="DueDays" type="xs:int" minOccurs="0" />
+              <xs:element name="EnqStageName" type="xs:string" minOccurs="0" />
+              <xs:element name="PriorityName" type="xs:string" minOccurs="0" />
+              <xs:element name="ProjectName" type="xs:string" minOccurs="0" />
+              <xs:element name="ProjectDescription" type="xs:string" minOccurs="0" />
+              <xs:element name="EnqStatusName" type="xs:string" minOccurs="0" />
+              <xs:element name="City" type="xs:string" minOccurs="0" />
+              <xs:element name="CountryName" type="xs:string" minOccurs="0" />
+              <xs:element name="ProjectNumber" type="xs:string" minOccurs="0" />
+              <xs:element name="ProjectPrefix" type="xs:string" minOccurs="0" />
+              <xs:element name="ClientName" type="xs:string" minOccurs="0" />
+              <xs:element name="ClientType" type="xs:string" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

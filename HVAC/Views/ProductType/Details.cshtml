@@ -1,0 +1,217 @@
+﻿
+@model HVAC.Models.EquipmentTypeVM
+@{
+    var i = 0;
+    var j = 0;
+    var k = 0;
+    ViewBag.pTitle = "Product Type Details";
+    ViewBag.pageTitle = "Setup";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+
+@using (Html.BeginForm("Details", "ProductType", FormMethod.Post, new { enctype = "multipart/form-data", @class = "needs-validation ", @novalidate = "novalidate" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+
+    <fieldset>
+        <div id="alert" style="color:red;margin-left:7px;display:none">* Please fill mandatory fields</div>
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+
+                    <div class="col-md-3">
+                        <div class="mb-2">
+                            @Html.HiddenFor(model => model.ID, new { @id = "EquipmentTypeID" })
+                            <label class="col-form-label">Brand</label> <br />
+                            <span style="color:blue">@Model.BrandName</span>
+                            <div class="invalid-feedback">
+                                Please select Brand
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="mb-2">
+
+                            <label class="col-form-label">Product Type</label> <br />
+                            <span style="color:blue">@Model.EquipmentType1</span>
+
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="mb-2">
+
+                            <label class="col-form-label">Product Family</label> <br />
+                            <span style="color:blue">@Model.ProductFamilyName</span>
+                        </div>
+                    </div>
+
+
+                    <div class="col-md-3 text-md-end">
+
+
+
+
+                        <a href='@Url.Action("Index", "ProductType")' class="btn btn-secondary">Cancel</a>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <ul class="nav nav-tabs nav-tabs-custom nav-justified" role="tablist">
+
+                        <li class="nav-item" role="presentation">
+                            <a class="nav-link active" data-bs-toggle="tab" href="#profile1" role="tab" aria-selected="false" tabindex="-1">
+                                <span class="d-block d-sm-none"><i class="far fa-user"></i></span>
+                                <span class="d-none d-sm-block">Scope of Work</span>
+                            </a>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <a class="nav-link" data-bs-toggle="tab" href="#messages1" role="tab" aria-selected="false" tabindex="-1">
+                                <span class="d-block d-sm-none"><i class="far fa-envelope"></i></span>
+                                <span class="d-none d-sm-block">Warranty</span>
+                            </a>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <a class="nav-link" data-bs-toggle="tab" href="#settings1" role="tab" aria-selected="false" tabindex="-1">
+                                <span class="d-block d-sm-none"><i class="fas fa-cog"></i></span>
+                                <span class="d-none d-sm-block">Exclusions</span>
+                            </a>
+                        </li>
+                    </ul>
+                    @*Tab pane*@
+                    <div class="tab-content p-3 text-muted">
+
+
+                        <div class="tab-pane active" id="profile1" role="tabpanel">
+                            <div class="row">
+                                <div class="col-md-12 text-md-end">
+                                    <div class="mb-2">
+                                        <input type="button" value="Add Scope of Work" class="btn btn-sm btn-primary"  onclick="AddScopePopup(0)" />
+                                    </div>
+                                </div>
+
+                            </div>
+                          
+
+                            <div class="row" id="DetailContainer1">
+
+                                @{Html.RenderPartial("ScopeDetailList", Model);}
+                            </div>
+                        </div>
+                        <div class="tab-pane" id="messages1" role="tabpanel">
+                            <div class="row">
+                                <div class="col-md-12 text-md-end">
+                                    <div class="mb-2">
+                                        <input type="button" value="Add Warranty" class="btn btn-sm btn-primary" onclick="AddWarranty(0)" />
+                                    </div>
+                                </div>
+                                </div>
+                            <div class="row" id="DetailContainer2">
+                                @{Html.RenderPartial("WarrantyDetailList", Model);}
+                            </div>
+                        </div>
+                        <div class="tab-pane" id="settings1" role="tabpanel">
+                            <div class="row">
+                                <div class="col-md-12 text-md-end">
+                                    <div class="mb-2">
+                                        <input type="button" value="Add Exclusion" class="btn btn-sm btn-primary" onclick="AddExclusion(0)" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row" id="DetailContainer3">
+                                @{Html.RenderPartial("ExclusionDetailList", Model);}
+                            </div>
+
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+    </fieldset>
+
+
+}
+
+<div class="modal fade bs-example-modal-xl" id="scopepopup" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">
+                    Manage Scope of Work
+                </h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body">
+                <div class="container-fluid" id="scopeContainer">
+                    
+                </div>
+            </div>
+            <div class="modal-footer" style="padding-top: 5px">
+                <span class="error text-left" id="spancontacterror"></span>
+                <button type="button" class="btn btn-primary" id="btnSaveContactDetail" onclick="SaveSCopePopup()">Save Scope of Work</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade bs-example-modal-xl" id="warrantypopup" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">
+                    Manage Warranty
+                </h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body">
+                <div class="container-fluid" id="warrantyContainer">
+            
+                </div>
+            </div>
+            <div class="modal-footer" style="padding-top: 5px">
+                <span class="error text-left" id="spanwarrantyerror"></span>
+                <button type="button" class="btn btn-success" onclick="SaveWarrantyPopup()">Save Warranty</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade bs-example-modal-xl" id="exclusionpopup" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">
+                    Manage Exclusion
+                </h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body">
+                <div class="container-fluid" id="exclusionContainer">
+                   
+                </div>
+            </div>
+            <div class="modal-footer" style="padding-top: 5px">
+                <span class="error text-left" id="spanexclusionerror"></span>
+                <button type="button" class="btn btn-success" onclick="SaveExclusionPopup()">Save Exclusion</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+@section scripts{
+    <script src="~/assets/libs/tinymce/tinymce.min.js"></script>
+    <script src="~/Scripts/JS/ProductTypeDetails.js"></script>
+}

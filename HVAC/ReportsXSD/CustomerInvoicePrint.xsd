@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="NewDataSet" xmlns="" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+  <xs:element name="NewDataSet" msdata:IsDataSet="true" msdata:UseCurrentLocale="true">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="CustomerInvoiceReport">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="CustomerInvoiceID" type="xs:int" minOccurs="0" />
+              <xs:element name="CustomerInvoiceNo" type="xs:string" minOccurs="0" />
+              <xs:element name="InvoiceDate" type="xs:dateTime" minOccurs="0" />
+              <xs:element name="CustomerID" type="xs:int" minOccurs="0" />
+              <xs:element name="CustomerName" type="xs:string" minOccurs="0" />
+              <xs:element name="CustomerAddress" type="xs:string" minOccurs="0" />
+              <xs:element name="CustomerPhoneNo" type="xs:string" minOccurs="0" />
+              <xs:element name="CustomerEmailID" type="xs:string" minOccurs="0" />
+              <xs:element name="InvoiceType" type="xs:int" minOccurs="0" />
+              <xs:element name="SalesPersonID" type="xs:int" minOccurs="0" />
+              <xs:element name="CurrencyID" type="xs:int" minOccurs="0" />
+              <xs:element name="ExRate" type="xs:decimal" minOccurs="0" />
+              <xs:element name="ReferenceNo" type="xs:string" minOccurs="0" />
+              <xs:element name="Remarks" type="xs:string" minOccurs="0" />
+              <xs:element name="SGSTAmount" type="xs:decimal" minOccurs="0" />
+              <xs:element name="CGSTAmount" type="xs:decimal" minOccurs="0" />
+              <xs:element name="IGSTAmount" type="xs:decimal" minOccurs="0" />
+              <xs:element name="TaxAmount" type="xs:decimal" minOccurs="0" />
+              <xs:element name="DiscountPercent" type="xs:decimal" minOccurs="0" />
+              <xs:element name="DiscountAmount" type="xs:decimal" minOccurs="0" />
+              <xs:element name="AcJournalID" type="xs:int" minOccurs="0" />
+              <xs:element name="StatusClose" type="xs:boolean" minOccurs="0" />
+              <xs:element name="AcCompanyID" type="xs:int" minOccurs="0" />
+              <xs:element name="InvoiceTotal" type="xs:decimal" minOccurs="0" />
+              <xs:element name="IsDeleted" type="xs:boolean" minOccurs="0" />
+              <xs:element name="AcFinancialYearID" type="xs:int" minOccurs="0" />
+              <xs:element name="BranchID" type="xs:int" minOccurs="0" />
+              <xs:element name="CreatedDate" type="xs:dateTime" minOccurs="0" />
+              <xs:element name="CreatedBy" type="xs:int" minOccurs="0" />
+              <xs:element name="ModifiedDate" type="xs:dateTime" minOccurs="0" />
+              <xs:element name="ModifiedBy" type="xs:int" minOccurs="0" />
+              <xs:element name="PaymentModeId" type="xs:int" minOccurs="0" />
+              <xs:element name="AcHeadId" type="xs:int" minOccurs="0" />
+              <xs:element name="DueDate" type="xs:dateTime" minOccurs="0" />
+              <xs:element name="InvoiceTotalFC" type="xs:decimal" minOccurs="0" />
+              <xs:element name="DiscountAmountFC" type="xs:decimal" minOccurs="0" />
+              <xs:element name="CustomerInvoiceDetailID" type="xs:int" minOccurs="0" />
+              <xs:element name="CustomerInvoiceID1" type="xs:int" minOccurs="0" />
+              <xs:element name="ProductID" type="xs:int" minOccurs="0" />
+              <xs:element name="UnitID" type="xs:int" minOccurs="0" />
+              <xs:element name="Quantity" type="xs:int" minOccurs="0" />
+              <xs:element name="SalesRate" type="xs:decimal" minOccurs="0" />
+              <xs:element name="SalesRateFC" type="xs:decimal" minOccurs="0" />
+              <xs:element name="SGST" type="xs:decimal" minOccurs="0" />
+              <xs:element name="CGST" type="xs:decimal" minOccurs="0" />
+              <xs:element name="IGST" type="xs:decimal" minOccurs="0" />
+              <xs:element name="CGSTAmt" type="xs:decimal" minOccurs="0" />
+              <xs:element name="SGSTAmt" type="xs:decimal" minOccurs="0" />
+              <xs:element name="IGSTAmt" type="xs:decimal" minOccurs="0" />
+              <xs:element name="TaxPercent" type="xs:decimal" minOccurs="0" />
+              <xs:element name="TaxAmount1" type="xs:decimal" minOccurs="0" />
+              <xs:element name="DiscountPercent1" type="xs:decimal" minOccurs="0" />
+              <xs:element name="DiscountAmount1" type="xs:decimal" minOccurs="0" />
+              <xs:element name="NetValue" type="xs:decimal" minOccurs="0" />
+              <xs:element name="Description" type="xs:string" minOccurs="0" />
+              <xs:element name="DiscountAmountFC1" type="xs:decimal" minOccurs="0" />
+              <xs:element name="DEFRID" type="xs:int" minOccurs="0" />
+              <xs:element name="ForDEFRID" type="xs:int" minOccurs="0" />
+              <xs:element name="ProductTypeID" type="xs:int" minOccurs="0" />
+              <xs:element name="ProductName" type="xs:string" minOccurs="0" />
+              <xs:element name="ItemUnit" type="xs:string" minOccurs="0" />
+              <xs:element name="TaxType" type="xs:string" minOccurs="0" />
+              <xs:element name="CustomerNo" type="xs:string" minOccurs="0" />
+              <xs:element name="BranchCurrency" type="xs:string" minOccurs="0" />
+              <xs:element name="CurrencyName" type="xs:string" minOccurs="0" />
+              <xs:element name="ShippingTo" type="xs:string" minOccurs="0" />
+              <xs:element name="VehicleNo" type="xs:string" minOccurs="0" />
+              <xs:element name="TransportMode" type="xs:string" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

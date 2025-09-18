@@ -1,0 +1,62 @@
+﻿@model HVAC.Models.DocumentMasterVM
+    @{
+        var i = 0;
+        var _decimal = @Session["Decimal"].ToString();
+    }
+    
+ 
+<div class="row no-margin" style="padding-top:0px">
+    <div class="col-md-12 tblbackground">
+        <table class="table table-datatable Datatable table-bordered tblfont" id="CargodataTables" >
+            <thead>
+                <tr>
+                    <th>S.No</th>
+                    <th>Document Type</th>
+                    <th>Title</th>
+                    <th>File</th>                                      
+                  <th></th>
+                    <th></th>
+                    
+                </tr>
+            </thead>
+            <tbody>
+           
+                @foreach (var item in Model.Details)
+                {
+                    <tr id="doctr_@i">
+                        <td id="row_@i">@(i+1)</td>
+                        <td>
+                            @item.DocumentTypeName
+                            @Html.HiddenFor(model => model.Details[i].DocumentID, new { @Value = @item.DocumentID, @id = "hdnDocumentId_" + @i })
+
+                        </td>
+
+                        <td>
+                            @item.DocumentTitle
+
+                        </td>
+                        <td>
+                            @*<a target="_blank" href="/UploadDocuments/@item.Filename" title="Edit Cargo"><i class="fa fa-file"></i></a>*@
+                            <a   href="JavaScript:void(0)" onclick="Downloadfile('@item.Filename')"; title="Download Document"><i class="mdi mdi-download font-size-18 "></i></a>
+                        </td>
+                           <td>
+                            @*<a target="_blank" href="/UploadDocuments/@item.Filename" title="Edit Cargo"><i class="fa fa-file"></i></a>*@
+                            <a   href="@item.FilePath" target="_blank"  title="View Document"><i class="mdi mdi-eye font-size-18"></i></a>
+                        </td>
+                        <td style="width:101px; font-size:13px;">
+                             
+                                <a class="text-success" onclick="EditDocument('@item.DocumentID','@i')" href="javascript:void(0);" title="Edit Document"><i class="mdi mdi-pencil font-size-18"></i></a>
+                                <a class="text-danger" onclick="DeleteDocument('@item.DocumentID','@i')" href="javascript:void(0);" title="Delete Document"><i class="mdi mdi-delete font-size-18"></i></a>
+                         
+                            </td>
+
+                    </tr>
+                    i++;
+                }
+
+            </tbody>
+        </table>
+    </div>
+</div>
+
+

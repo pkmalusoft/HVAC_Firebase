@@ -1,0 +1,169 @@
+﻿@model HVAC.Models.SupplierType
+@{
+
+    ViewBag.pTitle = "Supplier Type";
+    ViewBag.pageTitle = "Supplier Type";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<script>
+
+    function SaveSupplierType() {
+        debugger;
+        var id = 0;
+        if ($('#SupplierTypeID').val() > 0) {
+            id = $('#SupplierTypeID').val();
+
+        }
+        var supplierobj = {
+            SupplierTypeID: id,
+            SupplierType1: $('#SupplierType1').val(),
+            AcHeadID: $('#AcHeadID').val()
+
+        }
+        debugger;
+        $.ajax({
+            type: "POST",
+            url: '/SupplierType/SaveSupplierType/',
+            datatype: "html",
+            data: { supplier: supplierobj },
+            success: function (response) {
+                if (response.status == "OK") {
+                    Swal.fire("Save Status!", response.message, "success");
+                    setTimeout(function () {
+                        window.location.href = "/SupplierType/Index";
+                    }, 100)
+
+
+                }
+                else {
+                    Swal.fire("Save Status!", response.message, "warning");
+                }
+
+
+            }
+        });
+    }
+
+    function CheckSupplierExist(type, id, callback) {
+
+
+        $.ajax({
+            type: "Get",
+            url: '/SupplierType/SupplierTypeExist',
+            datatype: "Json",
+            data: {
+                SType: type,
+                ID: id
+            },
+
+            success: function (data) {
+
+                if (data == "true") {
+
+                    callback(true);
+                }
+                else {
+                    callback(false);
+                }
+
+            }
+        });
+
+
+    }
+
+
+</script>
+
+<script>
+
+    $(document).on("submit", ".needs-validation", function (e) {
+
+        e.preventDefault();
+        var id = 0;
+                    if (@Model.SupplierTypeID > 0) {
+
+                  $('#btnsave').text('Update');
+            id =@Model.SupplierTypeID;
+}
+
+
+
+
+        var type = $('#SupplierType1').val();
+        var Acc = $("#AcHeadID option:selected").val();
+
+
+        if (!type || type === 'Select') {
+            Swal.fire("Validation Error", "Please select a valid Supplier Type.", "error");
+            return;
+        }
+
+        if (!Acc || Acc === 'Select') {
+            Swal.fire("Validation Error", "Please select a valid Account.", "error");
+            return;
+        }
+
+
+        CheckSupplierExist(type, id, function (exists) {
+            if (exists) {
+                Swal.fire("Save Status!", "Supplier Type Already Exist", "warning");
+            } else if (!exists) {
+
+                SaveSupplierType();
+            }
+        });
+    });
+
+</script>
+
+
+@using (Html.BeginForm("Create", "SupplierType", FormMethod.Post, new { enctype = "multipart/form-data", @class = "needs-validation ", @novalidate = "novalidate" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+
+    <fieldset>
+        <div id="alert" style="color:red;margin-left:7px;display:none">* Please fill mandatory fields</div>
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+
+                    <div class="col-md-3">
+                        <div class="mb-2">
+                            @Html.HiddenFor(model => model.SupplierTypeID)
+                            <label class="col-form-label">SupplierType</label>
+                            @Html.TextBoxFor(model => model.SupplierType1, new { @class = "form-control txttarget", @autocomplete = "off", @required = "required" })
+                            @Html.ValidationMessageFor(model => model.SupplierType1)
+
+                            <div class="invalid-feedback">
+                                Please Enter Supplier Type
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="mb-2">
+                            <label class="col-form-label">Account Head</label>
+                            @Html.DropDownListFor(model => model.AcHeadID, new SelectList(ViewBag.AcHead, "AcHeadID", "AcHead1"), "Select", new { @class = "form-select", @tabindex = 13, @required = "required" })
+                            @Html.ValidationMessageFor(model => model.AcHeadID)
+
+                        </div>
+                    </div>
+
+
+                    <div class="col-md-12 text-md-end">
+                        <input type="submit" value="Save" class="btn btn-success" id="btnsave" />
+
+
+
+                        <a href='@Url.Action("Index", "SupplierType", new { id = 0 })' class="btn btn-secondary">Cancel</a>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </fieldset>
+
+
+}

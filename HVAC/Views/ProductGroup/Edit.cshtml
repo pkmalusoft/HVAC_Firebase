@@ -1,0 +1,58 @@
+﻿@model HVAC.Models.ProductTypeVM
+
+@{
+    ViewBag.Title = "Edit";
+         ViewBag.pTitle = "Product Type";
+    ViewBag.pageTitle = "Setup";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $(":text").css({ "border-radius": "5px" });
+        $("select").css({ "border-radius": "5px" });
+
+  
+
+    });
+</script>
+
+
+@using (Html.BeginForm()) {
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+
+    
+       <div id="validations" style="color:red;margin-left:7px;display:none">* Please fill mandatory fields</div>
+    <fieldset>
+ <div class="card"> 
+  <div class="card-body"> 
+           <div class="row"> 
+               @Html.HiddenFor(model => model.ProductTypeID)
+            
+
+               <div class="col-md-3">
+                <div class="mb-2">
+                          <label class="col-form-label required">Category Name</label>
+                        @Html.TextBoxFor(model=>model.ProductTypeID,new{@class="form-control",@required="required"})          
+             
+     </div>
+                   </div>
+
+        
+                        <div class="col-md-12 text-md-end">
+                           
+                              <input type="submit" value="Update" class="btn btn-success" data-toggle="tooltip" title="Click here" id="btnsave" />
+                               
+                          
+                        
+                          <a href='@Url.Action("Index", "ProductType", new { id = 0 })' class="btn btn-secondary" data-toggle="tooltip" data-placement="right" title="">Cancel</a>
+                          
+                        </div>
+                    </div> </div> </div>
+
+
+    </fieldset>
+} 
+

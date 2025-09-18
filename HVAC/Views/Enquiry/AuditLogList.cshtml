@@ -1,0 +1,60 @@
+﻿@model HVAC.Models.EnquiryVM
+@{
+    Layout = null;
+    var i = 0;
+}
+<style>
+    ul.ui-front {
+        z-index: 1100;
+    }
+</style>
+<script type="text/javascript">
+    $(document).ready(function () {
+
+
+
+
+
+
+
+    });
+
+</script>
+<ul class="list-group list-group-flush">
+    @foreach (var item in Model.AuditLogDetails)
+    {
+        <li class="list-group-item py-3" style="padding-left:0.05rem">
+            <div class="d-flex">
+                <div class="me-3">
+                    <div class="avatar-xs">
+                        <span class="avatar-title rounded-circle bg-success text-white font-size-11">
+                            @item.EmployeePrefix
+                        </span>
+                    </div>
+                    
+                </div>
+
+                <div class="align-self-center overflow-hidden me-auto">
+                    <div>
+                        <h5 class="font-size-11 text-truncate"><a href="javascript: void(0);" class="text-dark">@item.Remarks</a></h5>
+                        <p class="text-muted mb-0 font-size-10">@item.TransDate</p>
+                    </div>
+                </div>
+
+                @*<div class="dropdown ms-2">
+                        <a class="text-muted font-size-14 show" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                            <i class="mdi mdi-dots-horizontal"></i>
+                        </a>
+
+                        <div class="dropdown-menu dropdown-menu-end show" style="position: absolute; inset: 0px 0px auto auto; margin: 0px; transform: translate3d(0px, 22px, 0px);" data-popper-placement="bottom-end">
+                            <a class="dropdown-item" href="#">Action</a>
+                            <a class="dropdown-item" href="#">Another action</a>
+                            <a class="dropdown-item" href="#">Something else here</a>
+                        </div>
+                    </div>*@
+
+            </div>
+        </li>
+    }
+    </ul>
+

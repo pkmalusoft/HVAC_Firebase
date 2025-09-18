@@ -1,0 +1,22 @@
+﻿
+@{
+    ViewBag.Title = "Print";
+    ViewBag.pTitle = "Estimation";
+    ViewBag.pageTitle = "HVAC";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    int i = 0;
+    var _decimal = @Session["Decimal"].ToString();
+}
+<div class="row " style="padding-top:10px">
+   
+    <div class="col-md-4 text-md-end mt-2">
+
+
+        @*@Html.Action("Cancel", "Create", new { id = ViewBag.JobId }, new { @class = "btn btn-danger btnwidth float-right" })*@
+
+        <a href='/Estimation/Index' title="Back to Estimation Page" class="pull-right btn btn-secondary">Cancel</a>
+    </div>
+</div>
+<div class="row no-margin" style="padding-top:10px" id="divreportframe">
+    @{ Html.RenderAction("ReportFrame", "Quotation");}
+</div>

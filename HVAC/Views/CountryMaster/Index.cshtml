@@ -1,0 +1,125 @@
+﻿@model IEnumerable<HVAC.Models.CountryMasterVM>
+
+@{
+    ViewBag.Title = "Country Master List";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    tfoot {
+        display: table-header-group;
+    }
+</style>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#dataTables-example tfoot th').each(function () {
+            var title = $(this).text();
+            $(this).html('<input type="text" />');
+        });
+
+
+        var table = $('#dataTables-example').DataTable({ "sPaginationType": "full_numbers" });
+
+        table.columns().every(function () {
+            var that = this;
+
+            $('input', this.footer()).on('keyup change', function () {
+                if (that.search() !== this.value) {
+                    that
+                        .search(this.value)
+                        .draw();
+                }
+            });
+        });
+
+    });
+
+
+</script>
+
+
+
+<div class="card">
+    <div class="card-body">
+        <div class="col-md-12 mb-3 text-md-end">
+            <a class="btn btn-primary waves-effect waves-light text-md-end" href="/CountryMaster/Create">
+                <i class="mdi mdi-plus me-1"></i> New Country
+
+            </a>
+        </div>
+        <table class="table table-bordered mb-0" style="width:100%" id="dataTables-example">
+            <thead class="table-light">
+                <tr>
+
+                    <th>
+                        @Html.Label("Country Name")
+                    </th>
+                <th>
+                        @Html.Label("Country Code")
+                    </th>
+                    <th >
+                        @Html.Label("IATA Code")
+                    </th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+
+            
+
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+
+                        <td>
+                            @Html.DisplayFor(modelItem => item.CountryName)
+
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.CountryCode)
+
+                        </td>
+                        <td >
+                            @Html.DisplayFor(modelItem => item.IATACode)
+
+
+                        </td>
+                        <td>
+                        <div class="d-flex gap-3">
+                            <a href="@Url.Action("Create", new { id = item.CountryID })" class="text-success"><i class="mdi mdi-pencil font-size-18"></i></a>
+
+                            <a href="#" onclick="Delete(ID =@item.CountryID)" class="text-danger"><i class="mdi mdi-delete font-size-18"></i></a>
+                        </div>
+                        </td>
+                    </tr>
+
+                }
+            </tbody>
+
+        </table>
+        </div>
+    </div>
+
+    <section class="content">
+        @if (TempData["SuccessMsg"] != null)
+        {
+           
+            <script type="text/javascript">
+                      $(document).ready(function () {
+                          $.notify("@TempData["SuccessMsg"]", "success");
+                });
+            </script>
+        }
+
+    </section>
+
+
+
+    <script type="text/javascript">
+        function Delete(ID) {
+            if (confirm("Are you sure, You want to Delete Country?")) {
+                window.location.href = "/CountryMaster/DeleteConfirmed/?id=" + ID;
+            }
+        }
+    </script>

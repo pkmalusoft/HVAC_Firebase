@@ -1,0 +1,72 @@
+﻿@model HVAC.Models.EnquiryVM
+@{
+    Layout = null;
+    var i = 0;
+}
+<style>
+    ul.ui-front {
+        z-index: 1100;
+    }
+</style>
+<script type="text/javascript">
+    $(document).ready(function () {
+      
+    });
+
+</script>
+
+<ul class="list-group list-group-flush">
+    @{
+        if (Model.QuotationDetails.Count == 0)
+        {
+            <li class="list-group-item py-3" id="trclient_@i">
+                <div class="d-flex">
+                  
+
+                    <div class="align-self-center overflow-hidden me-auto">
+                        <div>
+                           
+                            <p class="text-muted mb-0"> No Quotation found</p>
+                            
+                        </div>
+                    </div>
+                    
+                </div>
+            </li>
+
+                            }
+                            else {
+        foreach (var item in Model.QuotationDetails)
+        {
+
+            <li class="list-group-item py-3" id="trclient_@i">
+              
+                   
+
+                    <div class="overflow-hidden me-auto">
+                        <div>
+                            <p class="font-size-11 text-truncate font-weight-bold "><a href="/Quotation/Create?id=@item.QuotationID" target="_blank"  class="text-primary"> @item.QuotationNo /@item.Version </a></p>
+                            <p class="text-muted mb-0"> @item.QuotationDate.Value.ToShortDateString()</p>
+                            @if (item.QuotationStatus == "Secured")
+                            {
+                            <span class="badge bg-success">@item.QuotationStatus</span>
+                            }
+                            else if (item.QuotationStatus == "Lost")
+                            {
+                            <span class="badge bg-danger">@item.QuotationStatus</span>
+                            }
+                            else
+                            {
+                            <span class="badge bg-warning">@item.QuotationStatus</span>
+                            }
+                        </div>
+                    </div>
+
+                    
+                
+            </li>
+                                }
+                            }
+    }
+</ul>
+

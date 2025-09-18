@@ -1,0 +1,173 @@
+﻿@model HVAC.Models.EnquiryVM
+@{
+    Layout = null;
+    var i = 0;
+}
+<style>
+    ul.ui-front {
+        z-index: 1100;
+    }
+</style>
+<script type="text/javascript">
+    $(document).ready(function () {
+       $("#cCountryName").autocomplete({
+            source: function (request, response) {
+                $.ajax({
+                    url: '/LocationMaster/GetCountryName',
+                    datatype: "json",
+                    data: {
+                        term: request.term
+                    },
+                    success: function (data) {
+                        response($.map(data, function (val, item) {
+                            return {
+                                label: val.CountryName,
+                                value: val.Id
+                            }
+                        }))
+                    }
+                })
+            },
+            minLength: 1,
+            autoFocus: false,
+            focus: function (e, ui) {
+                e.preventDefault();
+                $('#cCountryID').val(ui.item.value);
+                $('#cCountryName').val(ui.item.label);
+                $('#cCountryName').attr('portname', ui.item.label);
+
+            },
+            select: function (e, ui) {
+
+                e.preventDefault();
+                $('#cCountryID').val(ui.item.value);
+                $('#cCountryName').val(ui.item.label);
+                $('#cCountryName').attr('portname', ui.item.label);
+
+            },
+
+        });
+
+        $('#cCityName').autocomplete({
+            source: function (request, response) {
+                $.ajax({
+                    url: "@Url.Action("GetCityName", "LocationMaster")",
+                    data: { term: request.term },
+                    dataType: "json",
+                    type: "GET",
+                    success: function (data) {
+                        response($.map(data, function (val, item) {
+                            return {
+                                label: val.CityName,
+                                value: val.Id,
+                                Country: val.CountryName
+                            }
+                        }))
+                    }
+                });
+            },
+            minLength: 1,
+            autoFocus: false,
+            select: function (event, ui) {
+                event.preventDefault();
+                $('#cCityID').val(ui.item.value);
+                $('#cCityName').val(ui.item.label);
+                $('#cCountryName').val(ui.item.Country);
+                return false;
+            },
+            focus: function (event, ui) {
+                $('#cCityID').val(ui.item.value);
+                $('#cCityName').val(ui.item.label);
+                $('#cCountryName').val(ui.item.Country);
+                return false;
+            }
+        });
+
+
+        @*$('#LocationName').autocomplete({
+            source: function (request, response) {
+                $.ajax({
+                    url: "@Url.Action("GetLocation", "LocationMaster")",
+                    data: { term: request.term },
+                    dataType: "json",
+                    type: "GET",
+                    success: function (data) {
+                        response($.map(data, function (val, item) {
+                            return {
+                                label: val.Location,
+                                value: val.Location,
+                                City: val.CityName,
+                                Country: val.CountryName
+                            }
+                        }))
+                    }
+                })
+            },
+            minLength: 1,
+            autoFocus: false,
+            select: function (e, ui) {
+                e.preventDefault();
+                $('#LocationName').val(ui.item.label);
+                $('#CityName').val(ui.item.City);
+                $('#CountryName').val(ui.item.Country);
+                return false;
+            },
+            focus: function (event, ui) {
+                $('#LocationName').val(ui.item.label);
+                $('#CityName').val(ui.item.City);
+                $('#CountryName').val(ui.item.Country);
+                return false;
+            }
+        });*@
+
+
+    });
+
+</script>
+<div class="row no-margin" style="padding-top:0px">
+    <div class="col-md-12 tblbackground">
+        <table class="table table-datatable dataTable tblfont table-bordered table-striped mb-0" id="ContainerTables">
+            <thead class="table-light">
+                <tr>
+                    <th>S.No</th>
+                    <th>Client Type</th>
+                    <th>Client Name</th>                    
+                    <th></th>
+
+
+                </tr>
+            </thead>
+            <tbody id="tbodyclient">
+
+                @foreach (var item in Model.ClientDetails)
+                {
+                    <tr id="trclient_@i">
+                        <td id="row_@i">
+                            @(i+1)
+                            @Html.HiddenFor(model => model.ClientDetails[i].ClientID, new { @Value = @item.ClientID, @id = "hdnClientId_" + @i })
+                            @Html.HiddenFor(model => model.ClientDetails[i].EnquiryClientID, new { @Value = @item.EnquiryClientID, @id = "hdnEnquiryClientID_" + @i })
+                            @Html.HiddenFor(model => model.ClientDetails[i].Deleted, new { @Value = @item.Deleted, @id = "hdnclientdeleted_" + @i })
+                            @Html.HiddenFor(model => model.ClientDetails[i].ClientType, new { @Value = @item.ClientType, @id = "hdnclienttype_" + @i })
+                        </td>
+                        <td>
+                            @item.ClientType
+                        </td>
+                        <td>
+                            <a  target="_blank" href="/ClientMaster/Create?id=@item.ClientID">@item.ClientName</a>
+                            
+                        </td>
+                        <td>
+                            <div class="d-flex gap-3">
+                            <a href="javascript:void(0)" class="action-icon text-danger" onclick="deleteclientItemtrans(this)" class="deleteallocrow" id="delclient_@i"><i class="mdi mdi-trash-can font-size-22"></i></a>
+                            </div>
+                        </td>
+                        
+
+
+                    </tr>
+                    i++;
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

@@ -1,0 +1,110 @@
+﻿
+@{
+    ViewBag.Title = "Trane Order Equipment";
+    ViewBag.pTitle = "Reports";
+    ViewBag.pageTitle = "HVAC";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section scripts{
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/modules/funnel.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
+    <script src="https://code.highcharts.com/modules/export-data.js"></script>
+
+}
+<script>
+    function printChart() {
+        var chartContainer = document.getElementById('funnelContainer');
+        var printWindow = window.open('', '', 'height=600,width=800');
+
+        printWindow.document.write('<html><head><title>Print Chart</title>');
+        printWindow.document.write('<link rel="stylesheet" href="https://code.highcharts.com/css/highcharts.css" />');
+        printWindow.document.write('</head><body>');
+        printWindow.document.write(chartContainer.innerHTML);
+        printWindow.document.write('</body></html>');
+
+        printWindow.document.close();
+        printWindow.focus();
+
+        // Delay to allow rendering
+        setTimeout(function () {
+            printWindow.print();
+            printWindow.close();
+        }, 500);
+    }
+    document.addEventListener('DOMContentLoaded', function () {
+        Highcharts.chart('orderChart', {
+            chart: {
+                type: 'column',
+                options3d: {
+                    enabled: true,
+                    alpha: 10,
+                    beta: 10,
+                    depth: 50,
+                    viewDistance: 25
+                },
+                backgroundColor: {
+                    radialGradient: { cx: 0.5, cy: 0.5, r: 0.8 },
+                    stops: [
+                        [0, '#a8edea'],
+                        [1, '#fed6e3']
+                    ]
+                }
+            },
+            title: {
+                text: 'TRANE ORDERS - Equipments',
+                style: {
+                    fontWeight: 'bold',
+                    fontSize: '20px',
+                    color: '#001f4d'
+                }
+            },
+            subtitle: {
+                text: 'Total Order Value<br>$ 378,829.460',
+                align: 'right',
+                verticalAlign: 'top',
+                useHTML: true,
+                style: {
+                    fontSize: '18px',
+                    color: '#800000',
+                    fontWeight: 'bold'
+                }
+            },
+            xAxis: {
+                categories: ['Applied', 'Unitary Light Commercial'],
+                labels: {
+                    style: { fontWeight: 'bold', fontSize: '14px' }
+                }
+            },
+            yAxis: {
+                visible: false // hide axis numbers if not needed
+            },
+            plotOptions: {
+                column: {
+                    depth: 40,
+                    colorByPoint: true,
+                    dataLabels: {
+                        enabled: true,
+                        format: '{point.y:,.2f}',
+                        style: {
+                            fontSize: '14px',
+                            fontWeight: 'bold',
+                            color: '#fff',
+                            textOutline: 'none'
+                        }
+                    }
+                }
+            },
+            series: [{
+                name: 'Order Value',
+                data: [
+                    { name: 'Applied', y: 305984.46, color: '#1e5eb6' },
+                    { name: 'Unitary Light Commercial', y: 72845.00, color: '#f26b1d' }
+                ],
+                showInLegend: false
+            }]
+        });
+    });
+</script>
+<button onclick="printChart()"> Print Chart</button>
+<div id="orderChart" style="height: 500px; width: 100%;"></div>

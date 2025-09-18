@@ -1,0 +1,160 @@
+﻿@model HVAC.Models.Brand
+@{
+
+    ViewBag.pTitle = "Brand";
+    ViewBag.pageTitle = "Setup";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<script>
+
+    function SaveBrand() {
+        debugger;
+        var id = 0;
+        if ($('#BrandID').val() > 0) {
+            id = $('#BrandID').val();
+
+        }
+        var protypeobj = {
+            BrandID: id,
+            BrandName: $('#BrandName').val()
+            
+
+        }
+        debugger;
+        $.ajax({
+            type: "POST",
+            url: '/Brand/SaveBrand/',
+            datatype: "html",
+            data: { ProType: protypeobj },
+            success: function (response) {
+                if (response.status == "OK") {
+                    Swal.fire("Save Status!", response.message, "success");
+                    setTimeout(function () {
+                        window.location.href = "/Brand/Index";
+                    }, 100)
+
+
+                }
+                else {
+                    Swal.fire("Save Status!", response.message, "warning");
+                }
+
+
+            }
+        });
+    }
+
+    function CheckProjectTypeExist(type, id, callback) {
+
+
+        $.ajax({
+            type: "Get",
+            url: '/Brand/ProjectTypeExist',
+            datatype: "Json",
+            data: {
+                PType: type,
+                ID: id
+            },
+
+            success: function (data) {
+
+                if (data == "true") {
+
+                    callback(true);
+                }
+                else {
+                    callback(false);
+                }
+
+            }
+        });
+
+
+    }
+
+
+</script>
+
+<script>
+    (function () {
+        "use strict";
+        window.addEventListener(
+            "load",
+            function () {
+                var t = document.getElementsByClassName("needs-validation");
+                Array.prototype.filter.call(t, function (e) {
+                    e.addEventListener(
+                        "submit",
+                        function (t) {
+
+                            if (false === e.checkValidity()) {
+                                e.classList.add("was-validated");
+                            }
+                            else {
+                                t.preventDefault();
+                                t.stopPropagation();
+                                e.classList.remove("was-validated");
+
+                                SaveBrand();
+
+                            }
+                        },
+                        !1
+                    );
+                });
+            },
+            !1
+        );
+    })(),
+        $(document).ready(function () {
+
+           
+        });
+
+  
+
+</script>
+
+
+@using (Html.BeginForm("Create", "Brand", FormMethod.Post, new { enctype = "multipart/form-data", @class = "needs-validation ", @novalidate = "novalidate" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+
+    <fieldset>
+        <div id="alert" style="color:red;margin-left:7px;display:none">* Please fill mandatory fields</div>
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+
+                    <div class="col-md-3">
+                        <div class="mb-2">
+                            @Html.HiddenFor(model=>model.BrandID)
+                            <label class="col-form-label">Brand Name</label>
+                            @Html.TextBoxFor(model => model.BrandName, new { @class = "form-control txttarget", @autocomplete = "off", @required = "required" })
+                            @Html.ValidationMessageFor(model => model.BrandName)
+
+                        <div class="invalid-feedback">
+                             Enter Brand Name
+                        </div>
+                        </div>
+                    </div>
+                 
+
+
+                    <div class="col-md-12 text-md-end">
+                        <input type="submit" value="Save" class="btn btn-success" id="btnsave" />
+
+
+
+                        <a href='@Url.Action("Index", "Brand", new { id = 0 })' class="btn btn-secondary">Cancel</a>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </fieldset>
+
+
+}

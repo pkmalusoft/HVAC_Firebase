@@ -1,0 +1,295 @@
+﻿@model HVAC.Models.StockReportParam
+@{
+    ViewBag.Title = "Reports";
+    ViewBag.pTitle = "Stock Statement";
+    ViewBag.pageTitle = "Inventory";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section styles{
+    <link href="~/assets/libs/select2/css/select2.min.css" rel="stylesheet" type="text/css" />
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <!-- Select2 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
+    <!-- Select2 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+}
+<script type="text/javascript">
+    //$(function () {
+    //    $('#FromDate').datetimepicker({ format: 'DD-MM-YYYY' });
+
+    //});
+
+    //$(function () {
+    //    $('#ToDate').datetimepicker({ format: 'DD-MM-YYYY' });
+
+    //});
+
+    $(document).ready(function () {
+         var startdate = '@Session["FyearFrom"].ToString()';
+        var enddate = '@Session["FyearTo"].ToString()';
+        var sd = new Date(startdate.split('-')[1] + '-' + startdate.split('-')[0] + '-' + startdate.split('-')[2]);
+        var ed = new Date(enddate.split('-')[1] + '-' + enddate.split('-')[0] + '-' + enddate.split('-')[2]);
+
+
+        $('#ReportType').change(function () {
+            if ($('#ReportType').val() == "OutStanding") {
+                $("#CustomerName").val('');
+                $("#CustomerName").attr('disabled', 'disabled');
+                $("#CustomerName").removeAttr('required');
+                $('#lblcustomername').removeClass('required');
+            }
+            else if ($('#ReportType').val() == "AWBOutStanding") {
+                $("#CustomerName").val('');
+                $("#CustomerName").removeAttr('disabled');
+                $("#CustomerName").removeAttr('required');
+                $('#lblcustomername').removeClass('required');
+            }
+            else {
+                $("#CustomerName").removeAttr('disabled');
+                $('#lblcustomername').addClass('required');
+            }
+        });
+        $("#AllBrand").change(function () {
+            if ($("#AllBrand").prop('checked')) {
+                $('#BrandID').attr('disabled', 'disabled');
+                $('#BrandID').val('').trigger('change');
+            }
+            else {
+                $('#BrandID').removeAttr('disabled');
+
+
+            }
+        });
+        $("#AllProduct").change(function () {
+            if ($("#AllProduct").prop('checked')) {
+                $('#eEquipmentType').attr('disabled', 'disabled');
+                $('#eEquipmentType').val('').trigger('change');
+            }
+            else {
+                $('#eEquipmentType').removeAttr('disabled');
+
+
+            }
+        });
+        var suppressOpenOnClear = false;
+        $('.equipment-select').each(function () {
+            var $select = $(this);
+
+            // Handle the clear event
+            $select.on('select2:select2-selection__arrow', function () {
+                suppressOpenOnClear = true;
+
+                // Remove focus from both the hidden <select> and visible Select2 box
+                setTimeout(() => {
+                    $select.blur();
+                    $select.next('.select2-container').find('.select2-selection').blur();
+                }, 0);
+            });
+
+            // Prevent dropdown from reopening immediately after clear
+            $select.on('select2:opening', function (e) {
+                if (suppressOpenOnClear) {
+                    e.preventDefault(); // Stop it from opening
+                    suppressOpenOnClear = false;
+                }
+            });
+            var defaultOption = new Option($select.attr('boxname'), $select.attr('boxid'), true, true);
+            $select.append(defaultOption);
+            //// Append it to the select
+            $select.append('<option id="" value=""></option>').trigger('change');
+            $select.select2({
+                width: 'resolve', // respects width set in the HTML
+                placeholder: 'Select a Equipment Type',
+                allowClear: false,
+                minLength: 1,
+                ajax: {
+                    url: '/Enquiry/GetEquipmentType',
+                    dataType: 'json',
+                    delay: 250,
+                    data: function (params) {
+                        // var category = $select.closest('tr').find('.category').val();
+                        return {
+                            term: params.term, BrandID: $('#BrandID').val()
+                        };
+                    },
+                    processResults: function (data) {
+                        return {
+                            results: data.map(function (item) {
+                                return { id: item.ID, text: item.EquipmentType };
+                            })
+                        };
+                    },
+                    cache: true
+                }
+            });
+
+            $select.change(function () {
+
+
+
+
+                $.ajax({
+                    url: '/Enquiry/GetProductFamily',
+                    datatype: "json",
+                    data: {
+                        EquipmentTypeID: $('#eEquipmentType').val()
+                    },
+                    success: function (data) {
+
+                        if (data != null) {
+                            if (data.ProductFamilyID > 0) {
+                                $('#ProductFamilyID').val(data.ProductFamilyID);
+                                $('#eProductFamilyName').val(data.ProductFamilyName);
+                                $('#eBrandName').val(data.BrandName);
+                            }
+                            else {
+                                $('#ProductFamilyID').val(0);
+                                $('#eProductFamilyName').val('');
+                                $('#eBrandName').val(data.BrandName);
+                            }
+                        }
+                        else {
+                            $('#ProductFamilyID').val(0);
+                            $('#eProductFamilyName').val('');
+                            $('#eBrandName').val(data.BrandName);
+                        }
+
+                    }
+
+                })
+
+            });
+
+        });
+          
+        $('#ReportType').trigger('change');
+
+        if ($('#ProductID').val() > 0) {
+            $('#ProductName').removeAttr('disabled');
+            $('#ProductName').attr('required', 'required');
+            $("#AllProduct").prop('checked', false);
+        }
+        else  {
+            $('#ProductName').attr('disabled', 'disabled');
+            $('#ProductName').val('');
+            $('#ProductID').val(0);
+            $('#ProductName').removeAttr('required');
+            $("#AllProduct").prop('checked', true);
+        }
+
+        if ($('#ProductCategoryID').val() > 0) {
+            $('#ProductCategoryName').removeAttr('disabled');
+            $('#ProductCategoryName').attr('required', 'required');
+            $("#AllProductCategory").prop('checked', false);
+        }
+        else {
+            $('#ProductCategoryName').attr('disabled', 'disabled');
+            $('#PProductCategoryName').val('');
+            $('#ProductCategoryID').val(0);
+            $('#ProductName').removeAttr('required');
+            $("#AllProductCategory").prop('checked', true);
+        }
+    });
+</script>
+
+@using (Html.BeginForm("StockStatement", "Reports", FormMethod.Post, new { @id = "customerledger" }))
+{
+    @Html.AntiForgeryToken()
+
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    <div class="card">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="mb-2">
+                                <label class="col-form-label">From Date</label>
+                                <div class="docs-datepicker">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control docs-date" name="FromDate" id="AsonDate" value="@Model.AsonDate.ToShortDateString()"
+                                               placeholder="Pick a From Date" autocomplete="off">
+                                        <button type="button"
+                                                class="btn btn-secondary docs-datepicker-trigger"
+                                                disabled>
+                                            <i class="mdi mdi-calendar" aria-hidden="true"></i>
+                                        </button>
+                                    </div>
+                                    <div class="docs-datepicker-container"></div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="col-md-12">
+                            <div class="mb-2">
+                                <div id="divachead">
+                                    <div class="flexTitle">
+                                        <label class="col-form-label required">Brand</label>
+                                        <div class="checkboxdesign no-padding  text-right" style="float:right">
+                                            @Html.CheckBox("AllProductCategory", new { @name = "AllProductCategory", @checked = "checked" }) &nbsp
+                                            <label class="col-form-label" style="color:#07a7e3!important;padding-left: 0!important">All Brand</label>
+                                        </div>
+                                    </div>
+                                    @Html.DropDownListFor(model => model.BrandID, new SelectList(ViewBag.Brand, "BrandID", "BrandName"), "Select", new { @class = "form-select", @required = "required" })
+                                    
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="mb-2">
+                                <div id="divachead">
+                                    <div class="flexTitle">
+                                        <label class="col-form-label required">Product</label>
+                                        <div class="checkboxdesign no-padding  text-right" style="float:right">
+                                            @Html.HiddenFor(model => model.EquipmentType, new { @class = "form-control txttarget", @id = "EquipmentType" })
+                                            @Html.HiddenFor(model => model.EquipmentTypeID, new { @class = "form-control txttarget", @id = "EquipmentTypeID" })
+                                            @Html.CheckBox("AllProduct", new { @name = "AllProduct", @checked = "checked" }) &nbsp
+                                            <label class="col-form-label" style="color:#07a7e3!important;padding-left: 0!important">All Product</label>
+                                        </div>
+                                    </div>
+                                    <select id="eEquipmentType" class="form-select form-control equipment-select" style="width:100%"></select>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-9">
+                            <div class="mb-2">
+                                <label class="col-form-label  required">Output</label>
+                                @Html.DropDownList("Output", new List<SelectListItem>
+                                {
+                                    new SelectListItem{ Text="PDF", Value = "PDF" },
+                                    new SelectListItem{ Text="EXCEL", Value = "EXCEL" },
+                                    new SelectListItem{ Text="WORD", Value = "WORD" },
+
+                                 }, "Select", new { @class = "form-select", @value = "PDF", @required = "true" })
+                            </div>
+                        </div>
+                        <div class="col-md-3 text-md-end">
+                            <div class="mb-2 mt-2">
+                                <button type="submit" class="btn btn-success waves-effect waves-light filter btn_top reload" id="btnreport">
+                                    <i class="bx bx-revision mt-1" style="font-size: 21px;"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-9">
+                    @{ Html.RenderAction("ReportFrame", "Quotation");}
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+}
+
+@section scripts{
+    <script src="~/assets/libs/select2/js/select2.min.js"></script>
+
+   }

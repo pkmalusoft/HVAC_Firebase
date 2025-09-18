@@ -1,0 +1,129 @@
+﻿@model HVAC.Models.QuotationVM
+@{
+    var i = 0;
+    var _decimal = @Session["Decimal"].ToString();
+    Layout = null;
+}
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+
+    });
+
+
+</script>
+<table class="table table-datatable dataTable tblfont table-bordered table-striped mb-0" id="DetailTable4" style="width: 100% !important;">
+
+    <thead class="table-light" style="text-align:center">
+        <tr>
+            
+            <th width="30%">ClientName</th>
+            <th width="20%">Contact Name</th>
+            <th width="20%">Email ID</th>
+            <th width="20%">Phone No.</th>
+            <th width="10%">Action</th>
+
+        </tr>
+    </thead>
+    <tbody class="" style="text-align:center">
+
+        @foreach (var item1 in Model.QuotationContacts)
+        {
+
+        <tr id="quodtr_@i">
+            
+            <td style="text-align:left">
+                @Html.HiddenFor(modelitem => item1.ID, new { @id = "QCContactID_" + @i, @class = "form-control", @readonly = "readonly" })
+
+
+
+                @Html.HiddenFor(modelitem => item1.QuotationID, new { @id = "QCQuotationID_" + @i, @class = "form-control", @readonly = "readonly" })
+
+                @Html.HiddenFor(modelitem => item1.ClientID, new { @id = "QCClientID_" + @i, @class = " form-control-sm", @style = "width:200px" })
+                @Html.HiddenFor(modelitem => item1.ClientName, new { @id = "QCClientName_" + @i, @class = " form-control-sm", @style = "width:200px" })
+
+                <span id="QExEquipment_@i">@item1.ClientName</span>
+
+            </td>
+            <td class="editable" style="text-align:left">
+                @Html.HiddenFor(modelitem => item1.ContactName, new { @id = "QCContactName_" + @i, @class = " form-control-sm", @style = "width:200px" })
+
+                <span id="QCContact_@i">@item1.ContactName</span>
+
+            </td>
+            <td  class="editable" style="text-align:left">
+
+
+
+                @Html.HiddenFor(modelitem => item1.EmailID, new { @id = "QCEmailID_" + @i, @class = "form-control-sm" })
+
+
+                <span id="QCEmail_@i">@item1.EmailID</span>
+
+            </td>
+
+            <td  class="editable" style="text-align:left">
+
+
+                @Html.HiddenFor(modelitem => item1.PhoneNo, new { @id = "QCPhoneNo_" + @i, @class = "form-control-sm" })
+
+
+                <span id="QCPhoneNo_@i">@item1.PhoneNo</span>
+
+            </td>
+
+            <td>
+                <a onclick="EditContactDetailEntry('@i')" href="javascript:void(0);" title="Edit Item" class="edit-btn text-success"><i class="mdi mdi-pencil font-size-18"></i></a>
+                <a onclick="SaveContactDetailEntry('@i')" href="javascript:void(0);" style="display:none" title="Save Item" class="text-success save-btn"><i class="mdi mdi-content-save-edit font-size-18"></i></a>
+
+
+
+            </td>
+        </tr>
+            i++;
+        }
+    </tbody>
+
+</table>
+<script>
+    $(document).ready(function () {
+     
+    
+        $('.edit-btn').on('click', function () {
+            var $row = $(this).closest('tr');
+
+            $row.find('.editable').each(function () {
+                var _text = $(this).find('input');
+                var _span = $(this).find('span');
+                $(_text).attr('type', 'text');
+                $(_span).css('display', 'none');
+
+            });
+
+            $row.find('.edit-btn').hide();
+            $row.find('.save-btn').show();
+            $row.find('.editable input:first').focus().select();
+        });
+
+        $('.save-btn').on('click', function () {
+            var $row = $(this).closest('tr');
+
+            $row.find('.editable').each(function () {
+                var inputVal = $(this).find('input').val();
+                var _text = $(this).find('input');
+                var _span = $(this).find('span');
+                $(_text).attr('type', 'hidden');
+                $(_span).html(inputVal);
+                $(_span).css('display', 'block');
+
+            });
+
+            $row.find('.save-btn').hide();
+            $row.find('.edit-btn').show();
+
+            // You can add AJAX here to save the changes to the server
+        });
+    });
+</script>
