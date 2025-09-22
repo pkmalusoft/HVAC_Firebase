@@ -464,7 +464,8 @@ function SaveQuotation() {
         EnquiryID: $('#EnquiryID').val(),
         QuotationID: $('#QuotationID').val(),
         QuotationNo: $('#QuotationNo').val(),
-        EngineerID: $('#QEngineerID').val(),        
+        //EngineerID: $('#QEngineerID').val(),
+        EngineerID: $('#EngineerID').val(),
         QuotationDate: $('#QuotationDate').val(),
         CurrencyId: $('#QCurrencyId').val(),
         Validity: $('#Validity').val(),
@@ -1075,53 +1076,19 @@ function calculatequotationvaluenew() {
             },
 
         });
+        //$('#QuotationStatusID').blur(function () {
+        //    $('#drpQuotationTo').select2('open');
+        //})
+
         $('#QuotationStatusID').blur(function () {
-            $('#drpQuotationTo').select2('open');
+            if ($('#DirectQuotation').prop('checked')==false) {
+                $('#drpEstimation').focus();
+            }
+            else {
+                $('#QEstimationCategoryID').focus();
+            }
         })
-
-        $('#drpQuotationTo').blur(function () {
-            $('#SubjectText').focus();
-        })
-        //$("#QuotationPayment").autocomplete({
-        //    source: function (request, response) {
-        //        $.ajax({
-        //            url: '/Enquiry/GetMasterDataList',
-        //            datatype: "json",
-        //            data: {
-        //                'MasterName': 'PaymentTerms', 'term': request.term
-        //            },
-        //            success: function (response1) {
-        //                response($.map(response1.data, function (val, item) {
-        //                    return {
-        //                        label: val.Text,
-        //                        value: val.ID
-
-
-        //                    }
-        //                }))
-        //            }
-        //        })
-        //    },
-        //    minLength: 1,
-        //    autoFocus: false,
-        //    focus: function (e, ui) {
-        //        e.preventDefault();
-        //        $("#QuotationPayment").val(ui.item.label);
-
-           
-
-
-        //    },
-        //    select: function (e, ui) {
-        //        e.preventDefault();
-        //        $("#QuotationPayment").val(ui.item.label);
-
-           
-
-        //    },
-
-        //});
-
+        
         $('#btnaddestimation').click(function () {
             var _estimationID = $('#drpEstimation').val();
             var estimationno = $('#drpEstimation').select2('data')[0]?.text;
@@ -1139,13 +1106,49 @@ function calculatequotationvaluenew() {
             });
         })
 
+        $('#btncancelothercharge').click(function () {
+            $('#divestimationqutation').removeClass('d-xl-none');
+            $('#divdirectquotation').addClass('d-xl-none');            
+
+        })
+        $('#btnothercharge').click(function () {
+            $('#divestimationqutation').addClass('d-xl-none');
+            $('#divdirectquotation').removeClass('d-xl-none');
+            if ($('#DirectQuotation').prop('checked')) {
+                $('#divmargin').removeClass('d-xl-none');
+            }
+            else {
+                $('#divmargin').addClass('d-xl-none');
+            }
+        })
         $('#DirectQuotation').change(function () {
             if ($('#DirectQuotation').prop('checked')) {
                 $('#flexSwitchCheckChecked').prop('checked', false).trigger('change');
                 $('#flexSwitchCheckChecked').attr('disabled', 'disabled');
+                $('#btncancelothercharge').addClass('d-xl-none');
+                if ($('#DirectQuotation').prop('checked')) {
+                    $('#divmargin').removeClass('d-xl-none');
+                }
+                else {
+                    $('#divmargin').addClass('d-xl-none');
+                }
+                $('#lblflexSwitch').html('Direct Quotation');
+                $('#divestimationqutation').addClass('d-xl-none');
+                $('#divdirectquotation').removeClass('d-xl-none');
+                if ($('#DirectQuotation').prop('checked')) {
+                    $('#divmargin').removeClass('d-xl-none');
+                }
+                else {
+                    $('#divmargin').addClass('d-xl-none');
+                }
             }
             else {
-                $('#flexSwitchCheckChecked').prop('checked', true).trigger('change');
+                //$('#flexSwitchCheckChecked').prop('checked', false).trigger('change');
+                $('#lblflexSwitch').html('Quotation by Estimation');
+                $('#divestimationqutation').removeClass('d-xl-none');
+                $('#divdirectquotation').addClass('d-xl-none');
+                $('#divmargin').addClass('d-xl-none');
+                $('#btncancelothercharge').removeClass('d-xl-none');
             }           
 
         });
@@ -1161,7 +1164,12 @@ function calculatequotationvaluenew() {
                 $('#lblflexSwitch').html('Direct Quotation');
                 $('#divestimationqutation').addClass('d-xl-none');
                 $('#divdirectquotation').removeClass('d-xl-none');
-                $('#divmargin').removeClass('d-xl-none');
+                if ($('#DirectQuotation').prop('checked')) {
+                    $('#divmargin').removeClass('d-xl-none');
+                }
+                else {
+                    $('#divmargin').addClass('d-xl-none');
+                }
             }
             
         });
@@ -1371,26 +1379,10 @@ function calculatequotationvaluenew() {
                 }
             });
         })
-        $('#SelectedQuotationId').trigger('change');
-
-        $('#chkNominalCapacity').change(function () {
-            if ($('#chkNominalCapacity').prop('checked') == true) {
-                $('#QtxtNominal').removeAttr('disabled');
-            } else {
-                $('#QtxtNominal').attr('disabled','disabled');
-            }
-        })
-
-        $('#chkEfficientType').change(function () {
-            if ($('#chkEfficientType').prop('checked') == true) {
-                $('#QtxtEfficientType').removeAttr('disabled');
-            } else {
-                $('#QtxtEfficientType').attr('disabled', 'disabled');
-            }
-
-        })
+        
+       
         $.ajax({
-            url: '/Estimation/GetEstimationCategory',   // 🔹 API or controller action
+            url: '/Estimation/GetEstimationCategory',   //  
             type: 'GET',                       // or 'POST' if needed
             dataType: 'json',
             success: function (data) {
@@ -1686,9 +1678,9 @@ function calculatequotationvaluenew() {
             else {
                 $('#flexSwitchCheckChecked').prop('checked', true).trigger('change');
             }
-            $('#ProjectRef').focus();
+            $('#QuotationDate').focus();
         }
         else {
-            $('#ProjectRef').focus();
+            $('#QuotationDate').focus();
         }
     });

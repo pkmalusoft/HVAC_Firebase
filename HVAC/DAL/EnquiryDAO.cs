@@ -1293,7 +1293,53 @@ namespace HVAC.DAL
             }
             return objList;
         }
+        
+        //for jobhandover print details
+        public static List<JobPurchaseOrderVM> JobwisePOList(int JobId)
+        {
+            int branchid = Convert.ToInt32(HttpContext.Current.Session["CurrentBranchID"].ToString());
+            SqlCommand cmd = new SqlCommand();
+            cmd.Connection = new SqlConnection(CommonFunctions.GetConnectionString);
+            cmd.CommandText = "HVAC_JobwiseClientPO";
+            cmd.CommandType = CommandType.StoredProcedure;
+            
+            cmd.Parameters.AddWithValue("@JobID", JobId);
 
+            SqlDataAdapter da = new SqlDataAdapter(cmd);
+            DataSet ds = new DataSet();
+            da.Fill(ds);
+            List<JobPurchaseOrderVM> objList = new List<JobPurchaseOrderVM>();
+            JobPurchaseOrderVM obj;
+            if (ds != null && ds.Tables.Count > 0)
+            {
+                for (int i = 0; i < ds.Tables[0].Rows.Count; i++)
+                {
+                    obj = new JobPurchaseOrderVM();
+                    obj.SqNo = i + 1;
+                    obj.ID = Convert.ToInt32(ds.Tables[0].Rows[i]["ID"].ToString());
+                    obj.JobHandOverID = Convert.ToInt32(ds.Tables[0].Rows[i]["ID"].ToString());
+                    obj.ProjectNumber = ds.Tables[0].Rows[i]["ProjectNumber"].ToString();
+                    obj.VarNo = Convert.ToInt32(ds.Tables[0].Rows[i]["VarNo"].ToString());
+                    obj.ClientName = ds.Tables[0].Rows[i]["ClientName"].ToString();
+                    obj.PONumber = ds.Tables[0].Rows[i]["PONumber"].ToString();
+                    obj.ProjectName = ds.Tables[0].Rows[i]["ProjectTitle"].ToString();
+                    obj.PODate = Convert.ToDateTime(ds.Tables[0].Rows[i]["PODate"].ToString());
+                    obj.CreatedByName = ds.Tables[0].Rows[i]["EmployeeName"].ToString();
+                    obj.OrderValue = Convert.ToDecimal(ds.Tables[0].Rows[i]["OrderValue"].ToString());
+                    obj.TotalValue = Convert.ToDecimal(ds.Tables[0].Rows[i]["TotalValue"].ToString());
+                    obj.VatAmount = Convert.ToDecimal(ds.Tables[0].Rows[i]["VatAmount"].ToString());
+                    obj.VatPercent = Convert.ToDecimal(ds.Tables[0].Rows[i]["VatPercent"].ToString());
+                    obj.MRequestNo = ds.Tables[0].Rows[i]["MRequestNo"].ToString();
+                    obj.MRequestID = CommonFunctions.ParseInt(ds.Tables[0].Rows[i]["MRequestID"].ToString());
+                    obj.QuotationId = CommonFunctions.ParseInt(ds.Tables[0].Rows[i]["QuotationId"].ToString());
+                    obj.QuotationNo = ds.Tables[0].Rows[i]["QuotationNo"].ToString();
+                    obj.QuotationDate =Convert.ToDateTime(ds.Tables[0].Rows[i]["QuotationDate"].ToString());
+                    obj.CreatedByName = ds.Tables[0].Rows[i]["EmployeeName"].ToString();
+                    objList.Add(obj);
+                }
+            }
+            return objList;
+        }
         public static List<JobBondVM> GetJobInwardBondList(int POID,int JobHandoverID )
         {
             int branchid = Convert.ToInt32(HttpContext.Current.Session["CurrentBranchID"].ToString());

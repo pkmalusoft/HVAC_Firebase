@@ -300,6 +300,12 @@ namespace HVAC.Views
                 vm.TermsandConditions = "";
                 vm.QuotationContacts = _detail5;
 
+
+                //var _employee = db.EmployeeMasters.Where(cc => cc.UserID == userid).FirstOrDefault();
+                
+                vm.EngineerID = useremployee.EmployeeID;
+                vm.EmployeeName = useremployee.FirstName + " " + useremployee.LastName;
+                
                 var _EmployeeMaster = EnquiryDAO.GetEnquiryAssigneEmployees(vm.EnquiryID, useremployee.EmployeeID);
 
                 if (_EmployeeMaster == null)
@@ -398,18 +404,18 @@ namespace HVAC.Views
                 //vm.QuotationTerms = _detail4;
                 vm.QuotationContacts = _detail5;
                 ViewBag.Title = "Modify";
+                var _EmployeeMaster = db.EmployeeMasters.Find(vm.EngineerID);
+                vm.EmployeeName = _EmployeeMaster.FirstName + " " + _EmployeeMaster.LastName;                
 
-                var _EmployeeMaster = EnquiryDAO.GetEnquiryAssigneEmployees(vm.EnquiryID, useremployee.EmployeeID);
-
-                if (_EmployeeMaster == null)
-                {
-                    _EmployeeMaster = new List<EmployeeVM>();
-                    ViewBag.EmployeeMaster = _EmployeeMaster;
-                }
-                else
-                {
-                    ViewBag.EmployeeMaster = _EmployeeMaster;
-                }
+                //if (_EmployeeMaster == null)
+                //{
+                //    _EmployeeMaster = new List<EmployeeVM>();
+                //    ViewBag.EmployeeMaster = _EmployeeMaster;
+                //}
+                //else
+                //{
+                //    ViewBag.EmployeeMaster = _EmployeeMaster;
+                //}
             }
 
             return View(vm);

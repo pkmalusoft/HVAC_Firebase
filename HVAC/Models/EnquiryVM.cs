@@ -309,6 +309,7 @@ namespace HVAC.Models
     }
     public class JobPurchaseOrderVM : JobPurchaseOrderDetail
     {
+        public int SqNo { get; set; }
         public DateTime JobDate { get; set; }
         public string EnquiryNo { get; set; }
         public string QuotationNo { get; set; }
@@ -323,6 +324,7 @@ namespace HVAC.Models
         public decimal DiscountPercent { get; set; }
         public decimal DiscountAmount { get; set; }
         public string MRequestNo { get; set; }
+        public DateTime QuotationDate { get; set; }
         public List<QuotationDetailVM> Details { get; set; }
         public List<JobBondVM> BondDetails { get; set; }
         public List<QuotationWarrantyVM> WarrantyDetails { get; set; }

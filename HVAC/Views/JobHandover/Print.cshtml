@@ -1,337 +1,498 @@
-﻿@model HVAC.Models.JobDetailsViewModel
+﻿@using System.Globalization
+@model HVAC.Models.JobDetailsViewModel
 @{
-    Layout = null; /* Use Layout = "_Layout.cshtml" if you want your site chrome. */
-    //var isPdf = (Request?.Browser?.Browser ?? "").Equals("wkhtmltopdf", System.StringComparison.OrdinalIgnoreCase);
+    Layout = null; // Print-friendly, no layout
+    var i = 0;
 }
-
+@{
+    var omrFormat = new CultureInfo("en-OM");
+    omrFormat.NumberFormat.CurrencyDecimalDigits = 3;
+}
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <meta charset="utf-8" />
-    <title>Job Details - @Model.Job.JobNo</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-
-    <!-- If you use Skote/Bootstrap globally, include them in _Layout. Minimal fallback here -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>Project Details</title>
     <style>
-        body { font-size: 12px; }
-        .card { border-radius: 12px; box-shadow: 0 6px 16px rgba(0,0,0,.05); margin-bottom: 14px; }
-        .card-header { background: #f8f9fa; border-bottom: 1px solid #e9ecef; }
-        .muted { color: #6c757d; }
-        .badge-status { font-size: 11px; }
-        .kv { font-weight: 600; }
-        .table thead th { background: #f1f3f5; font-weight: 600; }
-        .table tfoot td { background: #f8f9fa; font-weight: 600; }
-        .page-break { page-break-before: always; }
-        /* Hide buttons/links in PDF */
-        @@media print {
-            .no-print { display: none !important; }
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            color: #333;
         }
+        /* The main table to hold the two columns */
+        .pdf-container-table {
+            width: 100%;
+            border-collapse: collapse; /* Removes spacing between cells */
+        }
+
+            .pdf-container-table td {
+                vertical-align: top; /* Aligns content to the top of the cells */
+                padding: 10px;
+            }
+
+        .left-panel, .right-panel {
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            background-color: #f9f9f9;
+        }
+
+        .right-panel {
+            margin-left: 20px; /* Adds a gap between the panels */
+        }
+
+        .panel h2 {
+            margin-top: 0;
+            color: #555;
+            border-bottom: 2px solid #ddd;
+            padding-bottom: 10px;
+        }
+
+        .details-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+            .details-table td {
+                padding: 10px;
+                border-bottom: 1px solid #eee;
+            }
+
+            .details-table tr:last-child td {
+                border-bottom: none;
+            }
+        .string-item {
+            display: block;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+        }
+            .string-item:last-child {
+                border-bottom: none;
+            }
+        .value-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+
+        }
+
+            .value-item:last-child {
+                border-bottom: none;
+            }
+
+        .total-value {
+            font-weight: bold;
+            font-size: 1.2em;
+            color: #007bff;
+        }
+
+        .pdf-two-col {
+            width: 100%;
+            white-space: nowrap;
+        }
+
+        .pdf-col {
+          /*  display: inline-block;*/
+            vertical-align: top;
+            width: 49%; /* Half width with slight margin */
+            white-space: normal;
+        }
+
+        .pdf-col1 {
+            display: inline-block;
+            vertical-align: top;
+            width: 70%; /* Half width with slight margin */
+            white-space: normal;
+        }
+
+        .pdf-col2 {
+            display: inline-block;
+            vertical-align: top;
+            width: 30%; /* Half width with slight margin */
+            white-space: normal;
+        }
+        /* Cards & tables */
+        .card {
+            border-radius: 12px;
+            box-shadow: 0 6px 16px #333;
+            margin-bottom: 12px;
+        }
+        .card-body {
+            flex: 1 1 auto;
+            padding: 10px;
+            /*color:darkgray;*/
+        }
+
+        .card-header {
+            background: #cad4df;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+      
+          /* This rule forces a new page before the content */
+    @@media print {
+        .page-break-container {
+            page-break-before: always;
+        }
+        .no-print{
+            display:none;
+        }
+    }
     </style>
 </head>
-<body class="bg-light">
-
-    <div class="container-fluid p-3 p-md-4">
+<body>
+    <div class="container">
+        <!-- Top bar (hidden in print) -->
         <div class="d-flex justify-content-between align-items-center mb-3 no-print">
             <h4 class="m-0">Job Details</h4>
             <div class="d-flex gap-2">
-                <a class="btn btn-outline-secondary" href="@Url.Action("Details", "Jobs", new { id = Model.Job.JobNo })">
-                    View
-                </a>
-                <a class="btn btn-primary" href="@Url.Action("PrintPdf", "JobHandover", new { id = 536 })">
-                    Download PDF
-                </a>
+                <a class="btn btn-outline-secondary" href="#">View</a>
+                <a class="btn btn-primary" href="/JobHandover/PrintPdf?id=536">Download PDF</a>
             </div>
         </div>
-        <div class="row">
-            <div class="col-xl-3">
 
 
+        <div class="pdf-two-col">
+
+            <div class="pdf-col1">
                 <div class="card">
                     <div class="card-body">
-                        <h5 class="fw-semibold">Overview</h5>
+                        <div class="card-header d-flex justify-content-between align-items-center" style="padding:10px;">
+                            <h5>Project Information</h5>
+                        </div>
+                        <div class="string-item">
+                            <span style="font-weight:bold">Project No.</span>
+                            <span>@Model.Job.JobNo</span>
+                        </div>
+                        <div class="string-item">
+                            <span style="font-weight:bold;margin-right:5px;">Project Title</span>
+                            <span>@Model.Job.Title</span>
+                        </div>
+                        <div class="string-item">
+                            <span style="font-weight:bold;margin-right:5px;">Customer Name:</span>
+                            <span>@Model.Customer.Name</span>
+                        </div>
+                        <div class="string-item">
+                            <span style="font-weight:bold;margin-right:5px;">Customer Location:</span>
+                            <span>@Model.Customer.BillingAddress</span>
+                        </div>
+                        <div class="string-item">
+                            <span style="font-weight:bold;margin-right:5px;">Project Start date</span>
+                            <span>@Model.Job.StartDate.ToShortDateString() - </span>
+                        </div>
 
-                        <div class="table-responsive">
-                            <table class="table">
-                                <tbody>
-                                    <tr>
-                                        <th scope="col">Job Title</th>
-                                        <td scope="col">Magento Developer</td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">Experience:</th>
-                                        <td>0-2 Years</td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">Vacancy</th>
-                                        <td>12</td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">Job Type</th>
-                                        <td><span class="badge badge-soft-success">Full Time</span></td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">Status</th>
-                                        <td><span class="badge badge-soft-info">New</span></td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">Posted Date</th>
-                                        <td>25 June, 2022</td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">Close Date</th>
-                                        <td>13 April, 2022</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                        <div class="hstack gap-2">
-                            <button class="btn btn-soft-primary w-100">Apply Now</button>
-                            <button class="btn btn-soft-danger w-100">Contact Us</button>
-                        </div>
                     </div>
                 </div>
-
-            
             </div>
-            <div class="col-xl-8">
-                <!-- Header -->
+
+            <div class="pdf-col2" style="margin-left:5px; ">
                 <div class="card">
-                    <div class="card-header">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div>
-                                <h5 class="mb-0">@Model.Job.Title</h5>
-                                <small class="text-muted">Job No: @Model.Job.JobNo</small>
-                            </div>
-                            <span class="badge bg-info badge-status">@Model.Job.Status</span>
+                    <div class="card-body">
+                        <div class="card-header" style="padding:10px;">
+                            <h5>Financial Overview</h5>
                         </div>
-                    </div>
-                    <div class="card-body row g-3">
-                        <div class="col-md-3"><div class="kv muted">Project Site</div><div>@Model.Job.ProjectSite</div></div>
-                        <div class="col-md-3"><div class="kv muted">Start Date</div><div>@Model.Job.StartDate:dd-MMM-yyyy</div></div>
-
-                        <div class="col-md-3">
-                            <div class="kv muted">End Date</div>
-                            <div>
-                                @(Model.Job.EndDate.HasValue
-            ? Model.Job.EndDate.Value.ToString("dd-MMM-yyyy")
-            : "-")
-                            </div>
+                        <div class="value-item">
+                            <span style="font-weight:bold">Job Value:</span>
+                            <span style="text-align:right">@string.Format(new CultureInfo("en-US"), "{0:C3}", @Model.Job.JobValue).Replace("$", "OMR ")</span>
                         </div>
-                        <div class="col-md-3"><div class="kv muted">Project Manager</div><div>@Model.Job.ProjectManager</div></div>
-                        @if (!string.IsNullOrWhiteSpace(Model.Job.Notes))
-                        {
-                            <div class="col-12"><div class="kv muted">Notes</div><div>@Model.Job.Notes</div></div>
-                        }
-                    </div>
-                </div>
-
-
-                <!-- Customer Details -->
-                <div class="card">
-                    <div class="card-header"><h6 class="mb-0">Customer Details</h6></div>
-                    <div class="card-body row g-3">
-                        <div class="col-md-3"><div class="kv muted">Customer</div><div>@Model.Customer.Name (@Model.Customer.Code)</div></div>
-                        <div class="col-md-3"><div class="kv muted">Contact</div><div>@Model.Customer.ContactPerson</div></div>
-                        <div class="col-md-3"><div class="kv muted">Phone</div><div>@Model.Customer.Phone</div></div>
-                        <div class="col-md-3"><div class="kv muted">Email</div><div>@Model.Customer.Email</div></div>
-                        <div class="col-md-6"><div class="kv muted">Billing Address</div><div>@Model.Customer.BillingAddress</div></div>
-                        <div class="col-md-6"><div class="kv muted">Shipping Address</div><div>@Model.Customer.ShippingAddress</div></div>
-                        <div class="col-md-3"><div class="kv muted">TRN / VAT</div><div>@Model.Customer.TRN_VAT</div></div>
+                        <div class="value-item">
+                            <span style="font-weight:bold">Cost Value:</span>
+                            <span style="text-align:right">@string.Format(new CultureInfo("en-US"), "{0:C3}", @Model.Job.Cost).Replace("$", "OMR ")</span>
+                        </div>
+                        <div class="value-item">
+                            <span style="font-weight:bold">VAT:</span>
+                            <span style="display:flex;text-align:right">@string.Format(new CultureInfo("en-US"), "{0:C3}", @Model.Job.Vat).Replace("$", "OMR ")</span>
+                        </div>
+                        <div class="value-item">
+                            <span style="font-weight:bold">Margin:</span>
+                            <span style="text-align:right">@string.Format(new CultureInfo("en-US"), "{0:C3}", @Model.Job.Margin).Replace("$", "OMR ")</span>
+                        </div>
+                        <div class="value-item total-value">
+                            <span style="font-weight:bold">Total Value:</span>
+                            <span style="text-align:right">@string.Format(new CultureInfo("en-US"), "{0:C3}", @Model.Job.TotalValue).Replace("$", "OMR ")</span>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-            <!-- PO List -->
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="card h-100">
 
-                        <div class="card-header"><h6 class="mb-0">Purchase Orders</h6></div>
-                        <div class="card-body">
-                            <div class="table-responsive">
-                                <table class="table table-sm table-bordered align-middle">
-                                    <thead>
-                                        <tr>
-                                            <th style="width: 16%">PO No</th>
-                                            <th style="width: 12%">PO Date</th>
-                                            <th>Vendor</th>
-                                            <th style="width: 8%">Curr</th>
-                                            <th style="width: 14%" class="text-end">Amount</th>
-                                            <th style="width: 16%">Status</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @if (Model.PurchaseOrders != null && Model.PurchaseOrders.Count > 0)
-                                        {
-                                            foreach (var po in Model.PurchaseOrders)
-                                            {
-                                                <tr>
-                                                    <td>@po.PONo</td>
-                                                    <td>@po.PODate.ToShortDateString()</td>
-                                                    <td>@po.Vendor</td>
-                                                    <td>@po.Currency</td>
-                                                    <td class="text-end">@po.Amount.ToString("N3")</td>
-                                                    <td>@po.Status</td>
-                                                </tr>
-                                            }
-                                        }
-                                        else
-                                        {
-                                            <tr><td colspan="6" class="text-center text-muted">No POs available.</td></tr>
-                                        }
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- Bonds -->
-                <div class="col-md-6">
-                    <div class="card h-100">
+        <!-- PO Table -->
 
-                        <div class="card-header"><h6 class="mb-0">Bond Details</h6></div>
-                        <div class="card-body">
-                            <div class="table-responsive">
-                                <table class="table table-sm table-bordered align-middle">
-                                    <thead>
-                                        <tr>
-                                            <th style="width:14%">Type</th>
-                                            <th style="width:14%">Bond No</th>
-                                            <th style="width:12%">Valid From</th>
-                                            <th style="width:12%">Valid To</th>
-                                            <th style="width:14%" class="text-end">Amount</th>
-                                            <th style="width:16%">Issuer</th>
-                                            <th>Remarks</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @if (Model.Bonds != null & Model.Bonds.Count > 0)
-                                        {
-                                            foreach (var b in Model.Bonds)
-                                            {
-                                                <tr>
-                                                    <td>@b.BondType</td>
-                                                    <td>@b.BondNo</td>
-                                                    <td>@b.ValidFrom.ToShortDateString()</td>
-                                                    <td>@b.ValidTo.ToShortDateString()</td>
-                                                    <td class="text-end">@b.Amount.ToString("N3")</td>
-                                                    <td>@b.Issuer</td>
-                                                    <td>@b.Remarks</td>
-                                                </tr>
-                                            }
-                                        }
-                                        else
-                                        {
-                                            <tr><td colspan="7" class="text-center text-muted">No bonds available.</td></tr>
-                                        }
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- Warranty & Payment Terms -->
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="card h-100">
-                        <div class="card-header"><h6 class="mb-0">Warranty Terms</h6></div>
-                        <div class="card-body">
-                            @if (Model.WarrantyTerms != null && Model.WarrantyTerms.Count > 0)
-                            {
-                                <ol class="mb-0">
-                                    @foreach (var t in Model.WarrantyTerms)
-                                    {
-                                        <li class="mb-1">@t</li>
-                                    }
-                                </ol>
-                            }
-                            else
-                            {
-                                <div class="text-muted">No warranty terms defined.</div>
-                            }
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="card h-100">
-                        <div class="card-header"><h6 class="mb-0">Payment Terms</h6></div>
-                        <div class="card-body">
-                            @if (Model.PaymentTerms != null && Model.PaymentTerms.Count > 0)
-                            {
-                                <ol class="mb-0">
-                                    @foreach (var t in Model.PaymentTerms)
-                                    {
-                                        <li class="mb-1">@t</li>
-                                    }
-                                </ol>
-                            }
-                            else
-                            {
-                                <div class="text-muted">No payment terms defined.</div>
-                            }
-                        </div>
-                    </div>
-                </div>
-            </div>
 
-            <!-- Costing -->
-            <div class="card page-break">
-                <div class="card-header"><h6 class="mb-0">Costing Summary</h6></div>
+        <div class="pdf-two-col">
+            <div class="card">
                 <div class="card-body">
-                    <div class="table-responsive">
-                        <table class="table table-sm table-bordered align-middle mb-3">
-                            <thead>
-                                <tr>
-                                    <th>Head</th>
-                                    <th class="text-end" style="width:20%">Amount</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr><td>Materials</td><td class="text-end">@Model.Costing.Materials.ToString("N3")</td></tr>
-                                <tr><td>Labor</td><td class="text-end">@Model.Costing.Labor.ToString("N3")</td></tr>
-                                <tr><td>Subcontract</td><td class="text-end">@Model.Costing.Subcontract.ToString("N3")</td></tr>
-                                <tr><td>Overheads</td><td class="text-end">@Model.Costing.Overheads.ToString("N3")</td></tr>
-                                <tr><td>Contingency</td><td class="text-end">@Model.Costing.Contingency.ToString("N3")</td></tr>
-                                <tr><td>Taxes</td><td class="text-end">@Model.Costing.Taxes.ToString("N3")</td></tr>
-                                <tr><td>Discount</td><td class="text-end">(@Model.Costing.Discount.ToString("N3"))</td></tr>
-                            </tbody>
-                            <tfoot>
-                                <tr>
-                                    <td>Total Cost</td>
-                                    <td class="text-end">@Model.Costing.TotalCost.ToString("N3")</td>
-                                </tr>
-                                <tr>
-                                    <td>Quoted Price</td>
-                                    <td class="text-end">@Model.Costing.QuotedPrice.ToString("N3")</td>
-                                </tr>
-                                <tr>
-                                    <td>Margin</td>
-                                    <td class="text-end">
-                                        @Model.Costing.Margin.ToString("N3")
-                                        <span class="text-muted">(@Model.Costing.MarginPct.ToString("0.00")%)</span>
-                                    </td>
-                                </tr>
-                            </tfoot>
-                        </table>
+                    <div class="card-header" style="padding-top:5px;padding-bottom:5px;margin-bottom:5px">
+                        <h5>Client PO List</h5>
                     </div>
-
-                    <div class="small text-muted">
-                        <strong>Notes:</strong> Taxes and duties as applicable at the time of invoicing. Prices subject to terms above.
-                    </div>
+                    <table class="table table-bordered" style="width:98%">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Var No.</th>
+                                <th>PO No.</th>
+                                <th>PO Date</th>
+                                <th>Quotation No</th>
+                                <th>Quotation Date</th>
+                                <th>Order Value</th>
+                                <th>VAT</th>
+                                <th>Total</th>
+                                <th>Created by</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.PurchaseOrders)
+                            {
+                                <tr>
+                                    <td>@item.VarNo</td>
+                                    <td>@item.PONumber</td>
+                                    <td>@item.PODate.ToShortDateString()</td>
+                                    <td>@item.QuotationNo</td>
+                                    <td>@item.QuotationDate.ToShortDateString()</td>
+                                    <td style="text-align:right">@string.Format(new CultureInfo("en-US"), "{0:C3}", @item.OrderValue).Replace("$", "")</td>
+                                    <td style="text-align:right">@item.VatPercent.ToString() %  @string.Format(new CultureInfo("en-US"), "{0:C3}", @item.VatAmount).Replace("$", " ")</td>
+                                    <td style="text-align:right">@string.Format(new CultureInfo("en-US"), "{0:C3}", @item.TotalValue).Replace("$", "")</td>
+                                    <td>@item.CreatedByName</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
                 </div>
-            </div>
-
-            <div class="text-center text-muted small mt-3">
-                Generated on @DateTime.Now:dd-MMM-yyyy HH:mm
             </div>
         </div>
 
-                @*@if (!isPdf)
-            {
-                <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-            }*@
+        <div class="pdf-two-col">
+
+
+            <div class="card">
+                <div class="card-body">
+                    <div class="card-header" style="padding-top:5px;padding-bottom:5px;margin-bottom:5px">
+                        <h5>Bond List</h5>
+                    </div>
+                    <table class="table table-bordered" id="ContainerTables">
+                        <thead class="table-light">
+                            <tr>
+                                <th>S.No</th>
+                                <th>Bond</th>
+                                <th>Sales Value</th>
+                                <th>Percentage</th>
+                                <th>Bond Value</th>
+                                <th>Issue Date</th>
+                                <th>Validity</th>
+                                <th>Expiry Date</th>
+
+
+
+
+                            </tr>
+                        </thead>
+                        <tbody id="tbodyclient">
+
+                            @foreach (var item in Model.BondDetails)
+                            {
+                                <tr id="trclient_@i">
+                                    <td id="row_@i">
+                                        @(i+1)
+                                        @Html.HiddenFor(model => model.BondDetails[i].ID, new { @Value = @item.ID, @id = "hdnPOID_" + @i })
+                                        @Html.HiddenFor(model => model.BondDetails[i].JobHandOverID, new { @Value = @item.JobHandOverID, @id = "hdnJobHandOverID_" + @i })
+                                    </td>
+                                    <td>
+                                        @item.BondName
+                                    </td>
+                                    <td style="text-align:right">
+                                        @HVAC.Models.CommonFunctions.GetBranchFormatNumber(@item.SalesValue, "3")
+                                    </td>
+                                    <td style="text-align:right">
+                                        @item.Percentage
+                                    </td>
+                                    <td style="text-align:right">
+                                        @HVAC.Models.CommonFunctions.GetBranchFormatNumber(@item.BondValue, "3")
+
+                                    </td>
+                                    <td>
+                                        @item.BondIssueDate.ToShortDateString()
+                                    </td>
+                                    <td>
+                                        @item.BondValidity
+                                    </td>
+                                    <td>
+                                        @item.BondExpiryDate.ToShortDateString()
+                                    </td>
+
+
+                                </tr>
+                                i++;
+                            }
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+        </div>
+        <div class="pdf-two-col">
+            <div class="card">
+                <div class="card-body">
+                    <div class="card-header" style="padding-top:5px;padding-bottom:5px;margin-bottom:5px">
+                        <h5>Warranty List</h5>
+                    </div>
+                    <table class="table table-bordered" id="DetailTable2" style="width: 100% !important;">
+
+                        <thead class="table-light" style="text-align:center">
+                            <tr>
+
+                                <th width="10%">Equipment Name</th>
+                                <th width="10%">Warranty</th>
+                                <th width="75%">Description</th>
+
+
+                            </tr>
+                        </thead>
+                        <tbody class="" style="text-align:center">
+
+                            @foreach (var item1 in Model.WarrantyDetails)
+                            {
+
+                                <tr id="quodtr_@i">
+
+                                    <td style="text-align:left">
+                                        @Html.HiddenFor(modelitem => item1.ID, new { @id = "QWarrantyID_" + @i, @class = "form-control", @readonly = "readonly" })
+
+
+                                        @Html.HiddenFor(modelitem => item1.EquipmentID, new { @id = "QWarrantyEquipmentID_" + @i, @class = "form-control", @readonly = "readonly" })
+
+
+                                        @Html.HiddenFor(modelitem => item1.EquipmentName, new { @id = "txtEquipmentName2_" + @i, @class = " form-control-sm", @style = "width:200px" })
+
+                                        <span id="QWarrantyEquipment_@i">@item1.EquipmentName</span>
+
+                                    </td>
+                                    <td style="text-align:left">
+                                        @Html.HiddenFor(modelitem => item1.WarrantyType, new { @id = "txtWarranty_" + @i, @class = " form-control-sm", @style = "width:100%" })
+                                        <span id="Qwarrantytype_@i">@item1.WarrantyType</span>
+                                    </td>
+                                    <td style="text-align:left" class="editable">
+
+
+                                        @Html.HiddenFor(modelitem => item1.Description, new { @id = "QtxtWarrantyDescription_" + @i, @class = " form-control-sm", @style = "width:200px" })
+
+                                        <span id="QwarrantyDescription_@i">@Html.Encode(@item1.Description)</span>
+
+                                    </td>
+
+
+
+
+
+                                </tr>
+                                i++;
+                            }
+                        </tbody>
+
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="pdf-two-col">
+            <div class="card">
+                <div class="card-body">
+                    <div class="card-header" style="padding-top:5px;padding-bottom:5px;margin-bottom:5px">
+                        <h5>Costing List</h5>
+                    </div>
+                    <table class="table table-bordered" id="EstimationDetailTable" style="width: 100% !important;">
+
+                        <thead class="table-light">
+                            <tr>
+                                <th width="20%">Estimation No.</th>
+                                <th width="35%">Equipment/Description</th>
+                                <th width="15%">Model/Unit</th>
+                                <th width="5%">Unit</th>
+
+                                <th width="5%">Qty</th>
+
+                                <th width="5%">Rate</th>
+                                <th>Value</th>
+
+                            </tr>
+                        </thead>
+                        <tbody class="" style="text-align:left">
+
+
+                            @foreach (var item1 in Model.Costing)
+                            {
+                                <tr id="quodtr_@i" class="@item1.displayclass">
+                                    @*<td id="row_@i">@(i+1)</td>*@
+                                    <td style="text-align:left">
+                                        @Html.HiddenFor(modelitem => item1.EquipmentID, new { @id = "QEquipmentID_" + @i, @class = "form-control", @readonly = "readonly" })
+                                        @Html.HiddenFor(modelitem => item1.EstimationCategoryID, new { @id = "QEstimationCategoryID_" + @i, @class = "form-control", @readonly = "readonly" })
+                                        @Html.HiddenFor(modelitem => item1.EstimationMasterID, new { @id = "QEstimationMasterID_" + @i, @class = "form-control", @readonly = "readonly" })
+                                        @Html.HiddenFor(modelitem => item1.Deleted, new { @id = "QDeleted_" + @i })
+                                        @*@Html.HiddenFor(modelitem => item1.Roworder, new { @id = "QRoworder_" + @i })*@
+                                        @Html.HiddenFor(modelitem => item1.UnitID, new { @id = "QUnitID_" + @i })
+                                        @Html.HiddenFor(modelitem => item1.EstimationDetailID, new { @id = "QEstimationDetailID_" + @i })
+                                        @Html.HiddenFor(modelitem => item1.EstimationID, new { @id = "QEstimationID_" + @i })
+                                        @Html.HiddenFor(modelitem => item1.EstimationNo, new { @id = "QEstimationNo_" + @i })
+                                        @Html.HiddenFor(modelitem => item1.CategoryName, new { @id = "QtxtCategoryName_" + @i, @class = " form-control-sm", @style = "width:200px" })
+
+                                        @item1.CategoryName
+                                        @{
+                                            if (item1.EstimationNo != null)
+                                            {
+                                                <span style="color:blue">@item1.EstimationNo</span>
+                                            }
+                                        }
+
+                                    </td>
+                                    <td style="text-align:left">
+                                        @Html.HiddenFor(modelitem => item1.Description, new { @id = "QtxtDescription_" + @i, @class = " form-control-sm", @style = "width:200px" })
+                                        @item1.Description
+
+                                    </td>
+                                    <td class="editable" style="text-align:left">
+                                        @Html.HiddenFor(modelitem => item1.Model, new { @id = "QtxtModel_" + @i, @class = "form-control-sm" })
+
+                                        <span id="QspanModel_@i">@item1.Model</span>
+
+                                    </td>
+                                    <td>
+
+                                        @item1.UnitName
+                                        @Html.HiddenFor(modelitem => item1.UnitName, new { @id = "QUnitName_" + @i, @class = "form-control" })
+                                    </td>
+
+                                    <td style="text-align:right" class="editable">
+                                        @Html.HiddenFor(modelitem => item1.Quantity, new { @id = "QtxtQty_" + @i, @class = "textright form-control-sm", @onchange = "calculatevalue(" + @i + ")", @style = "width:100px" })
+
+
+                                        <span id="QspanQty_@i" style="color:dodgerblue">@HVAC.Models.CommonFunctions.GetBranchFormatNumber(item1.Quantity, "2")</span>
+
+                                    </td>
+
+                                    <td style="text-align:right" class="editable">
+                                        @Html.HiddenFor(modelitem => item1.UnitRate, new { @Value = Convert.ToDecimal(item1.UnitRate).ToString("N2"), @id = "QtxtUnitRate_" + @i, @class = "textrightamount form-control-sm", @style = "width:100px", @onchange = "calculatevalue(" + @i + ")" })
+
+                                        <span id="QspanRate_@i" style="color:dodgerblue">@HVAC.Models.CommonFunctions.GetBranchFormatNumber(item1.UnitRate, "3")</span>
+                                    </td>
+                                    <td style="text-align:right">
+                                        @Html.HiddenFor(modelitem => item1.Amount, new { @Value = Convert.ToDecimal(item1.Amount).ToString("N3"), @id = "QtxtAmount_" + @i, @class = "textrightamount form-control-sm", @style = "width:100px", @readonly = "readonly" })
+                                        <span id="QspanAmount_@i" style="color:dodgerblue">@HVAC.Models.CommonFunctions.GetBranchFormatNumber(item1.Amount, "3")</span>
+
+                                    </td>
+
+
+                                </tr>
+                            }
+                        </tbody>
+
+
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+           
 </body>
 </html>

@@ -188,82 +188,116 @@ namespace HVAC.Views
             var model = GetJobDetail(Id);
             return View("Print", model);
         }
-
+        public ActionResult PdfFooter()
+        {
+            // You can pass a model if needed, but for a static footer, it's not required.
+            return View("_PdfFooter");
+        }
+        public ActionResult PdfHeader()
+        {
+            // You can pass a model if needed, but for a static footer, it's not required.
+            return View("_PdfHeader");
+        }
         // Export to PDF using Rotativa
         public ActionResult PrintPdf(int Id)
         {
+            // Use the absolute server path to the header/footer files
+            string headerUrl = Server.MapPath("~/Content/HeadersAndFooters/Header.html");
+            string footerUrl = Server.MapPath("~/Content/HeadersAndFooters/Footer.html");
+            // Dynamically get the full URL for the header and footer actions.
+            //string headerUrl = Url.Action("PdfHeader", "JobHandover", null, Request.Url.Scheme);
+            //string footerUrl = Url.Action("PdfFooter", "JobHandover", null, Request.Url.Scheme);
             var model = GetJobDetail(Id);
+            // Construct a single string for all custom switches.
+            //$"--print-media-type " +
+            string customSwitches =  $"--header-html {headerUrl} " +
+                                    $"--header-spacing 4 " +
+                                    $"--footer-html {footerUrl} " +
+                                    $"--footer-spacing 30";
+
             return new ViewAsPdf("Print", model)
             {
                 FileName = "Job_" + model.Job.JobNo + ".pdf",
-                PageSize = Rotativa.Options.Size.A4,
+                PageSize = Rotativa.Options.Size.A3,
                 PageOrientation = Rotativa.Options.Orientation.Portrait,
-                PageMargins = new Rotativa.Options.Margins(10, 10, 10, 10)
+                PageMargins = new Rotativa.Options.Margins(30, 10, 50, 10),
+                CustomSwitches = customSwitches
             };
+
+            //var FooterHtml = Url.Action("PdfFooter", "JobHandover", null, Request.Url.Scheme);
+           
+            //string headerUrl = Url.Action("PdfHeader", "JobHandover", null, Request.Url.Scheme);
+       
+          
+            //return new ViewAsPdf("Print", model)
+            //{
+            //    FileName = "Job_" + model.Job.JobNo + ".pdf",
+            //    PageSize = Rotativa.Options.Size.A3,
+            //    PageOrientation = Rotativa.Options.Orientation.Portrait,
+            //    PageMargins = new Rotativa.Options.Margins(10, 10,40, 10),                  
+            //    CustomSwitches =
+            //        //$"--print-media-type " +
+            //        //$"--disable-smart-shrinking " +
+            //        $"--header-html {headerUrl} " +
+            //        $"--header-spacing 4 " +
+            //        $"--footer-html {FooterHtml} " +
+            //        $"--footer-spacing 30 " +
+            //        $"--footer-center \"page [page] of [topage]\" " +
+            //        $"--footer-font-size 8 --footer-spacing 30"
+            //};
         }
         // Demo data. Replace with your repo/db fetch by JobNo/Id
         private JobDetailsViewModel GetJobDetail(int id)
         {
-            return new JobDetailsViewModel
+            var _job = db.JobHandovers.Find(id);
+            var _enquiry = db.Enquiries.Find(_job.EnquiryID);
+             var _customer = db.ClientMasters.Find(_job.ClientID);
+            var _polist = EnquiryDAO.JobwisePOList(id);
+            var _quotationid = 0;
+            if (_polist.Count > 0)
+                _quotationid = Convert.ToInt32(_polist[0].QuotationId);
+
+            if (_job != null)
             {
-                Job = new JobInfo
+                return new JobDetailsViewModel
                 {
-                    JobNo =  "JOB-2025-001",
-                    Title = "HVAC Installation – Block A",
-                    ProjectSite = "Muscat, Oman",
-                    Status = "In Progress",
-                    StartDate = new DateTime(2025, 8, 1),
-                    EndDate = null,
-                    ProjectManager = "Ravi K",
-                    Notes = "Phase-1 ducting in progress. Safety induction completed."
-                },
-                Customer = new CustomerInfo
-                {
-                    Name = "Airmech Oman LLC",
-                    Code = "AIRM001",
-                    ContactPerson = "Mr. Faisal",
-                    Phone = "+968-24xxxxx",
-                    Email = "faisal@airmech.om",
-                    BillingAddress = "P.O. Box 123, Muscat, Oman",
-                    ShippingAddress = "Project Site – Block A, Muscat",
-                    TRN_VAT = "OM123456789"
-                },
-                PurchaseOrders = new List<POInfo>
-                {
-                    new POInfo { PONo="PO-1001", PODate=new DateTime(2025,8,5), Vendor="Al Jazeera Metals", Currency="OMR", Amount=3250.000m, Status="Delivered" },
-                    new POInfo { PONo="PO-1002", PODate=new DateTime(2025,8,12), Vendor="Gulf Fasteners", Currency="OMR", Amount=1140.500m, Status="Partially Delivered" },
-                    new POInfo { PONo="PO-1003", PODate=new DateTime(2025,8,18), Vendor="Desert Ducting Co.", Currency="OMR", Amount=5600.000m, Status="Approved" }
-                },
-                Bonds = new List<BondInfo>
-                {
-                    new BondInfo { BondType="Performance", BondNo="PB-7890", ValidFrom=new DateTime(2025,8,1), ValidTo=new DateTime(2026,7,31), Amount=10000m, Issuer="Bank Muscat", Remarks="10% of contract value" },
-                    new BondInfo { BondType="Advance", BondNo="AB-4521", ValidFrom=new DateTime(2025,8,1), ValidTo=new DateTime(2026,1,31), Amount=7500m, Issuer="Bank Muscat", Remarks="Will be released after 50% progress" }
-                },
-                WarrantyTerms = new List<string>
-                {
-                    "12 months from commissioning date or 18 months from delivery, whichever is earlier.",
-                    "Manufacturer defects covered; wear-and-tear excluded.",
-                    "Response time within 24 hours for critical failures."
-                },
-                PaymentTerms = new List<string>
-                {
-                    "20% Advance against Advance Bank Guarantee.",
-                    "50% on material delivery to site.",
-                    "20% on installation completion.",
-                    "10% on final handover (retention)."
-                },
-                Costing = new CostingInfo
-                {
-                    Materials = 6200m,
-                    Labor = 2800m,
-                    Subcontract = 1400m,
-                    Overheads = 950m,
-                    Contingency = 350m,
-                    Taxes = 420m,
-                    Discount = 200m,
-                    QuotedPrice = 15000m
-                }
+                    Job = new JobInfo
+                    {
+                        JobNo = _job.ProjectNumber,
+                        Title = _job.ProjectTitle,
+                        ProjectSite = _job.DeliveryLocation,
+                        Status = "Status",
+                        StartDate = _enquiry.EnquiryDate,
+                        EndDate = null,
+                        ProjectManager = "Ravi K",
+                        Notes = _enquiry.ProjectDescription,
+                        JobValue =_job.JobValue,
+                        Cost = _job.JobCost,
+                        Vat = _job.VatAmount,
+                        Margin = _job.Margin,
+                        TotalValue = _job.TotalValue
+                    },
+                    Customer = new CustomerInfo
+                    {
+                        Name = _customer.ClientName,
+                        Code = _customer.ClientPrefix,
+                        ContactPerson = _customer.ContactName,
+                        Phone = _customer.ContactNo,
+                        Email = _customer.Email,
+                        BillingAddress = _customer.Address1 + "," + _customer.Address2,
+                        //ShippingAddress = "Project Site – Block A, Muscat",
+                        //TRN_VAT = "OM123456789"
+                    },
+                    PurchaseOrders = _polist,
+                    BondDetails  = EnquiryDAO.GetJobBondList(id),
+                    WarrantyDetails = EnquiryDAO.GetJobWarrantyList(id),
+                    Costing = EnquiryDAO.ClientPOEquipment(_quotationid)
             };
+            }
+            else
+            {
+                return new JobDetailsViewModel(); 
+            }
         }
 
         // View page
