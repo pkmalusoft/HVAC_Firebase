@@ -22,13 +22,22 @@ namespace HVAC.Controllers
         // GET: Dashboard
         public ActionResult Index()
         { 
+            if (Session["UserID"] == null || Session["fyearid"] == null || 
+                Session["CurrentBranchID"] == null || Session["UserRoleID"] == null)
+            {
+                return RedirectToAction("Home", "Home");
+            }
+            
             int userid = Convert.ToInt32(Session["UserID"].ToString());
-          int yearid = Convert.ToInt32(Session["fyearid"].ToString());
-          int branchid = Convert.ToInt32(Session["CurrentBranchID"].ToString());
+            int yearid = Convert.ToInt32(Session["fyearid"].ToString());
+            int branchid = Convert.ToInt32(Session["CurrentBranchID"].ToString());
             int RoleID = Convert.ToInt32(Session["UserRoleID"].ToString());
             int employeeId = 0;
             var useremployee = db.EmployeeMasters.Where(cc => cc.UserID == userid).FirstOrDefault();
-            employeeId = useremployee.EmployeeID;
+            if (useremployee != null)
+            {
+                employeeId = useremployee.EmployeeID;
+            }
             var vm = new FinancialsChartViewModel
             {
                 Months = Enumerable.Range(1, 12)

@@ -4,7 +4,6 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using HVAC.Models;
-using HealthCareApp;
 using System.IO;
 using Amazon;
 using Amazon.Runtime;
@@ -22,8 +21,6 @@ namespace HVAC.Controllers
      
         HVACEntities db=new HVACEntities();
 
-        private const string keyName = "updatedtestfile.txt";
-        private const string filePath = null;
         private static readonly string bucketName = ConfigurationManager.AppSettings["BucketName"];
         private static readonly RegionEndpoint bucketRegion = RegionEndpoint.USWest1;
         private static readonly string wasabiurl = ConfigurationManager.AppSettings["wasabiurl"];
@@ -32,6 +29,10 @@ namespace HVAC.Controllers
         private static readonly string secretkey = ConfigurationManager.AppSettings["AWSSecretKey"];
         private static readonly string wasabiurl1 = ConfigurationManager.AppSettings["wasabiurl1"];
 
+        /// <summary>
+        /// Displays the home page with company information and session status
+        /// </summary>
+        /// <returns>Home view with company details and session information</returns>
         public ActionResult Home()
         {
             var compdetail = db.AcCompanies.FirstOrDefault();
@@ -78,6 +79,10 @@ namespace HVAC.Controllers
            
         }
 
+        /// <summary>
+        /// Handles file upload to local server with validation
+        /// </summary>
+        /// <returns>JSON result with upload status and file information</returns>
         [HttpPost]
         public ActionResult UploadFileswork()
         {
@@ -92,10 +97,25 @@ namespace HVAC.Controllers
                     HttpFileCollectionBase files = Request.Files;
                     for (int i = 0; i < files.Count; i++)
                     {
-                        //string path = AppDomain.CurrentDomain.BaseDirectory + "Uploads/";  
-                        //string filename = Path.GetFileName(Request.Files[i].FileName);  
-
                         HttpPostedFileBase file = files[i];
+                        
+                        // Validate file
+                        if (file == null || file.ContentLength == 0)
+                            continue;
+                            
+                        // Check file size (10MB limit)
+                        if (file.ContentLength > 10 * 1024 * 1024)
+                        {
+                            return Json(new { status = "Failed", FileName = "", message = "File size exceeds 10MB limit." });
+                        }
+                        
+                        // Validate file extension
+                        string[] allowedExtensions = { ".pdf", ".doc", ".docx", ".xls", ".xlsx", ".txt", ".jpg", ".jpeg", ".png" };
+                        string fileExtension = Path.GetExtension(file.FileName).ToLower();
+                        if (!allowedExtensions.Contains(fileExtension))
+                        {
+                            return Json(new { status = "Failed", FileName = "", message = "File type not allowed." });
+                        }
 
 
                         // Checking for Internet Explorer  
@@ -167,6 +187,10 @@ namespace HVAC.Controllers
                 return ex.Message;
             }
         }
+        /// <summary>
+        /// Handles file upload to cloud storage (Wasabi S3) with validation
+        /// </summary>
+        /// <returns>JSON result with upload status and file information</returns>
         [HttpPost]
         public async Task<ActionResult> UploadFiles()
         {
@@ -181,10 +205,25 @@ namespace HVAC.Controllers
                     HttpFileCollectionBase files = Request.Files;
                     for (int i = 0; i < files.Count; i++)
                     {
-                        //string path = AppDomain.CurrentDomain.BaseDirectory + "Uploads/";  
-                        //string filename = Path.GetFileName(Request.Files[i].FileName);  
-
                         HttpPostedFileBase file = files[i];
+                        
+                        // Validate file
+                        if (file == null || file.ContentLength == 0)
+                            continue;
+                            
+                        // Check file size (10MB limit)
+                        if (file.ContentLength > 10 * 1024 * 1024)
+                        {
+                            return Json(new { status = "Failed", FileName = "", message = "File size exceeds 10MB limit." });
+                        }
+                        
+                        // Validate file extension
+                        string[] allowedExtensions = { ".pdf", ".doc", ".docx", ".xls", ".xlsx", ".txt", ".jpg", ".jpeg", ".png" };
+                        string fileExtension = Path.GetExtension(file.FileName).ToLower();
+                        if (!allowedExtensions.Contains(fileExtension))
+                        {
+                            return Json(new { status = "Failed", FileName = "", message = "File type not allowed." });
+                        }
 
 
                         // Checking for Internet Explorer  
@@ -278,7 +317,7 @@ namespace HVAC.Controllers
             return View();
         }
         [HttpPost]
-        public ActionResult TrialExpire(ComapanyVM u)
+        public ActionResult TrialExpire(CompanyVM u)
         {
             var accomp = u;
             if (u.Accept == true)

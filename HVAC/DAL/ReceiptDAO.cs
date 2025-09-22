@@ -6,7 +6,6 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Web;
-using System.Windows;
 using AttributeRouting.Helpers;
 using HVAC.Models;
 
@@ -16,19 +15,23 @@ namespace HVAC.DAL
     {
         public static string RevertInvoiceIdtoInscanMaster(int InvoiceId)
         {
-            SqlCommand cmd = new SqlCommand();
-            try
+            using (SqlConnection connection = new SqlConnection(CommonFunctions.GetConnectionString))
+            using (SqlCommand cmd = new SqlCommand())
             {
-                cmd.Connection = new SqlConnection(CommonFunctions.GetConnectionString);
-                cmd.CommandText = "Update InscanMaster set InvoiceID=null where Isnull(InvoiceId,0)=" + Convert.ToString(InvoiceId);
-                cmd.CommandType = CommandType.Text;
-                cmd.Connection.Open();
-                cmd.ExecuteNonQuery();
-                return "OK";
-            }
-            catch (Exception ex)
-            {
-                return ex.Message;
+                try
+                {
+                    cmd.Connection = connection;
+                    cmd.CommandText = "Update InscanMaster set InvoiceID=null where Isnull(InvoiceId,0)=@InvoiceId";
+                    cmd.CommandType = CommandType.Text;
+                    cmd.Parameters.AddWithValue("@InvoiceId", InvoiceId);
+                    connection.Open();
+                    cmd.ExecuteNonQuery();
+                    return "OK";
+                }
+                catch (Exception ex)
+                {
+                    return ex.Message;
+                }
             }
 
 
@@ -40,19 +43,23 @@ namespace HVAC.DAL
 
         public static string RevertInvoiceIdtoInboundShipment(int InvoiceId)
         {
-            SqlCommand cmd = new SqlCommand();
-            try
+            using (SqlConnection connection = new SqlConnection(CommonFunctions.GetConnectionString))
+            using (SqlCommand cmd = new SqlCommand())
             {
-                cmd.Connection = new SqlConnection(CommonFunctions.GetConnectionString);
-                cmd.CommandText = "Update InboundShipment set AgentInvoiceID=null where Isnull(AgentInvoiceId,0)=" + Convert.ToString(InvoiceId);
-                cmd.CommandType = CommandType.Text;
-                cmd.Connection.Open();
-                cmd.ExecuteNonQuery();
-                return "OK";
-            }
-            catch (Exception ex)
-            {
-                return ex.Message;
+                try
+                {
+                    cmd.Connection = connection;
+                    cmd.CommandText = "Update InboundShipment set AgentInvoiceID=null where Isnull(AgentInvoiceId,0)=@InvoiceId";
+                    cmd.CommandType = CommandType.Text;
+                    cmd.Parameters.AddWithValue("@InvoiceId", InvoiceId);
+                    connection.Open();
+                    cmd.ExecuteNonQuery();
+                    return "OK";
+                }
+                catch (Exception ex)
+                {
+                    return ex.Message;
+                }
             }
 
 
@@ -1824,27 +1831,37 @@ namespace HVAC.DAL
         }
         public static bool CheckCustomerNameExist(string CustomerName, int CustomerId = 0)
         {
-            SqlCommand cmd = new SqlCommand();
-            cmd.Connection = new SqlConnection(CommonFunctions.GetConnectionString);
-            if (CustomerId > 0)
-                cmd.CommandText = "select CustomerName from CustomerMaster where lower(rtrim(Isnull(CustomerName,''))) ='" + CustomerName.Trim().ToLower() + "' and CustomerId<>" + CustomerId.ToString();
-            else
-                cmd.CommandText = "select CustomerName from CustomerMaster where lower(rtrim(Isnull(CustomerName,''))) ='" + CustomerName.Trim().ToLower() + "'";
-            cmd.CommandType = CommandType.Text;
-            SqlDataAdapter da = new SqlDataAdapter(cmd);
-            DataSet ds = new DataSet();
-            da.Fill(ds);
-
-            List<CountryMasterVM> objList = new List<CountryMasterVM>();
-
-            if (ds != null && ds.Tables.Count > 0)
+            using (SqlConnection connection = new SqlConnection(CommonFunctions.GetConnectionString))
+            using (SqlCommand cmd = new SqlCommand())
             {
-                if (ds.Tables[0].Rows.Count > 0)
+                cmd.Connection = connection;
+                if (CustomerId > 0)
                 {
-                    return true;
+                    cmd.CommandText = "select CustomerName from CustomerMaster where lower(rtrim(Isnull(CustomerName,''))) =@CustomerName and CustomerId<>@CustomerId";
+                    cmd.Parameters.AddWithValue("@CustomerName", CustomerName.Trim().ToLower());
+                    cmd.Parameters.AddWithValue("@CustomerId", CustomerId);
                 }
+                else
+                {
+                    cmd.CommandText = "select CustomerName from CustomerMaster where lower(rtrim(Isnull(CustomerName,''))) =@CustomerName";
+                    cmd.Parameters.AddWithValue("@CustomerName", CustomerName.Trim().ToLower());
+                }
+                cmd.CommandType = CommandType.Text;
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
+                DataSet ds = new DataSet();
+                da.Fill(ds);
+
+                List<CountryMasterVM> objList = new List<CountryMasterVM>();
+
+                if (ds != null && ds.Tables.Count > 0)
+                {
+                    if (ds.Tables[0].Rows.Count > 0)
+                    {
+                        return true;
+                    }
+                }
+                return false;
             }
-            return false;
         }
         //Generate SupplierInvoice posting
         public string GenerateSupplierInvoicePosting(int Id)

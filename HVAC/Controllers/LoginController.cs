@@ -8,12 +8,39 @@ using HVAC.DAL;
 using System.Web.Security;
 using System.Data.SqlTypes;
 using System.Data.Entity;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace HVAC.Controllers
 {
     public class LoginController : Controller
     {
         HVACEntities db = new HVACEntities();
+        
+        // Role ID constants
+        private const int AGENT_ROLE_ID = 14;
+        private const int CUSTOMER_ROLE_ID = 13;
+        private const int COLOADER_ROLE_ID = 23;
+        
+        private string HashPassword(string password)
+        {
+            using (SHA256 sha256Hash = SHA256.Create())
+            {
+                byte[] bytes = sha256Hash.ComputeHash(Encoding.UTF8.GetBytes(password));
+                StringBuilder builder = new StringBuilder();
+                for (int i = 0; i < bytes.Length; i++)
+                {
+                    builder.Append(bytes[i].ToString("x2"));
+                }
+                return builder.ToString();
+            }
+        }
+        
+        private bool VerifyPassword(string password, string hashedPassword)
+        {
+            string hashedInput = HashPassword(password);
+            return hashedInput == hashedPassword;
+        }
 
         public ActionResult Login()
         {
@@ -57,21 +84,25 @@ namespace HVAC.Controllers
             UserRegistration u1 = null;
             try
             {
-                u1 = (from c in db.UserRegistrations where c.UserName == u.UserName && c.Password == u.Password select c).FirstOrDefault();
+                u1 = (from c in db.UserRegistrations where c.UserName == u.UserName select c).FirstOrDefault();
+                if (u1 != null && !VerifyPassword(u.Password, u1.Password))
+                {
+                    u1 = null; // Invalid password
+                }
                 if (u1 != null)
                 {
                     userid = u1.UserID;
-                    if (u1.RoleID == 14)
+                    if (u1.RoleID == AGENT_ROLE_ID)
                     {
-                        proleid = 14;
+                        proleid = AGENT_ROLE_ID;
                         roletype = "Agent";
                         Session["CurrentDepot"] = "";
                     }
-                    else if (u1.RoleID == 13 || u1.RoleID == 23)
+                    else if (u1.RoleID == CUSTOMER_ROLE_ID || u1.RoleID == COLOADER_ROLE_ID)
                     {
 
                         proleid = Convert.ToInt32(u1.RoleID);
-                        if (u1.RoleID == 13)
+                        if (u1.RoleID == CUSTOMER_ROLE_ID)
                             roletype = "Customer";
                         else
                             roletype = "CoLoader";
@@ -299,7 +330,7 @@ namespace HVAC.Controllers
                 GeneralDAO _dao = new GeneralDAO();
                 string newpassword = _dao.RandomPassword(6);
 
-                _user.Password = newpassword;
+                _user.Password = HashPassword(newpassword);
                 db.Entry(_user).State = EntityState.Modified;
                 db.SaveChanges();
                 EmailDAO _emaildao = new EmailDAO();                
@@ -323,11 +354,11 @@ namespace HVAC.Controllers
         public ActionResult ChangePassword(UserLoginVM vm)
         {
             string emailid = vm.UserName;
-            var _user = db.UserRegistrations.Where(cc => cc.UserName == emailid && cc.Password==vm.Password).FirstOrDefault();
-            if (_user != null)
+            var _user = db.UserRegistrations.Where(cc => cc.UserName == emailid).FirstOrDefault();
+            if (_user != null && VerifyPassword(vm.Password, _user.Password))
             {
 
-                _user.Password = vm.NewPassword;
+                _user.Password = HashPassword(vm.NewPassword);
                 db.Entry(_user).State = EntityState.Modified;
                 db.SaveChanges();
                 EmailDAO _emaildao = new EmailDAO();

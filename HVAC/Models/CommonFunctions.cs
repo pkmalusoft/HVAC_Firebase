@@ -1,10 +1,4 @@
-﻿// Decompiled with JetBrains decompiler
-// Type: HVAC.Models.CommanFunctions
-// Assembly: Courier_27_09_16, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 2B3B4E05-393A-455A-A5DE-86374CE9B081
-// Assembly location: D:\Courier09022018\Decompiled\obj\Release\Package\PackageTmp\bin\Net4Courier.dll
-
-using System;
+﻿using System;
 using System.Web.Mvc;
 using System.Data;
 using System.Globalization;
@@ -73,6 +67,9 @@ namespace HVAC.Models
         {
             HVACEntities db = new HVACEntities();
             
+            if (HttpContext.Current?.Session?["fyearid"] == null)
+                return DateTime.Now.ToString("yyyy/MM/dd");
+                
             int fyearid = Convert.ToInt32(HttpContext.Current.Session["fyearid"].ToString());
 
             DateTime startdate = Convert.ToDateTime(db.AcFinancialYears.Find(fyearid).AcFYearFrom);
@@ -87,6 +84,9 @@ namespace HVAC.Models
         {
             HVACEntities db = new HVACEntities();
 
+            if (HttpContext.Current?.Session?["fyearid"] == null)
+                return DateTime.Now.ToString("yyyy/MM/dd");
+                
             int fyearid = Convert.ToInt32(HttpContext.Current.Session["fyearid"].ToString());
 
             DateTime startdate = Convert.ToDateTime(db.AcFinancialYears.Find(fyearid).AcFYearTo);
@@ -327,6 +327,8 @@ namespace HVAC.Models
             HVACEntities db = new HVACEntities();
             try
             {
+                if (HttpContext.Current?.Session?["CurrentBranchID"] == null)
+                    return 0;
                 int branchid = Convert.ToInt32(HttpContext.Current.Session["CurrentBranchID"].ToString());
                 int CurrencyId = 0;
                 
@@ -355,6 +357,8 @@ namespace HVAC.Models
             HVACEntities db = new HVACEntities();
             try
             {
+                if (HttpContext.Current?.Session?["CurrentBranchID"] == null)
+                    return 0;
                 int branchid = Convert.ToInt32(HttpContext.Current.Session["CurrentBranchID"].ToString());
                 int CurrencyId = 0;
 
@@ -414,8 +418,8 @@ namespace HVAC.Models
         public static string GetFormatNumber(object iInputValue, string Decimals="")
         {
             if (Decimals == "")
-                Decimals = HttpContext.Current.Session["Decimal"].ToString();
-            string NumberFormat = HttpContext.Current.Session["NumberFormat"].ToString();
+                Decimals = HttpContext.Current?.Session?["Decimal"]?.ToString() ?? "2";
+            string NumberFormat = HttpContext.Current?.Session?["NumberFormat"]?.ToString() ?? "Lakhs";
             if (Decimals == "2")
             {
                                 
@@ -465,8 +469,8 @@ namespace HVAC.Models
         public static string GetBranchFormatNumber(object iInputValue, string Decimals = "")
         {
             if (Decimals == "")
-                Decimals = HttpContext.Current.Session["Decimal"].ToString();
-            string formatnumber = HttpContext.Current.Session["NumberFormat"].ToString();
+                Decimals = HttpContext.Current?.Session?["Decimal"]?.ToString() ?? "2";
+            string formatnumber = HttpContext.Current?.Session?["NumberFormat"]?.ToString() ?? "Lakhs";
             if (Decimals == "2")
             {
 
@@ -501,6 +505,8 @@ namespace HVAC.Models
         public  static string GetLoggedEmployeeName()
         {
             HVACEntities db = new HVACEntities();
+            if (HttpContext.Current?.Session?["UserID"] == null)
+                return "";
             int userid = Convert.ToInt32(HttpContext.Current.Session["UserID"].ToString());
             var employee = db.EmployeeMasters.Where(cc => cc.UserID == userid).FirstOrDefault();
             if (employee != null)
@@ -516,6 +522,8 @@ namespace HVAC.Models
         public static int GetLoggedEmployeID()
         {
             HVACEntities db = new HVACEntities();
+            if (HttpContext.Current?.Session?["UserID"] == null)
+                return 0;
             int userid = Convert.ToInt32(HttpContext.Current.Session["UserID"].ToString());
             var employee = db.EmployeeMasters.Where(cc => cc.UserID == userid).FirstOrDefault();
             if (employee != null)
@@ -537,6 +545,8 @@ namespace HVAC.Models
             {
                 return "";
             }
+            if (HttpContext.Current?.Session?["UserID"] == null)
+                return "";
             int userid = Convert.ToInt32(HttpContext.Current.Session["UserID"].ToString());
             var employee = db.EmployeeMasters.Where(cc => cc.EmployeeID == EmpID).FirstOrDefault();
             if (employee != null)

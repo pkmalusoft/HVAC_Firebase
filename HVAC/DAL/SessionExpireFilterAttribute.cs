@@ -7,42 +7,45 @@ namespace HVAC.DAL
 {
     public class SessionExpireFilterAttribute : ActionFilterAttribute
     {
-        //protected override void HandleUnauthorizedRequest(AuthorizationContext filterContext)
-        //{
-        //    HttpContext ctx = HttpContext.Current;
-        //    // check if session is supported  
-        //    if (ctx.Session != null)
-        //    {
-        //        // check if a new session id was generated  
-        //        if (ctx.Session["UserID"] == null) // || ctx.Session.IsNewSession)
-        //        {
-        //            filterContext.Result = new RedirectResult("~/Login/Login");
-        //            return;
-        //            ////Check is Ajax request  
-        //            //if (filterContext.HttpContext.Request.IsAjaxRequest())
-        //            //{
-        //            //    filterContext.HttpContext.Response.ClearContent();
-        //            //    filterContext.HttpContext.Items["AjaxPermissionDenied"] = true;
-        //            //}
-        //            //// check if a new session id was generated  
-        //            //else
-        //            //{
-        //            //    filterContext.Result = new RedirectResult("~/Login/Login");
-        //            //}
-        //        }               
-        //    }
-        //    base.HandleUnauthorizedRequest(filterContext);
-        //}
 
         public override void OnActionExecuting(ActionExecutingContext filterContext)
         {
             HttpContext ctx = HttpContext.Current;
-            // check  sessions here
-            if (HttpContext.Current.Session["UserID"] == null)
+            
+            // Check if session is available
+            if (ctx.Session == null)
             {
                 filterContext.Result = new RedirectResult("~/Home/Home");
                 return;
             }
+            
+            // Check for required session variables
+            if (HttpContext.Current.Session["UserID"] == null || 
+                HttpContext.Current.Session["UserRoleID"] == null ||
+                HttpContext.Current.Session["CurrentBranchID"] == null)
+            {
+                // Clear any existing session data
+                ctx.Session.Clear();
+                ctx.Session.Abandon();
+                
+                // Check if it's an AJAX request
+                if (filterContext.HttpContext.Request.IsAjaxRequest())
+                {
+                    filterContext.HttpContext.Response.ClearContent();
+                    filterContext.HttpContext.Items["AjaxPermissionDenied"] = true;
+                    filterContext.Result = new JsonResult
+                    {
+                        Data = new { status = "error", message = "Session expired" },
+                        JsonRequestBehavior = JsonRequestBehavior.AllowGet
+                    };
+                }
+                else
+                {
+                    filterContext.Result = new RedirectResult("~/Home/Home");
+                }
+                return;
+            }
+            
             base.OnActionExecuting(filterContext);
         }
     }
