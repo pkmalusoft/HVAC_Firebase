@@ -84,11 +84,11 @@ namespace HVAC.Controllers
             UserRegistration u1 = null;
             try
             {
-                u1 = (from c in db.UserRegistrations where c.UserName == u.UserName select c).FirstOrDefault();
-                if (u1 != null && !VerifyPassword(u.Password, u1.Password))
-                {
-                    u1 = null; // Invalid password
-                }
+                u1 = (from c in db.UserRegistrations where c.UserName == u.UserName && c.Password==u.Password select c).FirstOrDefault();
+                //if (u1 != null && !VerifyPassword(u.Password, u1.Password))
+                //{
+                //    u1 = null; // Invalid password
+                //}
                 if (u1 != null)
                 {
                     userid = u1.UserID;

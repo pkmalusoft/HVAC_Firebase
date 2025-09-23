@@ -316,7 +316,6 @@
     <Compile Include="Controllers\MenuRoleController.cs" />
     <Compile Include="Controllers\ReportsController.cs" />
     <Compile Include="Controllers\RoleController.cs" />
-    <Compile Include="Controllers\SessionExpireAttribute.cs" />
     <Compile Include="Controllers\SourceMasterController.cs" />
     <Compile Include="Controllers\DocumentTypeController.cs" />
     <Compile Include="Controllers\SupplierController.cs" />
@@ -813,6 +812,8 @@
     <Content Include="assets\images\product\img-8.png" />
     <Content Include="assets\images\profile-img.png" />
     <Content Include="assets\images\CompanyLogo.png" />
+    <Content Include="assets\images\QuotationFooter.jpg" />
+    <Content Include="assets\images\QuotationHeader.jpg" />
     <Content Include="assets\images\small\img-1.jpg" />
     <Content Include="assets\images\small\img-2.jpg" />
     <Content Include="assets\images\small\img-3.jpg" />
@@ -1773,6 +1774,8 @@
     <Content Include="Content\ClientLogo\ClientLogo.png" />
     <Content Include="Content\HeadersAndFooters\Footer.html" />
     <Content Include="Content\HeadersAndFooters\Header.html" />
+    <Content Include="Content\HeadersAndFooters\QuotationFooter.html" />
+    <Content Include="Content\HeadersAndFooters\QuotationHeader.html" />
     <Content Include="Content\img\1682559.png" />
     <Content Include="Content\img\agent.jpg" />
     <Content Include="Content\img\agent.png" />

@@ -9,7 +9,7 @@ using Newtonsoft.Json;
 using System.Data;
 using System.Data.Entity;
 namespace HVAC.Controllers
-{ [SessionExpire]
+{ [SessionExpireFilter]
     public class PurchaseInvoiceController : Controller
     {
         HVACEntities db = new HVACEntities();

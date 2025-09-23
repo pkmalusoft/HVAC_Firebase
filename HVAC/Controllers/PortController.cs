@@ -10,7 +10,7 @@ using HVAC.Models;
 
 namespace HVAC.Controllers
 {
-    [SessionExpire]
+    [SessionExpireFilter]
     
     public class PortController : Controller
     {

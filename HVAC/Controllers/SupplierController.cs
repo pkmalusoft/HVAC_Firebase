@@ -10,7 +10,7 @@ using HVAC.DAL;
 
 namespace HVAC.Controllers
 {
-    [SessionExpire]
+    [SessionExpireFilter]
     //[Authorize]
     public class SupplierController : Controller
     {

@@ -112,20 +112,9 @@
             text-align: left;
         }
     </style>
-    <div class="container" style="background-color:white;padding:35px">
+    <div class="container" style="background-color:white;">
         @Html.HiddenFor(mode => mode.QuotationID, new { @class = "form-control" })
-        <!-- Header with Logo & Addresses -->
-        @*<div style="border-bottom:2px solid #000; padding-bottom:10px; margin-bottom:20px; white-space:nowrap;">*@
-
-        <!-- Left: Logo + Company Address -->
-        <div style="display:inline-block; vertical-align:top; width:100%; white-space:normal;">
-            <img src="@Url.Content("~/assets/images/CompanyLogo2.png")" alt="Company Logo" /><br />
-        </div>
-
-
-
-        @*</div>*@
-
+        
         <div class="pdf-two-col mt-3">
             <h2 style="margin:0; font-weight:bold; text-transform:uppercase;text-align:center">Quotation</h2>
             <div class="pdf-col">

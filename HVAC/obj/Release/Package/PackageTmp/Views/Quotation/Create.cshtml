@@ -133,23 +133,37 @@
         <div class="card-body">
             <div class="row">
                 <div class="col-md-9 d-flex">
-                    <b>Quotation No.</b>
-                    <span type="button" class="text-primary mb-2 me-2 font-size-13" style="font-weight:bold;  padding-left: 6px">@Model.QuotationNo</span>
-                    <b>Enquiry No.</b>
-                    <span type="button" class="text-primary mb-2 me-2 font-size-13" style="font-weight: bold;  padding-left: 6px ">@Model.EnquiryNo</span>
-                    <b>Project</b>
-                    <span type="button" class="text-primary mb-2 me-2 font-size-13 text_over " style="font-weight: bold;   padding-left: 6px ">@Model.ProjectName</span>
+                    <div class="me-4">
+                        <b>Quotation No.</b>
+                        <div class="text-primary mb-2 font-size-13 fw-bold ps-1">@Model.QuotationNo</div>
+                    </div>
+
+                    <div class="me-4">
+                        <b>Enquiry No.</b>
+                        <div class="text-primary mb-2 font-size-13 fw-bold ps-1">@Model.EnquiryNo</div>
+                    </div>
+
+                    <div class="me-4">
+                        <b>Project</b>
+                        <div class="text-primary mb-2 font-size-13 fw-bold ps-1 text_over">@Model.ProjectName</div>
+                    </div>
+
+                    <div>
+                        <b>Engineer</b>
+                        <div class="text-primary mb-2 font-size-13 fw-bold ps-1 text_over">@Model.EmployeeName</div>
+                    </div>
                 </div>
+
                 <div class="col-md-3">
                     <div class="text-right">
                         @{
                             if (Model.ClientPOID > 0)
-                            {                                
-                                    <a href="@Url.Action("Create", "InwardPO", new { id = Model.ClientPOID })" title="Click to Go PO Page" target="_blank" class="quotation-link">
-                                        @Model.ClientPONO
-                                    </a>
-                             }                          
-                           
+                            {
+                                <a href="@Url.Action("Create", "InwardPO", new { id = Model.ClientPOID })" title="Click to Go PO Page" target="_blank" class="quotation-link">
+                                    @Model.ClientPONO
+                                </a>
+                            }
+
                             else
                             {
                                 <input type="submit" value="Save" class="btn btn-success" id="btnSaveQuotation" />
@@ -219,45 +233,44 @@
                         @Html.HiddenFor(mode => mode.SellingValue, new { @id = "SellingValue" })
                         @Html.HiddenFor(mode => mode.Margin, new { @class = "form-control" })
                         @Html.HiddenFor(mode => mode.VATAmount, new { @id = "VATAmount" })
-
+                        @Html.HiddenFor(mode => mode.EngineerID, new { @id = "EngineerID" })
 
                         @*@Html.DropDownListFor(model => model.EnquiryID, new SelectList(ViewBag.Enquiry, "EnquiryID", "EnquiryNo"), "Select", new { @class = "form-select", @required = "required", @id = "EnquiryID", @svalue = Model.EnquiryID })*@
 
                         <!-- Engineer Label + Checkbox in same row -->
-                        <div class="d-flex justify-content-between align-items-center">
-                            <label class="col-form-label required mb-0">Engineer</label>
-                            <div class="form-check">
-                                @{
-                                    if (Model.QuotationID > 0)
-                                    {
-                                        @Html.CheckBoxFor(mode => mode.DirectQuotation, new { @name = "DirectQuotation", @class = "form-check-input", @disabled = "disabled", @checked = Model.DirectQuotation })
-                                    }
-                                    else
-                                    {
-                                        @Html.CheckBoxFor(mode => mode.DirectQuotation, new { @name = "DirectQuotation", @class = "form-check-input" })
-                                    }
 
+                        @*<label class="col-form-label required mb-0">Engineer</label>*@
+                        <div class="form-check" style="margin-top:40px;font-size:16px">
+                            @{ 
+                                if (Model.QuotationID > 0)
+                                {
+                                    @Html.CheckBoxFor(mode => mode.DirectQuotation, new { @name = "DirectQuotation", @class = "form-check-input font-size-17", @tabindex = "-1", @disabled = "disabled", @checked = Model.DirectQuotation })
                                 }
-                                <label class="form-check-label text-primary mb-0">Direct Quotation</label>
-                            </div>
-                        </div>
+                                else
+                                {
+                                    @Html.CheckBoxFor(mode => mode.DirectQuotation, new { @name = "DirectQuotation", @class = "form-check-input" ,@tabindex="2" })
+                                }
 
-                        @{
-                            if (Model.QuotationID > 0)
-                            {
-                                @Html.DropDownListFor(mode => mode.EngineerID,
-                                    new SelectList(ViewBag.EmployeeMaster, "EmployeeID", "EmployeeName"),
-                                    "Select Engineer",
-                                    new { @class = "form-control", @id = "QEngineerID", @required = "required", @disabled = "disabled" })
                             }
-                            else
-                            {
-                                @Html.DropDownListFor(mode => mode.EngineerID,
-                                    new SelectList(ViewBag.EmployeeMaster, "EmployeeID", "EmployeeName"),
-                                    "Select Engineer",
-                                    new { @class = "form-select", @id = "QEngineerID", @required = "required", @tabindex = "2" })
-                            }
-                        }
+                            <label class="form-check-label  mb-0">Direct Quotation</label>
+                        </div>
+                       
+                        @*@{
+            if (Model.QuotationID > 0)
+            {
+                @Html.DropDownListFor(mode => mode.EngineerID,
+                    new SelectList(ViewBag.EmployeeMaster, "EmployeeID", "EmployeeName"),
+                    "Select Engineer",
+                    new { @class = "form-control", @id = "QEngineerID", @required = "required", @disabled = "disabled" })
+            }
+            else
+            {
+                @Html.DropDownListFor(mode => mode.EngineerID,
+                    new SelectList(ViewBag.EmployeeMaster, "EmployeeID", "EmployeeName"),
+                    "Select Engineer",
+                    new { @class = "form-select", @id = "QEngineerID", @required = "required", @tabindex = "2" })
+            }
+        }*@
 
                         @*@Html.DropDownList("QCurrencyId", new SelectList(ViewBag.Curency, "CurrencyID", "CurrencyName"), "Select Currency", new { @class = "form-control", @id = "QCurrencyId" })*@
                         @Html.HiddenFor(mode => mode.QuotationNo, new { @class = "form-select", @required = "required" })
@@ -272,7 +285,7 @@
                             @{
                                 if (Model.QuotationID > 0)
                                 {
-                                    <a id="btnshowcontact" href="javascript:void(0)" class="btn btn-sm btn-pink">Show Contact</a>
+                                    <a id="btnshowcontact" href="javascript:void(0)" class="btn btn-sm btn-pink" tabindex="4">Show Contact</a>
                                 }
                             }
 
@@ -281,21 +294,21 @@
 
                     @*<select id="drpClientId" class="form-select" multiple="multiple"></select>*@
                     @*@Html.TextBoxFor(mode => mode.ClientDetail, new { @class = "form-control", @required = "required", @readonly = "readonly" })*@
-                    <select id="drpQuotationTo" class="select2 form-control select2-multiple" tabindex="4" style="width:470px"
+                    <select id="drpQuotationTo" class="select2 form-control select2-multiple" tabindex="3" style="width:470px"
                             multiple="multiple" data-placeholder="Choose Quotation To...">
                     </select>
                 </div>
                 <div class="col-md-1">
                     <div class="mb-2">
                         <label class="col-form-label required">Version</label>
-                        @Html.TextBoxFor(mode => mode.Version, new { @id = "Version", @class = "form-control", @required = "required", @readonly = "readonly" })
+                        @Html.TextBoxFor(mode => mode.Version, new { @id = "Version", @class = "form-control", @required = "required", @readonly = "readonly",@tabindex="-1" })
                     </div>
                 </div>
                 <div class="col-md-1">
                     <div class="mb-2">
                         <label class="col-form-label required">Currency</label>
                         @Html.HiddenFor(mode => mode.Salutation, new { @id = "QtxtSalutation", @class = "form-control", @rows = "1" })
-                        @Html.DropDownListFor(mode => mode.CurrencyId, new SelectList(ViewBag.Currency, "CurrencyID", "CurrencyName"), "Select Currency", new { @class = "form-select", @id = "QCurrencyId", @required = "required", @tabindex = "4" })
+                        @Html.DropDownListFor(mode => mode.CurrencyId, new SelectList(ViewBag.Currency, "CurrencyID", "CurrencyName"), "Select Currency", new { @class = "form-select", @id = "QCurrencyId", @required = "required", @tabindex = "5" })
                         @*@Html.DropDownList("QCurrencyId", new SelectList(ViewBag.Curency, "CurrencyID", "CurrencyName"), "Select Currency", new { @class = "form-control", @id = "QCurrencyId" })*@
 
                     </div>
@@ -304,7 +317,7 @@
                     <div class="mb-2">
                         <label class="col-form-label required">Status</label>
 
-                        @Html.DropDownListFor(model => model.QuotationStatusID, new SelectList(@ViewBag.QuotationStatus, "ID", "Status"), "Select", new { @class = "form-select", @tabindex = "5" })
+                        @Html.DropDownListFor(model => model.QuotationStatusID, new SelectList(@ViewBag.QuotationStatus, "ID", "Status"), "Select", new { @class = "form-select", @tabindex = "6" })
 
 
                     </div>
@@ -407,9 +420,9 @@
                 <div class="tab-content p-3 text-muted">
                     <div class="tab-pane active" id="home1" role="tabpanel">
                         <div class="row align-items-start g-2">
-                            <div class="col-md-4 d-flex align-items-center">
+                            <div class="col-md-4 d-flex align-items-center d-xl-none">
                                 <div class="form-check form-switch mb-0 me-2">
-                                    <input class="form-check-input" type="checkbox" id="flexSwitchCheckChecked" checked="checked">
+                                    <input class="form-check-input" type="checkbox" id="flexSwitchCheckChecked" disabled checked="checked">
                                 </div>
                                 <label class="form-check-label mb-0" id="lblflexSwitch" for="flexSwitchCheckChecked">
                                     Quotation by Estimation
@@ -418,7 +431,7 @@
 
 
 
-                            <div class="col-md-6" id="divestimationqutation">
+                            <div class="col-md-12" id="divestimationqutation">
                                 <div class="row g-2 mb-2">
                                     <div class="col-md-4">
                                         <select id="drpEstimation" class="form-select form-select-sm estimation-select w-100"></select>
@@ -428,14 +441,18 @@
                                             <button type="button" class="btn btn-sm btn-primary waves-effect waves-light" id="btnaddestimation" title="Insert into Grid">
                                                 <i class="dripicons-enter mt-1" style="font-size: 14px;"></i>
                                             </button>
+
                                             <button type="button" class="btn btn-sm btn-pink waves-effect waves-light" id="btnviewestimation" title="Goto Estimation">
                                                 <i class="mdi mdi-eye mt-1" style="font-size: 14px;"></i>
+                                            </button>
+                                            <button type="button" class="btn btn-sm btn-primary waves-effect waves-light" id="btnothercharge" title="Insert into Grid">
+                                                Add Other Charge
                                             </button>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-8 text-md-end d-xl-none" id="divmargin">
+                            <div class="col-md-12 text-md-end d-xl-none" id="divmargin">
                                 <button type="button" data-bs-toggle="modal" data-bs-target="#marginpopup"
                                         class="btn btn-sm btn-primary btn-rounded waves-effect waves-light">
                                     <i class="mdi mdi-calculator-variant-outline me-1"></i> Apply Margin
@@ -471,27 +488,34 @@
                                 @Html.DropDownList("QUnitID", new SelectList(ViewBag.Unit, "ItemUnitID", "ItemUnit1"), "Select", new { @class = "form-select form-select-sm", @id = "QUnitID" })
                             </div>
 
-                            <div class="col-md-3">
+                            <div class="col-md-4">
                                 <div class="row">
                                     <div class="col-md-5">
                                         <label class="col-form-label">Rate</label>
                                         <input type="text" id="QtxtRate" value="" class="form-control form-control-sm textrightamount" onchange="calculatevalue1()" placeholder="Enter Rate" />
                                     </div>
-                                    <div class="col-md-5">
+                                    <div class="col-md-4">
                                         <label class="col-form-label">Value</label>
                                         <input type="hidden" id="QtxtExRate" value="" readonly class="textrightamount form-control" placeholder="Value" />
                                         <input type="text" id="QtxtValue" value="" readonly class="textrightamount form-control form-control-sm" placeholder="Value" />
                                         <input type="hidden" id="QtxtFValue" value="" readonly class="textrightamount form-control" placeholder="Value" />
                                         <input type="hidden" id="QtxtLValue" value="" readonly class="textright form-control" placeholder="Value" />
                                     </div>
-                                    <div class="col-md-2 d-flex align-items-end">
+                                    <div class="col-md-3 d-flex align-items-end gap-3">
                                         <button type="button" class="btn btn-success btn-sm waves-effect waves-light filter"
                                                 id="btnaddclient" title="Insert into Grid" onclick="AddDetail(this)">
                                             <i class="dripicons-enter" style="font-size: 16px;"></i>
-                                        </button>
+                                        </button>                                        
+                                            <button type="button" class="btn btn-sm btn-danger btn-sm waves-effect waves-light filter"
+                                                    id="btncancelothercharge" title="Cancel" onclick="BacktoEstimation(this)">
+                                                <i class="mdi mdi-close-box" style="font-size: 16px;"></i>
+                                            </button>
+                                        
                                     </div>
+
                                 </div>
                             </div>
+                           
                         </div>
 
 

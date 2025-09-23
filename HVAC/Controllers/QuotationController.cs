@@ -2312,6 +2312,7 @@ namespace HVAC.Views
         #endregion
 
         #region QuotationPrint
+      
         [HttpGet]
         public ActionResult Print(int Id)
         {
@@ -2343,7 +2344,14 @@ namespace HVAC.Views
         }
         public ActionResult PrintPDF(int Id, int ClientID)
         {
+            // Use the absolute server path to the header/footer files
+            string headerUrl = Server.MapPath("~/Content/HeadersAndFooters/QuotationHeader.html");
+            string footerUrl = Server.MapPath("~/Content/HeadersAndFooters/QuotationFooter.html");
             ViewBag.Client = EnquiryDAO.GetQuotationClient(Id);
+            string customSwitches = $"--header-html {headerUrl} " +
+                                  $"--header-spacing 3 " +
+                                  $"--footer-html {footerUrl} " +
+                                  $"--footer-spacing 30";
             //ReportsDAO.QuotationReport(Id, ClientID);
             QuotationVM vm = new QuotationVM();
             vm = GetQuotationPrintData(Id, ClientID);
@@ -2353,13 +2361,8 @@ namespace HVAC.Views
                 FileName = "Quotation_" + vm.QuotationNo + ".pdf",
                 PageOrientation = Rotativa.Options.Orientation.Portrait,
                 PageSize = Rotativa.Options.Size.A4,
-                PageMargins = new Rotativa.Options.Margins
-                {
-                    Top = 10,
-                    Bottom = 10,
-                    Left = 10,
-                    Right = 10
-                }
+                PageMargins = new Rotativa.Options.Margins(50, 20, 70, 20),
+                CustomSwitches = customSwitches
 
             };
         }

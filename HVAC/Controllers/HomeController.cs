@@ -317,10 +317,10 @@ namespace HVAC.Controllers
             return View();
         }
         [HttpPost]
-        public ActionResult TrialExpire(CompanyVM u)
+        public ActionResult TrialExpire(AcCompany u)
         {
             var accomp = u;
-            if (u.Accept == true)
+            if (u.AcceptSystem == true)
             {
                 var accompany = db.AcCompanies.FirstOrDefault();
                 
@@ -355,7 +355,7 @@ namespace HVAC.Controllers
                 {
                     if ((filebase.FileName.Contains(".xlsx") || filebase.FileName.Contains(".xls")))
                     {
-                        MappingManager manager = new MappingManager();
+                        //MappingManager manager = new MappingManager();
                         TempData["SelectedFile"] = filebase;
                         return RedirectToAction("Mapping", "Mapping");
                     }
