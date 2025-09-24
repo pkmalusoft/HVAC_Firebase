@@ -74,7 +74,7 @@
 
                 @Html.HiddenFor(modelitem => item1.Description, new { @id = "QtxtWarrantyDescription_" + @i, @class = " form-control-sm", @style = "width:200px" })
 
-                <span id="QwarrantyDescription_@i">@Html.Raw(@item1.Description)</span>
+                <span id="QwarrantyDescription_@i">@Html.Raw(Html.Encode(item1.Description))</span>
 
             </td>
 

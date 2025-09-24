@@ -16,49 +16,51 @@ namespace HVAC.DAL
 
         public static DataTable DeleteBondType(int ID)
         {
-            SqlCommand cmd = new SqlCommand();
-            cmd.Connection = new SqlConnection(CommonFunctions.GetConnectionString);
-            cmd.CommandText = "SP_DeleteBondType";
-            cmd.CommandType = CommandType.StoredProcedure;
-            cmd.Parameters.AddWithValue("@ID", ID);
-            SqlDataAdapter da = new SqlDataAdapter(cmd);
-            DataSet ds = new DataSet();
-            da.Fill(ds);
-
-            if (ds.Tables[0].Rows.Count > 0)
+            using (SqlConnection connection = new SqlConnection(CommonFunctions.GetConnectionString))
+            using (SqlCommand cmd = new SqlCommand())
             {
-                return ds.Tables[0];
-            }
-            else
-            {
-                return null;
-            }
+                cmd.Connection = connection;
+                cmd.CommandText = "SP_DeleteBondType";
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@ID", ID);
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
+                DataSet ds = new DataSet();
+                da.Fill(ds);
 
-
+                if (ds.Tables[0].Rows.Count > 0)
+                {
+                    return ds.Tables[0];
+                }
+                else
+                {
+                    return null;
+                }
+            }
         }
 
 
         public static DataTable DeleteWarranty(int ID)
         {
-            SqlCommand cmd = new SqlCommand();
-            cmd.Connection = new SqlConnection(CommonFunctions.GetConnectionString);
-            cmd.CommandText = "SP_DeleteWarranty";
-            cmd.CommandType = CommandType.StoredProcedure;
-            cmd.Parameters.AddWithValue("@ID", ID);
-            SqlDataAdapter da = new SqlDataAdapter(cmd);
-            DataSet ds = new DataSet();
-            da.Fill(ds);
-
-            if (ds.Tables[0].Rows.Count > 0)
+            using (SqlConnection connection = new SqlConnection(CommonFunctions.GetConnectionString))
+            using (SqlCommand cmd = new SqlCommand())
             {
-                return ds.Tables[0];
-            }
-            else
-            {
-                return null;
-            }
+                cmd.Connection = connection;
+                cmd.CommandText = "SP_DeleteWarranty";
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@ID", ID);
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
+                DataSet ds = new DataSet();
+                da.Fill(ds);
 
-
+                if (ds.Tables[0].Rows.Count > 0)
+                {
+                    return ds.Tables[0];
+                }
+                else
+                {
+                    return null;
+                }
+            }
         }
 
 

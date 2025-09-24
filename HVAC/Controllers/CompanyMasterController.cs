@@ -16,12 +16,11 @@ namespace HVAC.Controllers
     {
         HVACEntities db = new HVACEntities();
 
+        [OutputCache(Duration = 240, VaryByParam = "none")]
         public ActionResult Index()
         {
-            //List<ComapanyVM> lst = (from a in db.AcCompanies join cnt in db.CountryMasters on a.CountryID equals cnt.CountryID join t2 in db.CityMasters on a.CityID equals t2.CityID join t3 in db.CurrencyMasters on a.CurrencyID equals t3.CurrencyID join t4 in db.LocationMasters on a.LocationID equals t4.LocationID select new ComapanyVM {AcCompany=a.AcCompany1,AcCompanyID=a.AcCompanyID,Country=cnt.CountryName,City=t2.City,Currency=t3.CurrencyName, LocationID=t4.LocationID}).ToList();
-            List<ComapanyVM> lst = (from a in db.AcCompanies join t3 in db.CurrencyMasters on a.CurrencyID equals t3.CurrencyID select new ComapanyVM { AcCompany = a.AcCompany1, AcCompanyID = a.AcCompanyID, CountryName=a.CountryName, CityName=a.CityName, Currency = t3.CurrencyName, LocationName =a.LocationName}).ToList();
-
-
+            //List<CompanyVM> lst = (from a in db.AcCompanies join cnt in db.CountryMasters on a.CountryID equals cnt.CountryID join t2 in db.CityMasters on a.CityID equals t2.CityID join t3 in db.CurrencyMasters on a.CurrencyID equals t3.CurrencyID join t4 in db.LocationMasters on a.LocationID equals t4.LocationID select new CompanyVM {AcCompany=a.AcCompany1,AcCompanyID=a.AcCompanyID,Country=cnt.CountryName,City=t2.City,Currency=t3.CurrencyName, LocationID=t4.LocationID}).ToList();
+            List<CompanyVM> lst = (from a in db.AcCompanies join t3 in db.CurrencyMasters on a.CurrencyID equals t3.CurrencyID select new CompanyVM { AcCompany = a.AcCompany1, AcCompanyID = a.AcCompanyID, CountryName=a.CountryName, CityName=a.CityName, Currency = t3.CurrencyName, LocationName =a.LocationName}).ToList();
 
             return View(lst);
         }
@@ -50,7 +49,7 @@ namespace HVAC.Controllers
             ViewBag.Designations = db.Designations.ToList();
             //ViewBag.Location = db.LocationMasters.ToList();
             ViewBag.Currency = db.CurrencyMasters.ToList();
-            ComapanyVM v = new ComapanyVM();
+            CompanyVM v = new CompanyVM();
             v.LogoFileName = "defaultlogo.png";
             v.LogoFilPath = "/UploadFiles/" + v.LogoFileName;
             return View(v);
@@ -60,11 +59,13 @@ namespace HVAC.Controllers
         // POST: /CompanyMaster/Create
 
         [HttpPost]
-     
-        public ActionResult Create(ComapanyVM v)
+        [ValidateAntiForgeryToken]
+        public ActionResult Create(CompanyVM v)
         {
-            if (ModelState.IsValid)
+            try
             {
+                if (ModelState.IsValid)
+                {
                 AcCompany ob = new AcCompany();
 
 
@@ -115,12 +116,19 @@ namespace HVAC.Controllers
                     ob.LogoFileName = v.LogoFileName;
 
                 
-                db.AcCompanies.Add(ob);
-                db.SaveChanges();
-                TempData["SuccessMsg"] = "You have successfully added Company.";
-                return RedirectToAction("Index");
+                    db.AcCompanies.Add(ob);
+                    db.SaveChanges();
+                    TempData["SuccessMsg"] = "You have successfully added Company.";
+                    return RedirectToAction("Index");
+                }
+                return View(v);
             }
-            return View(v);
+            catch (Exception ex)
+            {
+                // Log the exception (implement logging framework)
+                ModelState.AddModelError("", "An error occurred while creating the company. Please try again.");
+                return View(v);
+            }
         }
 
         //
@@ -138,7 +146,7 @@ namespace HVAC.Controllers
             ViewBag.Currency = db.CurrencyMasters.ToList();
             
           
-            ComapanyVM v = new ComapanyVM();
+            CompanyVM v = new CompanyVM();
             if (accompany == null)
             {
                 return HttpNotFound();
@@ -203,7 +211,7 @@ namespace HVAC.Controllers
 
         [HttpPost]
        
-        public ActionResult Edit(ComapanyVM v)
+        public ActionResult Edit(CompanyVM v)
         {
 
             AcCompany ob = new AcCompany();
@@ -539,7 +547,7 @@ namespace HVAC.Controllers
         [HttpPost]
         public ActionResult DeleteDocument(int DocumentId, int ID)
         {
-            int fyearid = Convert.ToInt32(Session["fyearid"].ToString());
+            int fyearid = Session["fyearid"] != null ? Convert.ToInt32(Session["fyearid"].ToString()) : 0;
 
             DocumentMaster obj = db.DocumentMasters.Find(DocumentId);
             db.DocumentMasters.Remove(obj);
@@ -556,8 +564,8 @@ namespace HVAC.Controllers
         [HttpPost]
         public JsonResult SaveDocument(int DocumentID, string DocumentTitle, int DocumentTypeID, int CompanyID, string Filename)
         {
-            int fyearid = Convert.ToInt32(Session["fyearid"].ToString());
-            int UserID = Convert.ToInt32(Session["UserID"].ToString());
+            int fyearid = Session["fyearid"] != null ? Convert.ToInt32(Session["fyearid"].ToString()) : 0;
+            int UserID = Session["UserID"] != null ? Convert.ToInt32(Session["UserID"].ToString()) : 0;
 
             DocumentMaster model = new DocumentMaster();
             if (DocumentID == 0)

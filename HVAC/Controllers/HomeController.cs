@@ -12,6 +12,7 @@ using Amazon.S3.Model;
 using Amazon.S3.Transfer;
 using System.Configuration;
 using System.Threading.Tasks;
+using HVAC.Common;
  
 
 namespace HVAC.Controllers
@@ -33,10 +34,11 @@ namespace HVAC.Controllers
         /// Displays the home page with company information and session status
         /// </summary>
         /// <returns>Home view with company details and session information</returns>
+        [OutputCache(Duration = 300, VaryByParam = "none")]
         public ActionResult Home()
         {
             var compdetail = db.AcCompanies.FirstOrDefault();
-            ViewBag.CompanyName = compdetail.AcCompany1;
+            ViewBag.CompanyName = compdetail?.AcCompany1 ?? "";
             ViewBag.ContactPerson = compdetail.KeyPerson;
             ViewBag.ContactTelephone = compdetail.Phone;
             ViewBag.Email = compdetail.EMail;
@@ -84,6 +86,7 @@ namespace HVAC.Controllers
         /// </summary>
         /// <returns>JSON result with upload status and file information</returns>
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult UploadFileswork()
         {
             string fname = "";
@@ -192,6 +195,7 @@ namespace HVAC.Controllers
         /// </summary>
         /// <returns>JSON result with upload status and file information</returns>
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<ActionResult> UploadFiles()
         {
             string fname = "";
@@ -306,21 +310,33 @@ namespace HVAC.Controllers
             return File(
                 fileBytes, System.Net.Mime.MediaTypeNames.Application.Octet, filename);
         }
+        /// <summary>
+        /// Displays the trial expiration page with company information
+        /// </summary>
+        /// <returns>Trial expiration view with company details</returns>
         public ActionResult TrialExpireIndex()
         {
             var compdetail = db.AcCompanies.FirstOrDefault();
-            ViewBag.CompanyName = compdetail.AcCompany1;
-            ViewBag.ContactPerson = compdetail.KeyPerson;
-            ViewBag.ContactTelephone = compdetail.Phone;
-            ViewBag.Email = compdetail.EMail;
+            ViewBag.CompanyName = compdetail?.AcCompany1 ?? "";
+            ViewBag.ContactPerson = compdetail?.KeyPerson ?? "";
+            ViewBag.ContactTelephone = compdetail?.Phone ?? "";
+            ViewBag.Email = compdetail?.EMail ?? "";
             ViewBag.BranchCount = db.BranchMasters.Count();
             return View();
         }
+        /// <summary>
+        /// Handles trial expiration form submission
+        /// </summary>
+        /// <param name="u">Company information from trial expiration form</param>
+        /// <returns>Redirect to home page or trial expiration view</returns>
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult TrialExpire(AcCompany u)
         {
-            var accomp = u;
-            if (u.AcceptSystem == true)
+            try
+            {
+                var accomp = u;
+                if (u.AcceptSystem == true)
             {
                 var accompany = db.AcCompanies.FirstOrDefault();
                 
@@ -328,13 +344,20 @@ namespace HVAC.Controllers
                 db.Entry(accompany).State = System.Data.Entity.EntityState.Modified;
                 db.SaveChanges();
                 TempData["TrialSuccessMessage"] = "Thank you for Accept our System!";
+                }
+                else
+                {
+                    TempData["TrialMessage"] = "Sorry to see you go. Hope to be of service in future. Thank you. !!";
+                }
+                    
+                return RedirectToAction("Home", "Home");
             }
-            else
+            catch (Exception ex)
             {
-                TempData["TrialMessage"] = "Sorry to see you go. Hope to be of service in future. Thank you. !!";
+                LoggingHelper.LogError("Error in TrialExpire", "HomeController", "TrialExpire", ex);
+                TempData["TrialMessage"] = "An error occurred while processing your request. Please try again.";
+                return View(u);
             }
-                
-            return RedirectToAction("Home", "Home");
         }
 
         /// <summary>

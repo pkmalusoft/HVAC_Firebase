@@ -67,7 +67,7 @@
                 @Html.HiddenFor(modelitem => item1.EquipmentID, new { @id = "QExEquipmentID_" + @i, @class = "form-control", @readonly = "readonly" })
                 @Html.HiddenFor(modelitem => item1.Description, new { @id = "QtxtExDescription_" + @i, @class = " form-control-sm", @style = "width:200px" })
 
-                <span id="QExclusionDescription_@i">@Html.Raw(@item1.Description)</span>
+                <span id="QExclusionDescription_@i">@Html.Raw(Html.Encode(item1.Description))</span>
 
             </td>
 

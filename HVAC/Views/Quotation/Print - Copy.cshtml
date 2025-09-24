@@ -142,7 +142,7 @@
                         <h5 class="important-notes">Supply of  @note.EquipmentName Model- @note.Model ( Qty : @note.Qty) </h5>
                         foreach (var note1 in note.Items)
                         {
-                            <li>@Html.Raw(@note1.Description)</li>
+                            <li>@Html.Raw(Html.Encode(note1.Description))</li>
                         }
                     }
                     <br />

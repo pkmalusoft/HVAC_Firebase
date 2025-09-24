@@ -18,33 +18,36 @@ namespace HVAC.DAL
         public static List<DocumentMasterVM> GetCashBankDocument(int Id)
         {
             string url = ConfigurationManager.AppSettings["wasabiurl1"];
-            SqlCommand cmd = new SqlCommand();
-            cmd.Connection = new SqlConnection(CommonFunctions.GetConnectionString);
-            cmd.CommandText = "SP_GetCashBankDocument";
-            cmd.CommandType = CommandType.StoredProcedure;
-            cmd.Parameters.AddWithValue("@ID", Id);
-            SqlDataAdapter da = new SqlDataAdapter(cmd);
-            DataSet ds = new DataSet();
-            da.Fill(ds);
-
-            List<DocumentMasterVM> objList = new List<DocumentMasterVM>();
-
-            if (ds != null && ds.Tables.Count > 0)
+            using (SqlConnection connection = new SqlConnection(CommonFunctions.GetConnectionString))
+            using (SqlCommand cmd = new SqlCommand())
             {
-                for (int i = 0; i < ds.Tables[0].Rows.Count; i++)
+                cmd.Connection = connection;
+                cmd.CommandText = "SP_GetCashBankDocument";
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@ID", Id);
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
+                DataSet ds = new DataSet();
+                da.Fill(ds);
+
+                List<DocumentMasterVM> objList = new List<DocumentMasterVM>();
+
+                if (ds != null && ds.Tables.Count > 0)
                 {
-                    DocumentMasterVM obj = new DocumentMasterVM();
-                    obj.DocumentID = CommonFunctions.ParseInt(ds.Tables[0].Rows[i]["DocumentID"].ToString());
-                    obj.DocumentTitle = ds.Tables[0].Rows[i]["DocumentTitle"].ToString();
-                    obj.DocumentTypeID = CommonFunctions.ParseInt(ds.Tables[0].Rows[i]["DocumentTypeID"].ToString());
-                    obj.AcJournalID = CommonFunctions.ParseInt(ds.Tables[0].Rows[i]["AcJournalID"].ToString());
-                    obj.DocumentTypeName = ds.Tables[0].Rows[i]["DocumentTypeName"].ToString();
-                    obj.Filename = ds.Tables[0].Rows[i]["FileName"].ToString();
-                    obj.FilePath = url + obj.Filename;
-                    objList.Add(obj);
+                    for (int i = 0; i < ds.Tables[0].Rows.Count; i++)
+                    {
+                        DocumentMasterVM obj = new DocumentMasterVM();
+                        obj.DocumentID = CommonFunctions.ParseInt(ds.Tables[0].Rows[i]["DocumentID"].ToString());
+                        obj.DocumentTitle = ds.Tables[0].Rows[i]["DocumentTitle"].ToString();
+                        obj.DocumentTypeID = CommonFunctions.ParseInt(ds.Tables[0].Rows[i]["DocumentTypeID"].ToString());
+                        obj.AcJournalID = CommonFunctions.ParseInt(ds.Tables[0].Rows[i]["AcJournalID"].ToString());
+                        obj.DocumentTypeName = ds.Tables[0].Rows[i]["DocumentTypeName"].ToString();
+                        obj.Filename = ds.Tables[0].Rows[i]["FileName"].ToString();
+                        obj.FilePath = url + obj.Filename;
+                        objList.Add(obj);
+                    }
                 }
+                return objList;
             }
-            return objList;
         }
 
         public static List<DocumentMasterVM> GetCompanyDocument(int Id)

@@ -15,27 +15,29 @@ namespace HVAC.DAL
     {
         public static void SaveAuditLog(string Remarks, string ReferenceNo,string PageName)
         {
-            int userid = Convert.ToInt32(HttpContext.Current.Session["UserID"].ToString());
-            SqlCommand cmd = new SqlCommand();
-            try
+            int userid = HttpContext.Current?.Session?["UserID"] != null ? Convert.ToInt32(HttpContext.Current.Session["UserID"].ToString()) : 0;
+            using (SqlConnection connection = new SqlConnection(CommonFunctions.GetConnectionString))
+            using (SqlCommand cmd = new SqlCommand())
             {
-                cmd.Connection = new SqlConnection(CommonFunctions.GetConnectionString);
-                cmd.CommandText = "HVAC_SaveAuditLog";
-                cmd.CommandType = CommandType.StoredProcedure;
-                cmd.Parameters.AddWithValue("@TransDate", CommonFunctions.GetCurrentDateTime());
-                cmd.Parameters.AddWithValue("@Remarks", Remarks);
-                cmd.Parameters.AddWithValue("@LoginID", userid);
-                cmd.Parameters.AddWithValue("@PageName", PageName);
-                cmd.Parameters.AddWithValue("@ReferenceNo", ReferenceNo);
-                cmd.Connection.Open();
-                cmd.ExecuteNonQuery();
+                try
+                {
+                    cmd.Connection = connection;
+                    cmd.CommandText = "HVAC_SaveAuditLog";
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@TransDate", CommonFunctions.GetCurrentDateTime());
+                    cmd.Parameters.AddWithValue("@Remarks", Remarks);
+                    cmd.Parameters.AddWithValue("@LoginID", userid);
+                    cmd.Parameters.AddWithValue("@PageName", PageName);
+                    cmd.Parameters.AddWithValue("@ReferenceNo", ReferenceNo);
+                    connection.Open();
+                    cmd.ExecuteNonQuery();
+                }
+                catch (Exception ex)
+                {
+                    // Log the exception here if logging is implemented
+                    throw;
+                }
             }
-            catch (Exception ex)
-            {
-                // Log the exception here if logging is implemented
-                throw;
-            }
-
         }
 
         public static DateTime CheckParamDate(DateTime EntryDate, int yearid)

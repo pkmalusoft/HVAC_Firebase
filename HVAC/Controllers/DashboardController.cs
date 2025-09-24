@@ -20,18 +20,21 @@ namespace HVAC.Controllers
 
         HVACEntities db = new HVACEntities();
         // GET: Dashboard
+        [OutputCache(Duration = 60, VaryByParam = "none")]
         public ActionResult Index()
         { 
-            if (Session["UserID"] == null || Session["fyearid"] == null || 
-                Session["CurrentBranchID"] == null || Session["UserRoleID"] == null)
+            try
             {
-                return RedirectToAction("Home", "Home");
-            }
-            
-            int userid = Convert.ToInt32(Session["UserID"].ToString());
-            int yearid = Convert.ToInt32(Session["fyearid"].ToString());
-            int branchid = Convert.ToInt32(Session["CurrentBranchID"].ToString());
-            int RoleID = Convert.ToInt32(Session["UserRoleID"].ToString());
+                if (Session["UserID"] == null || Session["fyearid"] == null || 
+                    Session["CurrentBranchID"] == null || Session["UserRoleID"] == null)
+                {
+                    return RedirectToAction("Home", "Home");
+                }
+                
+                int userid = Session["UserID"] != null ? Convert.ToInt32(Session["UserID"].ToString()) : 0;
+                int yearid = Session["fyearid"] != null ? Convert.ToInt32(Session["fyearid"].ToString()) : 0;
+                int branchid = Session["CurrentBranchID"] != null ? Convert.ToInt32(Session["CurrentBranchID"].ToString()) : 0;
+                int RoleID = Session["UserRoleID"] != null ? Convert.ToInt32(Session["UserRoleID"].ToString()) : 0;
             int employeeId = 0;
             var useremployee = db.EmployeeMasters.Where(cc => cc.UserID == userid).FirstOrDefault();
             if (useremployee != null)
@@ -54,12 +57,33 @@ namespace HVAC.Controllers
             model.RevenueSeriesB = "2302,2671,2425,2414";
             model.RevenueSeriesC = "502,241,425,414";
             model.CountSeriesA  = "10,41,25,44";
-            model.CountSeriesB = "30,71,25,34";
-            model.CountSeriesC = "50,41,25,34";
-            model = DashboardDAO.GetDashboardSummary(branchid, yearid, employeeId, RoleID);
-            model.RecentOrders = DashboardDAO.GetDashboardEnquiryList(branchid, yearid, employeeId, RoleID);
-          //  model.FinancialsChartModel = vm;
-            return View(model);
+                model.CountSeriesB = "30,71,25,34";
+                model.CountSeriesC = "50,41,25,34";
+                
+                // Use caching for dashboard data
+                string cacheKey = $"Dashboard_{branchid}_{yearid}_{employeeId}_{RoleID}";
+                var cachedModel = HttpContext.Cache[cacheKey] as DashboardViewModel;
+                
+                if (cachedModel == null)
+                {
+                    model = DashboardDAO.GetDashboardSummary(branchid, yearid, employeeId, RoleID);
+                    model.RecentOrders = DashboardDAO.GetDashboardEnquiryList(branchid, yearid, employeeId, RoleID);
+                    // Cache for 5 minutes
+                    HttpContext.Cache.Insert(cacheKey, model, null, DateTime.Now.AddMinutes(5), TimeSpan.Zero);
+                }
+                else
+                {
+                    model = cachedModel;
+                }
+              //  model.FinancialsChartModel = vm;
+                return View(model);
+            }
+            catch (Exception ex)
+            {
+                // Log the exception (implement logging framework)
+                ModelState.AddModelError("", "An error occurred while loading the dashboard. Please try again.");
+                return View(new DashboardVM());
+            }
             // Pass model to Skote dashboard view
                                 //int userid = Convert.ToInt32(Session["UserID"].ToString());
                                 //int branchid = Convert.ToInt32(Session["CurrentBranchID"].ToString());

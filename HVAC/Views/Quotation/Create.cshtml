@@ -551,7 +551,7 @@
                                     <tr>
                                         <td style="text-align:left;font-weight:bold">Subject</td>
                                         <td style="text-align:left;">
-                                            <span id="subjectDisplay">@Html.Raw(Model.SubjectText)</span>
+                                            <span id="subjectDisplay">@Html.Raw(Html.Encode(Model.SubjectText))</span>
 
                                             @Html.HiddenFor(model => model.SubjectText, new { id = "QtxtSubject" })
                                         </td>
@@ -565,7 +565,7 @@
                                         <td style="text-align: left; font-weight: bold">Validity</td>
 
                                         <td style="text-align: left;">
-                                            <span id="validityDisplay">@Html.Raw(Model.Validity)</span>
+                                            <span id="validityDisplay">@Html.Raw(Html.Encode(Model.Validity))</span>
 
                                             @Html.HiddenFor(model => model.Validity, new { id = "QtxtValidity" })
                                         </td>
@@ -580,7 +580,7 @@
                                         <td style="text-align: left; font-weight: bold">Delivery Terms</td>
 
                                         <td style="text-align: left;">
-                                            <span id="deliveryTermsDisplay">@Html.Raw(Model.DeliveryTerms)</span>
+                                            <span id="deliveryTermsDisplay">@Html.Raw(Html.Encode(Model.DeliveryTerms))</span>
 
                                             @Html.HiddenFor(model => model.DeliveryTerms, new { id = "QtxtDeliveryTerms" })
                                         </td>
@@ -595,7 +595,7 @@
                                         <td style="text-align: left; font-weight: bold">Terms and Conditions</td>
 
                                         <td style="text-align:left;">
-                                            <span id="TermsConditionDisplay">@Html.Raw(Model.TermsandConditions)</span>
+                                            <span id="TermsConditionDisplay">@Html.Raw(Html.Encode(Model.TermsandConditions))</span>
 
                                             @Html.HiddenFor(model => model.TermsandConditions, new { id = "QtxtTermsCondition" })
                                         </td>

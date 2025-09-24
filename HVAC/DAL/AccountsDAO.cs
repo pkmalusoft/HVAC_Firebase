@@ -50,77 +50,77 @@ namespace HVAC.DAL
          
         public static string GetMaxVoucherNo(int FYearId, int BranchId, string VoucherType)
         {
-
-            SqlCommand cmd = new SqlCommand();
             string strConnString = ConfigurationManager.ConnectionStrings["myConnectionString"].ConnectionString;
-            cmd.Connection = new SqlConnection(strConnString);
-            cmd.CommandText = "SP_GetMaxVoucherNo";
-            cmd.CommandType = CommandType.StoredProcedure;
-
-            cmd.Parameters.Add("@FyearId", SqlDbType.Int);
-            cmd.Parameters["@FyearId"].Value = FYearId;
-
-            cmd.Parameters.AddWithValue("@VoucherType", VoucherType);
-
-            cmd.Parameters.AddWithValue("@BranchId", BranchId);
-            string voucherno = "";
-            try
+            using (SqlConnection connection = new SqlConnection(strConnString))
+            using (SqlCommand cmd = new SqlCommand())
             {
-                SqlDataAdapter da = new SqlDataAdapter(cmd);
-                DataSet ds = new DataSet();
-                da.Fill(ds);
-                if (ds != null && ds.Tables.Count > 0)
-                {
-                    for (int i = 0; i < ds.Tables[0].Rows.Count; i++)
-                    {
-                        voucherno = ds.Tables[0].Rows[0][0].ToString();
+                cmd.Connection = connection;
+                cmd.CommandText = "SP_GetMaxVoucherNo";
+                cmd.CommandType = CommandType.StoredProcedure;
 
+                cmd.Parameters.Add("@FyearId", SqlDbType.Int);
+                cmd.Parameters["@FyearId"].Value = FYearId;
+
+                cmd.Parameters.AddWithValue("@VoucherType", VoucherType);
+
+                cmd.Parameters.AddWithValue("@BranchId", BranchId);
+                string voucherno = "";
+                try
+                {
+                    SqlDataAdapter da = new SqlDataAdapter(cmd);
+                    DataSet ds = new DataSet();
+                    da.Fill(ds);
+                    if (ds != null && ds.Tables.Count > 0)
+                    {
+                        for (int i = 0; i < ds.Tables[0].Rows.Count; i++)
+                        {
+                            voucherno = ds.Tables[0].Rows[0][0].ToString();
+                        }
                     }
                 }
-
+                catch (Exception ex)
+                {
+                    return "";
+                }
+                return voucherno;
             }
-            catch (Exception ex)
-            {
-                return "";
-            }
-            return voucherno;
         }
         public static string GetMaxVoucherNo(int FYearId,int BranchId)
         {
-            
-            SqlCommand cmd = new SqlCommand();
             string strConnString = ConfigurationManager.ConnectionStrings["myConnectionString"].ConnectionString;
-            cmd.Connection = new SqlConnection(strConnString);
-            cmd.CommandText = "SP_GetMaxVoucherNo";
-            cmd.CommandType = CommandType.StoredProcedure;
-
-            cmd.Parameters.Add("@FyearId", SqlDbType.Int);
-            cmd.Parameters["@FyearId"].Value = FYearId;
-
-            cmd.Parameters.AddWithValue("@VoucherType", "");
-
-            cmd.Parameters.AddWithValue("@BranchId", BranchId);
-            string voucherno = "";
-            try
+            using (SqlConnection connection = new SqlConnection(strConnString))
+            using (SqlCommand cmd = new SqlCommand())
             {
-                SqlDataAdapter da = new SqlDataAdapter(cmd);
-                DataSet ds = new DataSet();
-                da.Fill(ds);                
-                if (ds != null && ds.Tables.Count > 0)
+                cmd.Connection = connection;
+                cmd.CommandText = "SP_GetMaxVoucherNo";
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                cmd.Parameters.Add("@FyearId", SqlDbType.Int);
+                cmd.Parameters["@FyearId"].Value = FYearId;
+
+                cmd.Parameters.AddWithValue("@VoucherType", "");
+
+                cmd.Parameters.AddWithValue("@BranchId", BranchId);
+                string voucherno = "";
+                try
                 {
-                    for (int i = 0; i < ds.Tables[0].Rows.Count; i++)
-                    {                        
-                        voucherno= ds.Tables[0].Rows[0][0].ToString();
-                        
+                    SqlDataAdapter da = new SqlDataAdapter(cmd);
+                    DataSet ds = new DataSet();
+                    da.Fill(ds);                
+                    if (ds != null && ds.Tables.Count > 0)
+                    {
+                        for (int i = 0; i < ds.Tables[0].Rows.Count; i++)
+                        {                        
+                            voucherno= ds.Tables[0].Rows[0][0].ToString();
+                        }
                     }
                 }
-                
+                catch (Exception ex)
+                {
+                    return "";
+                }
+                return voucherno;
             }
-            catch (Exception ex)
-            {
-                return "";
-            }
-            return voucherno;
         }
         public static int InsertOrUpdateAcBankDetails(AcBankDetail ObjectAcBankDetail, int isupdate)
         {

@@ -18,68 +18,68 @@ namespace HVAC.DAL
 
         public static List<CreditNoteVM> CustomerJVList(int FYearId, int BranchID, DateTime FromDate, DateTime ToDate, string CreditNoteNo, string InvoiceNo)
         {
-            SqlCommand cmd = new SqlCommand();
-            cmd.Connection = new SqlConnection(CommonFunctions.GetConnectionString);
-            cmd.CommandText = "CustomerJVList";
-            cmd.CommandType = CommandType.StoredProcedure;
-
-            cmd.Parameters.Add("@FYearID", SqlDbType.Int);
-            cmd.Parameters["@FYearID"].Value = FYearId;
-
-            cmd.Parameters.Add("@BranchID", SqlDbType.Int);
-            cmd.Parameters["@BranchID"].Value = BranchID;
-
-            cmd.Parameters.Add("@FromDate", SqlDbType.VarChar);
-            cmd.Parameters["@FromDate"].Value = FromDate.ToString("MM/dd/yyyy");
-
-            cmd.Parameters.Add("@ToDate", SqlDbType.VarChar);
-            cmd.Parameters["@ToDate"].Value = ToDate.ToString("MM/dd/yyyy");
-
-            cmd.Parameters.Add("@CreditNoteNo", SqlDbType.VarChar);
-            if (CreditNoteNo == null)
+            using (SqlConnection connection = new SqlConnection(CommonFunctions.GetConnectionString))
+            using (SqlCommand cmd = new SqlCommand())
             {
-                cmd.Parameters["@CreditNoteNo"].Value = "";
-            }
-            else
-            {
-                cmd.Parameters["@CreditNoteNo"].Value = CreditNoteNo;
-            }
-            cmd.Parameters.Add("@InvoiceNo", SqlDbType.VarChar);
-            if (InvoiceNo == null)
-            {
-                cmd.Parameters["@InvoiceNo"].Value = "";
-            }
-            else
+                cmd.Connection = connection;
+                cmd.CommandText = "CustomerJVList";
+                cmd.CommandType = CommandType.StoredProcedure;
 
-            {
-                cmd.Parameters["@InvoiceNo"].Value = InvoiceNo;
-            }
+                cmd.Parameters.Add("@FYearID", SqlDbType.Int);
+                cmd.Parameters["@FYearID"].Value = FYearId;
 
+                cmd.Parameters.Add("@BranchID", SqlDbType.Int);
+                cmd.Parameters["@BranchID"].Value = BranchID;
 
+                cmd.Parameters.Add("@FromDate", SqlDbType.VarChar);
+                cmd.Parameters["@FromDate"].Value = FromDate.ToString("MM/dd/yyyy");
 
-            SqlDataAdapter da = new SqlDataAdapter(cmd);
-            DataSet ds = new DataSet();
-            da.Fill(ds);
-            List<CreditNoteVM> objList = new List<CreditNoteVM>();
-            CreditNoteVM obj;
+                cmd.Parameters.Add("@ToDate", SqlDbType.VarChar);
+                cmd.Parameters["@ToDate"].Value = ToDate.ToString("MM/dd/yyyy");
 
-            if (ds != null && ds.Tables.Count > 0)
-            {
-                for (int i = 0; i < ds.Tables[0].Rows.Count; i++)
+                cmd.Parameters.Add("@CreditNoteNo", SqlDbType.VarChar);
+                if (CreditNoteNo == null)
                 {
-                    obj = new CreditNoteVM();
-                    obj.AcJournalID = CommonFunctions.ParseInt(ds.Tables[0].Rows[i]["AcJournalID"].ToString());
-                    obj.CreditNoteID = CommonFunctions.ParseInt(ds.Tables[0].Rows[i]["CreditNoteID"].ToString());
-                    obj.Date = Convert.ToDateTime(ds.Tables[0].Rows[i]["CreditNoteDate"].ToString());
-                    obj.CustomerID = CommonFunctions.ParseInt(ds.Tables[0].Rows[i]["CustomerID"].ToString());
-                    obj.CreditNoteNo = ds.Tables[0].Rows[i]["CreditNoteNo"].ToString();
-                    obj.CustomerName = ds.Tables[0].Rows[i]["CustomerName"].ToString();
-                    obj.Description = ds.Tables[0].Rows[i]["Description"].ToString();
-                    obj.Amount = Convert.ToDecimal(ds.Tables[0].Rows[i]["Amount"].ToString());
-                    objList.Add(obj);
+                    cmd.Parameters["@CreditNoteNo"].Value = "";
                 }
+                else
+                {
+                    cmd.Parameters["@CreditNoteNo"].Value = CreditNoteNo;
+                }
+                cmd.Parameters.Add("@InvoiceNo", SqlDbType.VarChar);
+                if (InvoiceNo == null)
+                {
+                    cmd.Parameters["@InvoiceNo"].Value = "";
+                }
+                else
+                {
+                    cmd.Parameters["@InvoiceNo"].Value = InvoiceNo;
+                }
+
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
+                DataSet ds = new DataSet();
+                da.Fill(ds);
+                List<CreditNoteVM> objList = new List<CreditNoteVM>();
+                CreditNoteVM obj;
+
+                if (ds != null && ds.Tables.Count > 0)
+                {
+                    for (int i = 0; i < ds.Tables[0].Rows.Count; i++)
+                    {
+                        obj = new CreditNoteVM();
+                        obj.AcJournalID = CommonFunctions.ParseInt(ds.Tables[0].Rows[i]["AcJournalID"].ToString());
+                        obj.CreditNoteID = CommonFunctions.ParseInt(ds.Tables[0].Rows[i]["CreditNoteID"].ToString());
+                        obj.Date = Convert.ToDateTime(ds.Tables[0].Rows[i]["CreditNoteDate"].ToString());
+                        obj.CustomerID = CommonFunctions.ParseInt(ds.Tables[0].Rows[i]["CustomerID"].ToString());
+                        obj.CreditNoteNo = ds.Tables[0].Rows[i]["CreditNoteNo"].ToString();
+                        obj.CustomerName = ds.Tables[0].Rows[i]["CustomerName"].ToString();
+                        obj.Description = ds.Tables[0].Rows[i]["Description"].ToString();
+                        obj.Amount = Convert.ToDecimal(ds.Tables[0].Rows[i]["Amount"].ToString());
+                        objList.Add(obj);
+                    }
+                }
+                return objList;
             }
-            return objList;
         }
         public static List<CreditNoteVM> CreditNoteList(int FYearId, int BranchID, DateTime FromDate, DateTime ToDate,string CreditNoteNo,string InvoiceNo)
         {
@@ -243,7 +243,7 @@ namespace HVAC.DAL
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw;
             }
 
 
@@ -269,7 +269,7 @@ namespace HVAC.DAL
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw;
             }
 
            

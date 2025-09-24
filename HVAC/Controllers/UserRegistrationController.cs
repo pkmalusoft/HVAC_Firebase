@@ -17,7 +17,7 @@ namespace HVAC.Controllers
 
         public ActionResult Index(int? RoleId=0)
         {
-            int branchid = Convert.ToInt32(Session["CurrentBranchID"].ToString());
+            int branchid = Session["CurrentBranchID"] != null ? Convert.ToInt32(Session["CurrentBranchID"].ToString()) : 0;
             List<RoleMasterVM> rollist = new List<RoleMasterVM>();
             RoleMasterVM _role = new RoleMasterVM { RoleID = 0, RoleName = "Select All" };
             rollist.Add(_role);
@@ -130,7 +130,7 @@ namespace HVAC.Controllers
             ViewBag.Branch = db.BranchMasters.ToList();
             if (id==0)
             {
-                var branchid = Convert.ToInt32(Session["CurrentBranchID"].ToString());
+                var branchid = Session["CurrentBranchID"] != null ? Convert.ToInt32(Session["CurrentBranchID"].ToString()) : 0;
                 v.UserID = 0;
                 v.IsActive = true;
                 v.DefaultBranchId = branchid;

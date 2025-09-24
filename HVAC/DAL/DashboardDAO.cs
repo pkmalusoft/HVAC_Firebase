@@ -17,44 +17,47 @@ namespace HVAC.DAL
     {
         public static List<EnquiryVM> GetDashboardEnquiryList(int BranchId, int FYearId,int EmployeeId,int RoleID)
         {
-            SqlCommand cmd = new SqlCommand();
-            cmd.Connection = new SqlConnection(CommonFunctions.GetConnectionString);
-            cmd.CommandText = "HVAC_DashboardEnquiryList";
-            cmd.CommandType = CommandType.StoredProcedure;
-            cmd.Parameters.AddWithValue("@FYearId", FYearId);
-            cmd.Parameters.AddWithValue("@BranchID", BranchId);            
-            cmd.Parameters.AddWithValue("@EmployeeId", EmployeeId);
-            cmd.Parameters.AddWithValue("@RoleID", RoleID);
-
-            SqlDataAdapter da = new SqlDataAdapter(cmd);
-            DataSet ds = new DataSet();
-            da.Fill(ds);
-            List<EnquiryVM> objList = new List<EnquiryVM>();
-            EnquiryVM obj;
-            if (ds != null && ds.Tables.Count > 0)
+            using (SqlConnection connection = new SqlConnection(CommonFunctions.GetConnectionString))
+            using (SqlCommand cmd = new SqlCommand())
             {
-                for (int i = 0; i < ds.Tables[0].Rows.Count; i++)
+                cmd.Connection = connection;
+                cmd.CommandText = "HVAC_DashboardEnquiryList";
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@FYearId", FYearId);
+                cmd.Parameters.AddWithValue("@BranchID", BranchId);            
+                cmd.Parameters.AddWithValue("@EmployeeId", EmployeeId);
+                cmd.Parameters.AddWithValue("@RoleID", RoleID);
+
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
+                DataSet ds = new DataSet();
+                da.Fill(ds);
+                List<EnquiryVM> objList = new List<EnquiryVM>();
+                EnquiryVM obj;
+                if (ds != null && ds.Tables.Count > 0)
                 {
-                    obj = new EnquiryVM();
-                    obj.EnquiryID = Convert.ToInt32(ds.Tables[0].Rows[i]["EnquiryID"].ToString());
-                    obj.EnquiryDate = CommonFunctions.ParseDate(ds.Tables[0].Rows[i]["EnquiryDate"].ToString());
-                    obj.EnquiryNo = ds.Tables[0].Rows[i]["EnquiryNo"].ToString();
-                    obj.EnquiryDate = Convert.ToDateTime(ds.Tables[0].Rows[i]["EnquiryDate"].ToString());
-                    obj.ProjectName = ds.Tables[0].Rows[i]["ProjectName"].ToString();
-                    obj.ProjectDescription = ds.Tables[0].Rows[i]["ProjectDescription"].ToString();
-                    obj.EnqStageName = ds.Tables[0].Rows[i]["EnqStageName"].ToString();
-                    obj.EnquiryStatus = ds.Tables[0].Rows[i]["EnqStatusName"].ToString();
-                    obj.PriorityName = ds.Tables[0].Rows[i]["PriorityName"].ToString();
-                    obj.ProjectNumber = ds.Tables[0].Rows[i]["ProjectNumber"].ToString();
-                    obj.CityName = ds.Tables[0].Rows[i]["City"].ToString();
-                    obj.ClientName = ds.Tables[0].Rows[i]["ClientName"].ToString();
-                    obj.ProjectPrefix = ds.Tables[0].Rows[i]["ProjectPrefix"].ToString();
-                    obj.CountryName = ds.Tables[0].Rows[i]["CountryName"].ToString();
-                    obj.AssignedEmps = ds.Tables[0].Rows[i]["EmployeeName"].ToString();
-                    objList.Add(obj);
+                    for (int i = 0; i < ds.Tables[0].Rows.Count; i++)
+                    {
+                        obj = new EnquiryVM();
+                            obj.EnquiryID = Convert.ToInt32(ds.Tables[0].Rows[i]["EnquiryID"].ToString());
+                        obj.EnquiryDate = CommonFunctions.ParseDate(ds.Tables[0].Rows[i]["EnquiryDate"].ToString());
+                        obj.EnquiryNo = ds.Tables[0].Rows[i]["EnquiryNo"].ToString();
+                        obj.EnquiryDate = Convert.ToDateTime(ds.Tables[0].Rows[i]["EnquiryDate"].ToString());
+                        obj.ProjectName = ds.Tables[0].Rows[i]["ProjectName"].ToString();
+                        obj.ProjectDescription = ds.Tables[0].Rows[i]["ProjectDescription"].ToString();
+                        obj.EnqStageName = ds.Tables[0].Rows[i]["EnqStageName"].ToString();
+                        obj.EnquiryStatus = ds.Tables[0].Rows[i]["EnqStatusName"].ToString();
+                        obj.PriorityName = ds.Tables[0].Rows[i]["PriorityName"].ToString();
+                        obj.ProjectNumber = ds.Tables[0].Rows[i]["ProjectNumber"].ToString();
+                        obj.CityName = ds.Tables[0].Rows[i]["City"].ToString();
+                        obj.ClientName = ds.Tables[0].Rows[i]["ClientName"].ToString();
+                        obj.ProjectPrefix = ds.Tables[0].Rows[i]["ProjectPrefix"].ToString();
+                        obj.CountryName = ds.Tables[0].Rows[i]["CountryName"].ToString();
+                        obj.AssignedEmps = ds.Tables[0].Rows[i]["EmployeeName"].ToString();
+                        objList.Add(obj);
+                    }
                 }
+                return objList;
             }
-            return objList;
         }
 
         public static DashboardViewModel GetDashboardSummary(int BranchId, int FYearId, int EmployeeId, int RoleID)
@@ -129,7 +132,7 @@ namespace HVAC.DAL
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw;
             }
 
         }

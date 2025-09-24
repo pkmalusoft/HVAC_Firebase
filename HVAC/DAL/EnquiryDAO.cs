@@ -14,51 +14,54 @@ namespace HVAC.DAL
     {
         public static List<EnquiryVM> EnquiryList(DateTime FromDate, DateTime ToDate, string EnquiryNo, int FyearId,int EmployeeId,int RoleID)
         {
-            int branchid = Convert.ToInt32(HttpContext.Current.Session["CurrentBranchID"].ToString());
-            SqlCommand cmd = new SqlCommand();
-            cmd.Connection = new SqlConnection(CommonFunctions.GetConnectionString);
-            cmd.CommandText = "HVAC_GetEnquiryList";
-            cmd.CommandType = CommandType.StoredProcedure;
-            cmd.Parameters.AddWithValue("@FromDate", FromDate.ToString("MM/dd/yyyy"));
-            cmd.Parameters.AddWithValue("@ToDate", ToDate.ToString("MM/dd/yyyy"));
-            cmd.Parameters.AddWithValue("@FYearId", FyearId);
-                        
-
-            if (EnquiryNo == null)
-                EnquiryNo = "";
-            cmd.Parameters.AddWithValue("@EnquiryNo", EnquiryNo);
-
-            cmd.Parameters.AddWithValue("@BranchID", branchid);
-            cmd.Parameters.AddWithValue("@EmployeeId", EmployeeId);
-            cmd.Parameters.AddWithValue("@RoleID",RoleID);
-
-            SqlDataAdapter da = new SqlDataAdapter(cmd);
-            DataSet ds = new DataSet();
-            da.Fill(ds);
-            List<EnquiryVM> objList = new List<EnquiryVM>();
-            EnquiryVM obj;
-            if (ds != null && ds.Tables.Count > 0)
+            int branchid = HttpContext.Current?.Session?["CurrentBranchID"] != null ? Convert.ToInt32(HttpContext.Current.Session["CurrentBranchID"].ToString()) : 0;
+            using (SqlConnection connection = new SqlConnection(CommonFunctions.GetConnectionString))
+            using (SqlCommand cmd = new SqlCommand())
             {
-                for (int i = 0; i < ds.Tables[0].Rows.Count; i++)
+                cmd.Connection = connection;
+                cmd.CommandText = "HVAC_GetEnquiryList";
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@FromDate", FromDate.ToString("MM/dd/yyyy"));
+                cmd.Parameters.AddWithValue("@ToDate", ToDate.ToString("MM/dd/yyyy"));
+                cmd.Parameters.AddWithValue("@FYearId", FyearId);
+                            
+
+                if (EnquiryNo == null)
+                    EnquiryNo = "";
+                cmd.Parameters.AddWithValue("@EnquiryNo", EnquiryNo);
+
+                cmd.Parameters.AddWithValue("@BranchID", branchid);
+                cmd.Parameters.AddWithValue("@EmployeeId", EmployeeId);
+                cmd.Parameters.AddWithValue("@RoleID",RoleID);
+
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
+                DataSet ds = new DataSet();
+                da.Fill(ds);
+                List<EnquiryVM> objList = new List<EnquiryVM>();
+                EnquiryVM obj;
+                if (ds != null && ds.Tables.Count > 0)
                 {
-                    obj = new EnquiryVM();
-                    obj.EnquiryID= Convert.ToInt32(ds.Tables[0].Rows[i]["EnquiryID"].ToString());
-                    obj.EnquiryDate = CommonFunctions.ParseDate(ds.Tables[0].Rows[i]["EnquiryDate"].ToString());
-                    obj.EnquiryNo = ds.Tables[0].Rows[i]["EnquiryNo"].ToString();
-                    obj.EnquiryDate = Convert.ToDateTime(ds.Tables[0].Rows[i]["EnquiryDate"].ToString());
-                    obj.ProjectName = ds.Tables[0].Rows[i]["ProjectName"].ToString();
-                    obj.ProjectDescription = ds.Tables[0].Rows[i]["ProjectDescription"].ToString();
-                    obj.EnqStageName = ds.Tables[0].Rows[i]["EnqStageName"].ToString();
-                    obj.EnquiryStatus = ds.Tables[0].Rows[i]["EnqStatusName"].ToString();
-                    obj.PriorityName = ds.Tables[0].Rows[i]["PriorityName"].ToString();
-                    obj.ProjectNumber = ds.Tables[0].Rows[i]["ProjectNumber"].ToString();
-                    obj.CityName = ds.Tables[0].Rows[i]["City"].ToString();
-                    obj.ProjectPrefix = ds.Tables[0].Rows[i]["ProjectPrefix"].ToString();
-                    obj.CountryName = ds.Tables[0].Rows[i]["CountryName"].ToString();
-                    objList.Add(obj);
+                    for (int i = 0; i < ds.Tables[0].Rows.Count; i++)
+                    {
+                        obj = new EnquiryVM();
+                        obj.EnquiryID= Convert.ToInt32(ds.Tables[0].Rows[i]["EnquiryID"].ToString());
+                        obj.EnquiryDate = CommonFunctions.ParseDate(ds.Tables[0].Rows[i]["EnquiryDate"].ToString());
+                        obj.EnquiryNo = ds.Tables[0].Rows[i]["EnquiryNo"].ToString();
+                        obj.EnquiryDate = Convert.ToDateTime(ds.Tables[0].Rows[i]["EnquiryDate"].ToString());
+                        obj.ProjectName = ds.Tables[0].Rows[i]["ProjectName"].ToString();
+                        obj.ProjectDescription = ds.Tables[0].Rows[i]["ProjectDescription"].ToString();
+                        obj.EnqStageName = ds.Tables[0].Rows[i]["EnqStageName"].ToString();
+                        obj.EnquiryStatus = ds.Tables[0].Rows[i]["EnqStatusName"].ToString();
+                        obj.PriorityName = ds.Tables[0].Rows[i]["PriorityName"].ToString();
+                        obj.ProjectNumber = ds.Tables[0].Rows[i]["ProjectNumber"].ToString();
+                        obj.CityName = ds.Tables[0].Rows[i]["City"].ToString();
+                        obj.ProjectPrefix = ds.Tables[0].Rows[i]["ProjectPrefix"].ToString();
+                        obj.CountryName = ds.Tables[0].Rows[i]["CountryName"].ToString();
+                        objList.Add(obj);
+                    }
                 }
+                return objList;
             }
-            return objList;
         }
 
 

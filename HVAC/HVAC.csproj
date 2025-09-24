@@ -384,7 +384,7 @@
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\ClientMasterVM.cs" />
-    <Compile Include="Models\ComapanyVM.cs" />
+    <Compile Include="Models\CompanyVM.cs" />
     <Compile Include="Models\CommonFunctions.cs" />
     <Compile Include="Models\CountryMaster.cs">
       <DependentUpon>Model1.tt</DependentUpon>

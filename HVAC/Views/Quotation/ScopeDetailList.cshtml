@@ -72,7 +72,7 @@
 
                     @Html.HiddenFor(modelitem => item1.Description, new { @id = "txtDescription1_" + @i, @class = " form-control-sm", @style = "width:100%" })
 
-                   @Html.Raw(@item1.Description) 
+                   @Html.Raw(Html.Encode(item1.Description)) 
 
                 </td>
 

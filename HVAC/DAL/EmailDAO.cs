@@ -183,37 +183,40 @@ namespace HVAC.DAL
 
         public static List<LocationVM> GetLocationName(string term)
         {
-            SqlCommand cmd = new SqlCommand();
-            cmd.Connection = new SqlConnection(CommonFunctions.GetConnectionString);
-            cmd.CommandText = "SP_QryGetLocation";
-            cmd.CommandType = CommandType.StoredProcedure;
-            if (term == null)
+            using (SqlConnection connection = new SqlConnection(CommonFunctions.GetConnectionString))
+            using (SqlCommand cmd = new SqlCommand())
             {
-                term = "";
-            }
-            cmd.Parameters.AddWithValue("@term", term);
-
-            SqlDataAdapter da = new SqlDataAdapter(cmd);
-            DataSet ds = new DataSet();
-            da.Fill(ds);
-
-            List<LocationVM> objList = new List<LocationVM>();
-
-            if (ds != null && ds.Tables.Count > 0)
-            {
-                for (int i = 0; i < ds.Tables[0].Rows.Count; i++)
+                cmd.Connection = connection;
+                cmd.CommandText = "SP_QryGetLocation";
+                cmd.CommandType = CommandType.StoredProcedure;
+                if (term == null)
                 {
-                    LocationVM obj = new LocationVM();
-                    obj.LocationID = CommonFunctions.ParseInt(ds.Tables[0].Rows[i]["LocationID"].ToString());
-                    obj.CityID = CommonFunctions.ParseInt(ds.Tables[0].Rows[i]["CityID"].ToString());
-                    obj.CountryID = CommonFunctions.ParseInt(ds.Tables[0].Rows[i]["CountryID"].ToString());
-                    obj.Location = ds.Tables[0].Rows[i]["Location"].ToString();
-                    obj.CityName = ds.Tables[0].Rows[i]["City"].ToString();
-                    obj.CountryName = ds.Tables[0].Rows[i]["CountryName"].ToString();
-                    objList.Add(obj);
+                    term = "";
                 }
+                cmd.Parameters.AddWithValue("@term", term);
+
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
+                DataSet ds = new DataSet();
+                da.Fill(ds);
+
+                List<LocationVM> objList = new List<LocationVM>();
+
+                if (ds != null && ds.Tables.Count > 0)
+                {
+                    for (int i = 0; i < ds.Tables[0].Rows.Count; i++)
+                    {
+                        LocationVM obj = new LocationVM();
+                        obj.LocationID = CommonFunctions.ParseInt(ds.Tables[0].Rows[i]["LocationID"].ToString());
+                        obj.CityID = CommonFunctions.ParseInt(ds.Tables[0].Rows[i]["CityID"].ToString());
+                        obj.CountryID = CommonFunctions.ParseInt(ds.Tables[0].Rows[i]["CountryID"].ToString());
+                        obj.Location = ds.Tables[0].Rows[i]["Location"].ToString();
+                        obj.CityName = ds.Tables[0].Rows[i]["City"].ToString();
+                        obj.CountryName = ds.Tables[0].Rows[i]["CountryName"].ToString();
+                        objList.Add(obj);
+                    }
+                }
+                return objList;
             }
-            return objList;
         }
     }
 }

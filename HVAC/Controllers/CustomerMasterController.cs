@@ -15,9 +15,16 @@ namespace HVAC.Controllers
        
         public ActionResult Index()
         {
-             
-
-            return View();
+            try
+            {
+                return View();
+            }
+            catch (Exception ex)
+            {
+                // Log the exception (implement logging framework)
+                ModelState.AddModelError("", "An error occurred while loading customers. Please try again.");
+                return View();
+            }
         }
 
        
@@ -31,14 +38,32 @@ namespace HVAC.Controllers
         // POST: /Currency/Create
 
         [HttpPost]
-
+        [ValidateAntiForgeryToken]
         public ActionResult Create(CurrencyVM v)
         {
-             
+            try
+            {
+                // Input validation
+                if (!ModelState.IsValid)
+                {
+                    return View(v);
+                }
 
-            return View();
+                // Additional custom validation
+                if (string.IsNullOrEmpty(v.CurrencyName))
+                {
+                    ModelState.AddModelError("CurrencyName", "Currency name is required.");
+                    return View(v);
+                }
 
-
+                return View();
+            }
+            catch (Exception ex)
+            {
+                // Log the exception (implement logging framework)
+                ModelState.AddModelError("", "An error occurred while creating the customer. Please try again.");
+                return View(v);
+            }
         }
 
         

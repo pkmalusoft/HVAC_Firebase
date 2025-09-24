@@ -39,49 +39,53 @@ namespace HVAC.DAL
        
         public static void SaveAuditLog(string Remarks,int JobId)
         {
-            int userid = Convert.ToInt32(HttpContext.Current.Session["UserID"].ToString());
-            SqlCommand cmd = new SqlCommand();
-            try
+            int userid = HttpContext.Current?.Session?["UserID"] != null ? Convert.ToInt32(HttpContext.Current.Session["UserID"].ToString()) : 0;
+            using (SqlConnection connection = new SqlConnection(CommonFunctions.GetConnectionString))
+            using (SqlCommand cmd = new SqlCommand())
             {
-                cmd.Connection = new SqlConnection(CommonFunctions.GetConnectionString);
-                cmd.CommandText = "SP_SaveAuditLog";
-                cmd.CommandType = CommandType.StoredProcedure;
-                cmd.Parameters.AddWithValue("@TransDate", CommonFunctions.GetCurrentDateTime());
-                cmd.Parameters.AddWithValue("@Remarks", Remarks);
-                cmd.Parameters.AddWithValue("@LoginID", userid);
-                cmd.Parameters.AddWithValue("@JobID", JobId);
-                cmd.Connection.Open();
-                cmd.ExecuteNonQuery();
+                try
+                {
+                    cmd.Connection = connection;
+                    cmd.CommandText = "SP_SaveAuditLog";
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@TransDate", CommonFunctions.GetCurrentDateTime());
+                    cmd.Parameters.AddWithValue("@Remarks", Remarks);
+                    cmd.Parameters.AddWithValue("@LoginID", userid);
+                    cmd.Parameters.AddWithValue("@JobID", JobId);
+                    connection.Open();
+                    cmd.ExecuteNonQuery();
+                }
+                catch(Exception ex)
+                {
+                    throw;
+                }
             }
-            catch(Exception ex)
-            {
-                throw ex;
-            }
-             
         }
 
         public static string GetMaxJobEnquiryNo(DateTime EnquiryDate, int BranchId, int FyearId)
         {
-            SqlCommand cmd = new SqlCommand();
-            cmd.Connection = new SqlConnection(CommonFunctions.GetConnectionString);
-            cmd.CommandText = "SP_GetMaxJOBEnquiryNo";
-            cmd.CommandType = CommandType.StoredProcedure;            
-            cmd.Parameters.AddWithValue("@EnquiryDate", Convert.ToDateTime(EnquiryDate).ToString("MM/dd/yyyy"));
-            cmd.Parameters.AddWithValue("@BranchId", BranchId);
-            cmd.Parameters.AddWithValue("@FYearId", FyearId);
-
-            SqlDataAdapter da = new SqlDataAdapter(cmd);
-            DataSet ds = new DataSet();
-            da.Fill(ds);
-            if (ds.Tables[0].Rows.Count > 0)
+            using (SqlConnection connection = new SqlConnection(CommonFunctions.GetConnectionString))
+            using (SqlCommand cmd = new SqlCommand())
             {
-                return ds.Tables[0].Rows[0][0].ToString();
-            }
-            else
-            {
-                return "";
-            }
+                cmd.Connection = connection;
+                cmd.CommandText = "SP_GetMaxJOBEnquiryNo";
+                cmd.CommandType = CommandType.StoredProcedure;            
+                cmd.Parameters.AddWithValue("@EnquiryDate", Convert.ToDateTime(EnquiryDate).ToString("MM/dd/yyyy"));
+                cmd.Parameters.AddWithValue("@BranchId", BranchId);
+                cmd.Parameters.AddWithValue("@FYearId", FyearId);
 
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
+                DataSet ds = new DataSet();
+                da.Fill(ds);
+                if (ds.Tables[0].Rows.Count > 0)
+                {
+                    return ds.Tables[0].Rows[0][0].ToString();
+                }
+                else
+                {
+                    return "";
+                }
+            }
         }
         public static List<string> GetRevenueGroupList()
         {

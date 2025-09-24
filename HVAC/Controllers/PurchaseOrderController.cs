@@ -22,12 +22,13 @@ namespace HVAC.Controllers
 
         public ActionResult Index()
         {
-
-            PurchaseOrderSearch obj = (PurchaseOrderSearch)Session["PurchaseOrderSearch"];
-            PurchaseOrderSearch model = new PurchaseOrderSearch();
-            int branchid = Convert.ToInt32(Session["CurrentBranchID"].ToString());
-            int depotId = 1; // Convert.ToInt32(Session["CurrentDepotID"].ToString());
-            int yearid = Convert.ToInt32(Session["fyearid"].ToString());
+            try
+            {
+                PurchaseOrderSearch obj = (PurchaseOrderSearch)Session["PurchaseOrderSearch"];
+                PurchaseOrderSearch model = new PurchaseOrderSearch();
+                int branchid = Session["CurrentBranchID"] != null ? Convert.ToInt32(Session["CurrentBranchID"].ToString()) : 0;
+                int depotId = 1; // Convert.ToInt32(Session["CurrentDepotID"].ToString());
+                int yearid = Session["fyearid"] != null ? Convert.ToInt32(Session["fyearid"].ToString()) : 0;
             ViewBag.SupplierType = db.SupplierTypes.ToList();
             if (obj == null || obj.FromDate.ToString().Contains("0001"))
             {
@@ -58,19 +59,30 @@ namespace HVAC.Controllers
             }
 
             return View(model);
-
+            }
+            catch (Exception ex)
+            {
+                // Log the exception (implement logging framework)
+                ModelState.AddModelError("", "An error occurred while loading the purchase orders. Please try again.");
+                return View(new PurchaseOrderSearch());
+            }
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult Index(PurchaseOrderSearch obj)
         {
-            Session["PurchaseOrderSearch"] = obj;
-            return RedirectToAction("Index");
+            if (ModelState.IsValid)
+            {
+                Session["PurchaseOrderSearch"] = obj;
+                return RedirectToAction("Index");
+            }
+            return View(obj);
         }
         public ActionResult Create(int id = 0, int PurchaseOrderID = 0)
         {
-            int branchid = Convert.ToInt32(Session["CurrentBranchID"].ToString());
-            int fyearid = Convert.ToInt32(Session["fyearid"].ToString());
+            int branchid = Session["CurrentBranchID"] != null ? Convert.ToInt32(Session["CurrentBranchID"].ToString()) : 0;
+            int fyearid = Session["fyearid"] != null ? Convert.ToInt32(Session["fyearid"].ToString()) : 0;
             var suppliers = db.SupplierMasters.ToList();
             ViewBag.Supplier = suppliers;
             ViewBag.Currency = db.CurrencyMasters.ToList();

@@ -19,25 +19,49 @@ namespace HVAC.Controllers
         //
         // GET: /Supplier/
 
+        [OutputCache(Duration = 180, VaryByParam = "none")]
         public ActionResult Index()
         {
+            try
+            {
                 var SupplierList = db.SupplierMasters.Where(cc=>cc.SupplierID >0).Where(cc => cc.SupplierTypeID == 1 || cc.SupplierTypeID == 2 || cc.SupplierTypeID==3).ToList();
                 ViewBag.pTitle = "Manage Supplier";
                 ViewBag.TypeId = 1;
-                return View(SupplierList);                      
+                return View(SupplierList);
+            }
+            catch (Exception ex)
+            {
+                // Log the exception (implement logging framework)
+                ModelState.AddModelError("", "An error occurred while loading suppliers. Please try again.");
+                return View(new List<SupplierMaster>());
+            }
         }
 
         //
         // GET: /Supplier/Details/5
 
-        public ActionResult Details(int id = 0)
+        /// <summary>
+        /// Displays supplier details asynchronously
+        /// </summary>
+        /// <param name="id">Supplier ID</param>
+        /// <returns>Supplier details view or 404 if not found</returns>
+        public async Task<ActionResult> Details(int id = 0)
         {
-            SupplierMaster supplier = db.SupplierMasters.Find(id);
-            if (supplier == null)
+            try
             {
-                return HttpNotFound();
+                var supplier = await db.SupplierMasters.FindAsync(id);
+                if (supplier == null)
+                {
+                    return HttpNotFound();
+                }
+                return View(supplier);
             }
-            return View(supplier);
+            catch (Exception ex)
+            {
+                // Log the exception (implement logging framework)
+                ModelState.AddModelError("", "An error occurred while loading supplier details. Please try again.");
+                return View(new SupplierMaster());
+            }
         }
 
         //
@@ -72,10 +96,18 @@ namespace HVAC.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create(SupplierMaster supplier)
         {
-            int branchid = Convert.ToInt32(Session["CurrentBranchID"].ToString());
-            int companyid = Convert.ToInt32(Session["CurrentCompanyID"].ToString());
-            //if (ModelState.IsValid)
-            //{
+            try
+            {
+                // Input validation
+                if (!ModelState.IsValid)
+                {
+                    var supplierMasterTypes = (from d in db.SupplierTypes select d).ToList();
+                    ViewBag.SupplierType = supplierMasterTypes;
+                    return View(supplier);
+                }
+
+                int branchid = Session["CurrentBranchID"] != null ? Convert.ToInt32(Session["CurrentBranchID"].ToString()) : 0;
+                int companyid = Session["CurrentCompanyID"] != null ? Convert.ToInt32(Session["CurrentCompanyID"].ToString()) : 0;
             //ViewBag.country = DropDownList<CountryMaster>.LoadItems(
 
             //ObjectSourceModel.GetCountry(), "CountryID", "CountryName");
@@ -145,6 +177,15 @@ namespace HVAC.Controllers
             }
             ViewBag.TypeId = TypeId;
             return View(supplier);
+            }
+            catch (Exception ex)
+            {
+                // Log the exception (implement logging framework)
+                ModelState.AddModelError("", "An error occurred while creating the supplier. Please try again.");
+                var supplierMasterTypes = (from d in db.SupplierTypes select d).ToList();
+                ViewBag.SupplierType = supplierMasterTypes;
+                return View(supplier);
+            }
         }
 
         //
@@ -233,6 +274,7 @@ namespace HVAC.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public JsonResult GetSupplierCode(string suppliername)
         {
             string status = "ok";

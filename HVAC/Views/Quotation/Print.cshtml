@@ -134,7 +134,7 @@
                 </p>
             </div>
             <div class="pdf-col">
-                @Html.Raw(@Model.SubjectText)               
+                @Html.Raw(Html.Encode(Model.SubjectText))               
             </div>
             <br />
             <div class="pdf-col">
@@ -161,7 +161,7 @@
                         <span class="important-notes">Supply of  @note.EquipmentName Model- @note.Model ( Qty : @note.Qty) </span>
                         foreach (var note1 in note.Items)
                         {
-                            <li style="margin-left:35px;">@Html.Raw(@note1.Description)</li>
+                            <li style="margin-left:35px;">@Html.Raw(Html.Encode(note1.Description))</li>
                         }
                     }
 
@@ -255,7 +255,7 @@
             <!-- LEFT SIDE: Important Notes -->
             <div class="pdf-col">
 
-                @Html.Raw(@Model.PaymentTerms)
+                @Html.Raw(Html.Encode(Model.PaymentTerms))
             </div>
 
 
@@ -267,7 +267,7 @@
             <!-- LEFT SIDE: Important Notes -->
             <div class="pdf-col">
 
-                @Html.Raw(@Model.Validity)
+                @Html.Raw(Html.Encode(Model.Validity))
             </div>
 
 
@@ -279,7 +279,7 @@
             <!-- LEFT SIDE: Important Notes -->
             <div class="pdf-col">
 
-                @Html.Raw(@Model.DeliveryTerms)
+                @Html.Raw(Html.Encode(Model.DeliveryTerms))
             </div>
 
 
@@ -296,7 +296,7 @@
                     {
 
 
-                        <li>@Html.Raw(warranty.Description)</li>
+                        <li>@Html.Raw(Html.Encode(warranty.Description))</li>
                     }
 
                 </ul>
@@ -319,7 +319,7 @@
                             {
 
 
-                                <li>@Html.Raw(warranty.Description)</li>
+                                <li>@Html.Raw(Html.Encode(warranty.Description))</li>
                             }
 
                         </ul>
@@ -338,7 +338,7 @@
                     <!-- LEFT SIDE: Important Notes -->
                     <div class="pdf-col">
 
-                        @Html.Raw(@Model.TermsandConditions)
+                        @Html.Raw(Html.Encode(Model.TermsandConditions))
                     </div>
 
 

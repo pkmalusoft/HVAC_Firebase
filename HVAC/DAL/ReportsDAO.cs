@@ -19,10 +19,10 @@ namespace HVAC.DAL
     {
         public static string GenerateDefaultReport()
         {
-            int branchid = Convert.ToInt32(HttpContext.Current.Session["CurrentBranchID"].ToString());
-            int yearid = Convert.ToInt32(HttpContext.Current.Session["fyearid"].ToString());
-            int userid = Convert.ToInt32(HttpContext.Current.Session["UserID"].ToString());
-            string usertype = HttpContext.Current.Session["UserType"].ToString();
+            int branchid = HttpContext.Current?.Session?["CurrentBranchID"] != null ? Convert.ToInt32(HttpContext.Current.Session["CurrentBranchID"].ToString()) : 0;
+            int yearid = HttpContext.Current?.Session?["fyearid"] != null ? Convert.ToInt32(HttpContext.Current.Session["fyearid"].ToString()) : 0;
+            int userid = HttpContext.Current?.Session?["UserID"] != null ? Convert.ToInt32(HttpContext.Current.Session["UserID"].ToString()) : 0;
+            string usertype = HttpContext.Current?.Session?["UserType"]?.ToString() ?? "";
             
             ReportDocument rd = new ReportDocument();
             rd.Load(Path.Combine(HostingEnvironment.MapPath("~/Reports"), "DefaultReport.rpt"));
@@ -50,10 +50,10 @@ namespace HVAC.DAL
         }
         public static string QuotationReport(int QuotationID,int ClientId)
         {
-            int branchid = Convert.ToInt32(HttpContext.Current.Session["CurrentBranchID"].ToString());
-            int yearid = Convert.ToInt32(HttpContext.Current.Session["fyearid"].ToString());
-            int userid = Convert.ToInt32(HttpContext.Current.Session["UserID"].ToString());
-            string usertype = HttpContext.Current.Session["UserType"].ToString();
+            int branchid = HttpContext.Current?.Session?["CurrentBranchID"] != null ? Convert.ToInt32(HttpContext.Current.Session["CurrentBranchID"].ToString()) : 0;
+            int yearid = HttpContext.Current?.Session?["fyearid"] != null ? Convert.ToInt32(HttpContext.Current.Session["fyearid"].ToString()) : 0;
+            int userid = HttpContext.Current?.Session?["UserID"] != null ? Convert.ToInt32(HttpContext.Current.Session["UserID"].ToString()) : 0;
+            string usertype = HttpContext.Current?.Session?["UserType"]?.ToString() ?? "";
 
             string strConnString = ConfigurationManager.ConnectionStrings["myConnectionString"].ConnectionString;
             SqlConnection sqlConn = new SqlConnection(strConnString);

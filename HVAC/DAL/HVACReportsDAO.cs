@@ -37,25 +37,27 @@ namespace HVAC.DAL
         {
             List<EnquirySummaryModel> summaryList = new List<EnquirySummaryModel>();
 
-            SqlCommand cmd = new SqlCommand();
-            cmd.Connection = new SqlConnection(CommonFunctions.GetConnectionString);
-            cmd.CommandText = "HVAC_GetMonthlyEnquirySummary";
-            cmd.CommandType = CommandType.StoredProcedure;
-            cmd.Parameters.AddWithValue("@Year", ID);
-            cmd.Connection.Open();
-            using (SqlDataReader reader = cmd.ExecuteReader())
+            using (SqlConnection connection = new SqlConnection(CommonFunctions.GetConnectionString))
+            using (SqlCommand cmd = new SqlCommand())
             {
-                while (reader.Read())
+                cmd.Connection = connection;
+                cmd.CommandText = "HVAC_GetMonthlyEnquirySummary";
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@Year", ID);
+                connection.Open();
+                using (SqlDataReader reader = cmd.ExecuteReader())
                 {
-                    summaryList.Add(new EnquirySummaryModel
+                    while (reader.Read())
                     {
-                        MonthName = reader["MonthName"].ToString(),
-                        EnquiriesReceived = Convert.ToInt32(reader["EnquiriesReceived"]),
-                        EnquiriesQuoted = Convert.ToInt32(reader["EnquiriesQuoted"])
-                    });
+                        summaryList.Add(new EnquirySummaryModel
+                        {
+                            MonthName = reader["MonthName"].ToString(),
+                            EnquiriesReceived = Convert.ToInt32(reader["EnquiriesReceived"]),
+                            EnquiriesQuoted = Convert.ToInt32(reader["EnquiriesQuoted"])
+                        });
+                    }
                 }
             }
-
 
             return summaryList;
 

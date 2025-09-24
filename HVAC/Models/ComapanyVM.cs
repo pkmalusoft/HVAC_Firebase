@@ -9,7 +9,7 @@ using System.Web;
 
 namespace HVAC.Models
 {
-  public class ComapanyVM
+  public class CompanyVM
   {
     public int AcCompanyID { get; set; }
 

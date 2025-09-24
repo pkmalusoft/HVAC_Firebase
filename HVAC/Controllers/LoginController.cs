@@ -74,8 +74,21 @@ namespace HVAC.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult Login(UserLoginVM u)
         {
+            // Input validation
+            if (!ModelState.IsValid)
+            {
+                return View(u);
+            }
+
+            if (string.IsNullOrEmpty(u.UserName) || string.IsNullOrEmpty(u.Password))
+            {
+                ModelState.AddModelError("", "Username and password are required.");
+                return View(u);
+            }
+
             int proleid = 0;
             int userid = 0;
             string roletype = "";
@@ -84,11 +97,11 @@ namespace HVAC.Controllers
             UserRegistration u1 = null;
             try
             {
-                u1 = (from c in db.UserRegistrations where c.UserName == u.UserName && c.Password==u.Password select c).FirstOrDefault();
-                //if (u1 != null && !VerifyPassword(u.Password, u1.Password))
-                //{
-                //    u1 = null; // Invalid password
-                //}
+                u1 = (from c in db.UserRegistrations where c.UserName == u.UserName select c).FirstOrDefault();
+                if (u1 != null && !VerifyPassword(u.Password, u1.Password))
+                {
+                    u1 = null; // Invalid password
+                }
                 if (u1 != null)
                 {
                     userid = u1.UserID;

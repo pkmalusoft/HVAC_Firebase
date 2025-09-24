@@ -258,7 +258,9 @@ namespace HVAC.Models
         
         public List<Menu> GetMenuSidebar(int RoleId)
         {
-            int branchid = Convert.ToInt32(HttpContext.Current.Session["CurrentBranchID"].ToString());
+            int branchid = HttpContext.Current?.Session?["CurrentBranchID"] != null 
+                ? Convert.ToInt32(HttpContext.Current.Session["CurrentBranchID"].ToString()) 
+                : 0;
 
             if (RoleId == 1)
             {

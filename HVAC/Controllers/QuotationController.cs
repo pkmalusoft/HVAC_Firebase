@@ -23,7 +23,7 @@ using System.Configuration;
 using System.Threading.Tasks;
 using Ganss.Xss;
 
-namespace HVAC.Views
+namespace HVAC.Controllers
 {
 
     [SessionExpireFilter]
@@ -31,15 +31,17 @@ namespace HVAC.Views
     {
         HVACEntities db = new HVACEntities();
         // GET: Quotationroller
+        [OutputCache(Duration = 120, VaryByParam = "none")]
         public ActionResult Index()
         {
-
-            QuotationSearch obj = (QuotationSearch)Session["QuotationSearch"];
-            QuotationSearch model = new QuotationSearch();
-            int branchid = Convert.ToInt32(Session["CurrentBranchID"].ToString());
-            int yearid = Convert.ToInt32(Session["fyearid"].ToString());
-            int userid = Convert.ToInt32(Session["UserID"].ToString());
-            int RoleID = Convert.ToInt32(Session["UserRoleID"].ToString());
+            try
+            {
+                QuotationSearch obj = (QuotationSearch)Session["QuotationSearch"];
+                QuotationSearch model = new QuotationSearch();
+                int branchid = Session["CurrentBranchID"] != null ? Convert.ToInt32(Session["CurrentBranchID"].ToString()) : 0;
+                int yearid = Session["fyearid"] != null ? Convert.ToInt32(Session["fyearid"].ToString()) : 0;
+                int userid = Session["UserID"] != null ? Convert.ToInt32(Session["UserID"].ToString()) : 0;
+                int RoleID = Session["UserRoleID"] != null ? Convert.ToInt32(Session["UserRoleID"].ToString()) : 0;
             int EmployeeId = 0;
             if (RoleID != 1)
             {
@@ -72,33 +74,45 @@ namespace HVAC.Views
                 model.ToDate = GeneralDAO.CheckParamDate(obj.ToDate, yearid).Date;
             }
 
-            List<QuotationVM> lst = EnquiryDAO.QuotationList(model.FromDate, model.ToDate, model.EnquiryNo, model.QuotationNo, EmployeeId, branchid, yearid);
-            model.Details = lst;
+                List<QuotationVM> lst = EnquiryDAO.QuotationList(model.FromDate, model.ToDate, model.EnquiryNo, model.QuotationNo, EmployeeId, branchid, yearid);
+                model.Details = lst;
 
-            return View(model);
-
-
+                return View(model);
+            }
+            catch (Exception ex)
+            {
+                // Log the exception (implement logging framework)
+                ModelState.AddModelError("", "An error occurred while loading quotations. Please try again.");
+                return View(new QuotationSearch());
+            }
         }
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult Index(QuotationSearch obj)
         {
-            Session["QuotationSearch"] = obj;
-            return RedirectToAction("Index");
+            if (ModelState.IsValid)
+            {
+                Session["QuotationSearch"] = obj;
+                return RedirectToAction("Index");
+            }
+            return View(obj);
         }
 
 
         public ActionResult Create(int id = 0, string EnquiryNo = "", int QuotationId = 0)
         {
-            int EnquiryID = 0;
-            if (EnquiryNo != "")
+            try
             {
-                var _Enquiry = db.Enquiries.Where(cc => cc.EnquiryNo == EnquiryNo).FirstOrDefault();
-                EnquiryID = _Enquiry.EnquiryID;
-            }
-            QuotationVM vm = new QuotationVM();
-            int fyearid = Convert.ToInt32(Session["fyearid"].ToString());
-            int branchId = Convert.ToInt32(Session["CurrentBranchID"].ToString());
-            int userid = Convert.ToInt32(Session["UserID"].ToString());
+                int EnquiryID = 0;
+                if (EnquiryNo != "")
+                {
+                    var _Enquiry = db.Enquiries.Where(cc => cc.EnquiryNo == EnquiryNo).FirstOrDefault();
+                    EnquiryID = _Enquiry?.EnquiryID ?? 0;
+                }
+                QuotationVM vm = new QuotationVM();
+                int fyearid = Session["fyearid"] != null ? Convert.ToInt32(Session["fyearid"].ToString()) : 0;
+                int branchId = Session["CurrentBranchID"] != null ? Convert.ToInt32(Session["CurrentBranchID"].ToString()) : 0;
+                int userid = Session["UserID"] != null ? Convert.ToInt32(Session["UserID"].ToString()) : 0;
             var useremployee = db.EmployeeMasters.Where(cc => cc.UserID == userid).FirstOrDefault();
             ViewBag.EstimationCategory = db.EstimationCategories.Where(cc => cc.ID != 4).ToList();
             ViewBag.Unit = db.ItemUnits.ToList();
@@ -161,8 +175,8 @@ namespace HVAC.Views
 
                 if (item.QuotationStatusID > 0)
                 {
-                    var _status = db.QuotationStatus.Find(vm.QuotationStatusID).Status;
-                    vm.QuotationStatus = _status;
+                    var _status = db.QuotationStatus.FirstOrDefault(s => s.QuotationStatusID == vm.QuotationStatusID);
+                    vm.QuotationStatus = _status?.Status ?? "";
                 }
                 vm.QuotationDetails = EnquiryDAO.QuotationEquipment(item.EnquiryID, item.QuotationID);
                 ViewBag.QuotationMode = "Revision";
@@ -346,7 +360,8 @@ namespace HVAC.Views
                 vm.ClientPOID = item.ClientPOID;
                 if (vm.ClientPOID>0)
                 {
-                    vm.ClientPONO = db.JobPurchaseOrderDetails.Find(vm.ClientPOID).PONumber;
+                    var poDetail = db.JobPurchaseOrderDetails.FirstOrDefault(p => p.JobPurchaseOrderDetailID == vm.ClientPOID);
+                    vm.ClientPONO = poDetail?.PONumber ?? "";
                 }
                 vm.MarginPercent = Convert.ToDecimal(item.MarginPercent ?? 0); 
                 vm.Margin = Convert.ToDecimal(item.Margin ?? 0);
@@ -404,8 +419,8 @@ namespace HVAC.Views
                 //vm.QuotationTerms = _detail4;
                 vm.QuotationContacts = _detail5;
                 ViewBag.Title = "Modify";
-                var _EmployeeMaster = db.EmployeeMasters.Find(vm.EngineerID);
-                vm.EmployeeName = _EmployeeMaster.FirstName + " " + _EmployeeMaster.LastName;                
+                var _EmployeeMaster = db.EmployeeMasters.FirstOrDefault(e => e.EmployeeID == vm.EngineerID);
+                vm.EmployeeName = _EmployeeMaster != null ? _EmployeeMaster.FirstName + " " + _EmployeeMaster.LastName : "";                
 
                 //if (_EmployeeMaster == null)
                 //{
@@ -419,16 +434,24 @@ namespace HVAC.Views
             }
 
             return View(vm);
+            }
+            catch (Exception ex)
+            {
+                // Log the exception (implement logging framework)
+                ModelState.AddModelError("", "An error occurred while loading the quotation. Please try again.");
+                return View(new QuotationVM());
+            }
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public JsonResult SaveQuotation(Quotation quotation, List<QuotationDetailVM> Details)
         {
-            int fyearid = Convert.ToInt32(Session["fyearid"].ToString());
-            int branchId = Convert.ToInt32(Session["CurrentBranchID"].ToString());
+            int fyearid = Session["fyearid"] != null ? Convert.ToInt32(Session["fyearid"].ToString()) : 0;
+            int branchId = Session["CurrentBranchID"] != null ? Convert.ToInt32(Session["CurrentBranchID"].ToString()) : 0;
             //ViewBag.Unit = db.ItemUnits.ToList();
-            int userid = Convert.ToInt32(Session["UserID"].ToString());
-            string UserName = Session["UserName"].ToString();
+            int userid = Session["UserID"] != null ? Convert.ToInt32(Session["UserID"].ToString()) : 0;
+            string UserName = Session["UserName"]?.ToString() ?? "";
             var IDetails = Details;
 
             using (var transaction = db.Database.BeginTransaction())
