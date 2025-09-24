@@ -71,11 +71,11 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            font-size: 14px;
+            font-size: 25px;
             color: #000;
         }
         .important-notes {
-            font-size: 15px;
+            font-size: 25px;
             color: blue;
             font-weight: bold;
             padding-top: 10px;
@@ -99,17 +99,10 @@
         .highlight {
             background: #f8f9fa;
             font-weight: bold;
-        }
-
-        .po-header {
-            font-size: 16px;
-            font-weight: bold;
-        }
-
-        .footer {
-            margin-top: 20px;
-            font-size: 12px;
-            text-align: left;
+        }        
+        
+        .p{
+            line-height:2;
         }
     </style>
     <div class="container" style="background-color:white;">
@@ -118,15 +111,26 @@
         <div class="pdf-two-col mt-3">
             <h2 style="margin:0; font-weight:bold; text-transform:uppercase;text-align:center">Quotation</h2>
             <div class="pdf-col">
+                <div style="display: flex; justify-content: space-between;">
+                    <div>
+                        <strong>OUR REF:</strong> @Model.EnquiryNo
+                    </div>
+                    <div>
+                        <strong>Date:</strong> @Convert.ToDateTime(@Model.QuotationDate).ToString("dd-MMM-yyyy")
+                    </div>
+                </div>
+            
 
-                <p style="line-height:25px;">
-                    <strong>OUR REF:</strong> @Model.EnquiryNo<br />
-                    <strong>Date:</strong> @Convert.ToDateTime(@Model.QuotationDate).ToString("dd-MMM-yyyy")<br />
+                <p style="margin-top:20px">
+                    <strong style="font-size:20px">@Model.ClientDetail</strong><br />
+                    <strong>@Model.QuoteClientAddress</strong><br />
+                    <strong>@Model.QuoteClientLocation</strong><br />
 
-                    <strong>Project Name:</strong> @Model.ProjectName<br />
-                    <strong>@Model.ClientDetail</strong><br />
-                    <strong>@Model.QuoteClientDetail</strong><br />
-                    <strong>Kind Attn:@Model.ContactPerson  </strong>
+
+                </p>
+                <p style="margin-top:20px">
+                    <strong>Kind Attn:@Model.ContactPerson  </strong><br />
+                    <strong>EmailID :@Model.QuoteClientEmailId </strong>
                 </p>
             </div>
             <div class="pdf-col">
@@ -148,7 +152,7 @@
 
 
 
-        <strong style="font-size:15px"> Scope of Work : </strong>
+        <strong> Scope of Work : </strong>
         <div class="pdf-two-col">
 
             <!-- LEFT SIDE: Important Notes -->
@@ -173,7 +177,7 @@
         <br />
         <br />
         <!-- Items Table -->
-        <table style="width:100%; border:1px solid #ddd; border-collapse:collapse; font-family:Arial, sans-serif; font-size:14px;">
+        <table style="width:100%; border:1px solid #ddd; border-collapse:collapse;">
             <thead class="table-light">
                 <tr style="padding: 8px; background: #808080; color: white; border-bottom: 2px solid #fff;">
 
@@ -248,7 +252,7 @@
                 </tr>
             </tfoot>
         </table>
-        <strong style="font-size:15px">Payment Terms </strong>
+        <strong>Payment Terms </strong>
 
         <div class="pdf-two-col" style="margin-top:10px">
 
@@ -261,7 +265,7 @@
 
         </div>
         <br />
-        <strong style="font-size:15px">Validity</strong>
+        <strong>Validity</strong>
         <div class="pdf-two-col" style="margin-top:10px">
 
             <!-- LEFT SIDE: Important Notes -->
@@ -273,7 +277,7 @@
 
         </div>
         <br />
-        <strong style="font-size:15px">Delivery Terms</strong>
+        <strong>Delivery Terms</strong>
         <div class="pdf-two-col" style="margin-top:10px">
 
             <!-- LEFT SIDE: Important Notes -->
@@ -285,7 +289,7 @@
 
         </div>
         <br />
-        <strong style="font-size:15px">Warranty</strong>
+        <strong>Warranty</strong>
         <div class="pdf-two-col" style="margin-top:10px">
 
             <!-- LEFT SIDE: Important Notes -->
@@ -305,7 +309,7 @@
 
         </div>
 
-        <strong style="font-size:15px">Exclusion:</strong>
+        <strong>Exclusion:</strong>
         <div class="pdf-two-col" style="margin-top:10px">
 
             <!-- LEFT SIDE: Important Notes -->
@@ -324,7 +328,7 @@
 
 
         </div>
-        <strong style="font-size:15px">Terms and Condition</strong>
+        <strong>Terms and Condition</strong>
         <div class="pdf-two-col" style="margin-top:10px">
 
             <!-- LEFT SIDE: Important Notes -->

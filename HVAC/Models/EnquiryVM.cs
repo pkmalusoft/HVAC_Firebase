@@ -183,6 +183,9 @@ namespace HVAC.Models
         public string ProjectNo { get; set; }
         public int JobHandOverID { get; set; }
         public decimal GrossAmount { get; set; }
+        public string QuoteClientLocation { get; set; }
+        public string QuoteClientAddress { get; set; }
+        public string QuoteClientEmailId { get; set; }
         public string QuoteClientDetail { get; set; }
         public string ClientPONO { get; set; }
         public string QuotationValueInWords { get; set; }

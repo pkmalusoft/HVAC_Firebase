@@ -29,17 +29,17 @@
 
             <label for="ClientID" class="col-form-label" style="font-weight:bold">Quotation To</label>
             @Html.DropDownListFor(model => model.ClientID,
-                new SelectList(ViewBag.Client, "ClientID", "ClientName"),
-                "Select",
-                new
-                     {
-                    @class = "form-select",
-                    @required = "required",
-                    @id = "ClientID",
-                    @svalue = Model.ClientID,
-                    @style="widht:90%"
-                }
-            )
+  new SelectList(ViewBag.Client, "ClientID", "ClientName"),
+  "Select",
+  new
+  {
+      @class = "form-select",
+      @required = "required",
+      @id = "ClientID",
+      @svalue = Model.ClientID,
+      @style = "widht:90%"
+  }
+)
             @Html.HiddenFor(model => model.QuotationID, new { @id = "QuotationID" })
         </div>
     </div>
@@ -54,7 +54,7 @@
     </div>
     <div class="col-md-6 text-md-end" style="padding-top:10px">
         <div class="mb-2">
-            <a href="@Url.Action("PrintPDF","Quotation",new { Id = Model.QuotationID, ClientID= Model.ClientID })"
+            <a href="@Url.Action("PrintPDF", "Quotation", new { Id = Model.QuotationID, ClientID = Model.ClientID })"
                class="btn btn-warning" target="_blank">
                 <i class="fa fa-file-download" style="font-size:18px"></i> Download PDF
             </a>
@@ -71,11 +71,11 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            font-size: 14px;
+            font-size: 22px;
             color: #000;
         }
         .important-notes {
-            font-size: 15px;
+            font-size: 25px;
             color: blue;
             font-weight: bold;
             padding-top: 10px;
@@ -99,44 +99,45 @@
         .highlight {
             background: #f8f9fa;
             font-weight: bold;
-        }
-
-        .po-header {
-            font-size: 16px;
-            font-weight: bold;
-        }
-
-        .footer {
-            margin-top: 20px;
-            font-size: 12px;
-            text-align: left;
+        }        
+        
+        .p{
+            line-height:2;
         }
     </style>
     <div class="container" style="background-color:white;">
         @Html.HiddenFor(mode => mode.QuotationID, new { @class = "form-control" })
-        
+
         <div class="pdf-two-col mt-3">
-            <h2 style="margin:0; font-weight:bold; text-transform:uppercase;text-align:center">Quotation</h2>
+            <h2 style="margin:0; font-weight:bold; text-transform:uppercase;text-align:center">Quotation</h2> <br />
             <div class="pdf-col">
+                <div style="display: flex; justify-content: space-between;">
+                    <div>
+                        <strong>OUR REF:</strong> @Model.EnquiryNo
+                    </div>
+                    <div>
+                        <strong>Date:</strong> @Convert.ToDateTime(@Model.QuotationDate).ToString("dd-MMM-yyyy")
+                    </div>
+                </div>
 
-                <p style="line-height:25px;">
-                    <strong>OUR REF:</strong> @Model.EnquiryNo<br />
-                    <strong>Date:</strong> @Convert.ToDateTime(@Model.QuotationDate).ToString("dd-MMM-yyyy")<br />
 
-                    <strong>Project Name:</strong> @Model.ProjectName<br />
+                <p style="margin-top:20px">
                     <strong>@Model.ClientDetail</strong><br />
-                    <strong>@Model.QuoteClientDetail</strong><br />
-                    <strong>Kind Attn:@Model.ContactPerson  </strong>
-                </p>
-            </div>
-            <div class="pdf-col">
-                <p>
-                    <strong>Project : @Model.ProjectName:</strong>
-                </p>
-                <p>@Html.Raw(@Model.SubjectText) </p>
-            </div>
-            <div class="pdf-col">
+                    <strong>@Model.QuoteClientAddress</strong><br />
+                    <strong>@Model.QuoteClientLocation</strong><br />
 
+
+                </p>
+                <p style="margin-top:20px">
+                    <strong>Kind Attn.:@Model.ContactPerson  </strong><br />
+                    <strong>Email:@Model.QuoteClientEmailId </strong>
+                </p>
+            </div>
+            <div class="pdf-col">
+                @Html.Raw(@Model.SubjectText)               
+            </div>
+            <br />
+            <div class="pdf-col">
                 <strong>Dear Sir,</strong> <br />
                 <p style="text-align:justify">
                     We thank you for inviting us to quote for the subject stated above.  We are
@@ -148,7 +149,7 @@
 
 
 
-        <strong style="font-size:15px"> Scope of Work : </strong>
+        <strong> Scope of Work : </strong>
         <div class="pdf-two-col">
 
             <!-- LEFT SIDE: Important Notes -->
@@ -170,10 +171,8 @@
 
         </div>
 
-        <br />
-        <br />
         <!-- Items Table -->
-        <table style="width:100%; border:1px solid #ddd; border-collapse:collapse; font-family:Arial, sans-serif; font-size:14px;">
+        <table style="width:100%; border:1px solid #ddd; border-collapse:collapse;margin-top:10px">
             <thead class="table-light">
                 <tr style="padding: 8px; background: #808080; color: white; border-bottom: 2px solid #fff;">
 
@@ -239,7 +238,7 @@
 
                 </tr>
                 <tr style="background: #808080; border-bottom: 1px solid #eee; ">
-                    <td colspan="2" style="padding: 8px; font-weight: bold; text-align: left; color: white">@Model.QuotationValueInWords</td>
+                    <td colspan="2" style="font-size:18px;padding: 8px; font-weight: bold; text-align: left; color: white">@Model.QuotationValueInWords</td>
                     <td colspan="2" style="padding: 8px; font-weight: bold; color: white">Net Total</td>
 
                     <td style="padding: 8px;text-align: right; color: white; font-weight: bold;">@string.Format(new CultureInfo("en-US"), "{0:C3}", @Model.QuotationValue).Replace("$", "OMR")</td>
@@ -248,9 +247,10 @@
                 </tr>
             </tfoot>
         </table>
-        <strong style="font-size:15px">Payment Terms </strong>
 
-        <div class="pdf-two-col" style="margin-top:10px">
+        <br />
+        <strong>Payment Terms </strong>
+        <div class="pdf-two-col">
 
             <!-- LEFT SIDE: Important Notes -->
             <div class="pdf-col">
@@ -261,7 +261,7 @@
 
         </div>
         <br />
-        <strong style="font-size:15px">Validity</strong>
+        <strong>Validity</strong>
         <div class="pdf-two-col" style="margin-top:10px">
 
             <!-- LEFT SIDE: Important Notes -->
@@ -273,8 +273,8 @@
 
         </div>
         <br />
-        <strong style="font-size:15px">Delivery Terms</strong>
-        <div class="pdf-two-col" style="margin-top:10px">
+        <strong>Delivery Terms</strong>
+       
 
             <!-- LEFT SIDE: Important Notes -->
             <div class="pdf-col">
@@ -283,10 +283,10 @@
             </div>
 
 
-        </div>
+       
         <br />
-        <strong style="font-size:15px">Warranty</strong>
-        <div class="pdf-two-col" style="margin-top:10px">
+        <strong>Warranty</strong>
+      
 
             <!-- LEFT SIDE: Important Notes -->
             <div class="pdf-col">
@@ -300,60 +300,67 @@
                     }
 
                 </ul>
-            </div>
+         
 
 
         </div>
+        @{
+            if (Model.QuotationExclusionDetails.Count > 0)
+            {
+                <br />
+                <strong>Exclusion:</strong>
+                <div class="pdf-two-col" style="margin-top:10px">
 
-        <strong style="font-size:15px">Exclusion:</strong>
-        <div class="pdf-two-col" style="margin-top:10px">
+                    <!-- LEFT SIDE: Important Notes -->
+                    <div class="pdf-col">
 
-            <!-- LEFT SIDE: Important Notes -->
-            <div class="pdf-col">
-
-                <ul>
-                    @foreach (var warranty in Model.QuotationExclusionDetails)
-                    {
-
-
-                        <li>@Html.Raw(warranty.Description)</li>
-                    }
-
-                </ul>
-            </div>
+                        <ul>
+                            @foreach (var warranty in Model.QuotationExclusionDetails)
+                            {
 
 
-        </div>
-        <strong style="font-size:15px">Terms and Condition</strong>
-        <div class="pdf-two-col" style="margin-top:10px">
+                                <li>@Html.Raw(warranty.Description)</li>
+                            }
 
-            <!-- LEFT SIDE: Important Notes -->
-            <div class="pdf-col">
+                        </ul>
+                    </div>
+                </div>
+            }
+        }
 
-                @Html.Raw(@Model.TermsandConditions)
-            </div>
+        @{
+            if (Model.TermsandConditions != "" & Model.TermsandConditions != null)
+            {
+                <br />
+                <strong>Terms and Condition</strong>
+                <div class="pdf-two-col" style="margin-top:10px">
+
+                    <!-- LEFT SIDE: Important Notes -->
+                    <div class="pdf-col">
+
+                        @Html.Raw(@Model.TermsandConditions)
+                    </div>
 
 
-        </div>
-        <br />
-        <br />
+                </div>
+            }
+        }
         <br />
         <div>
             <p style="text-align:justify">
                 We trust you will find the above offer in line with your requirement .In case you
                 shall require any further clarifications, please feel free to contact us.
                 Thanking you and assuring you our best attention at all times.
-
             </p>
         </div>
         <!-- Footer -->
         <div class="">
-            <b>Yours truly,</b>
+
 
             <!-- Signatory Section -->
             <div style="width:100%; text-align:left; margin-top:50px; white-space:nowrap;">
-
-                <b>@Model.EmployeeName</b>
+                <b>Yours truly,</b><br />
+                @Model.EmployeeName <br /><br /><br />
                 <!-- Received By -->
                 <div style="width:32%; text-align:left; vertical-align:top;">
                     <div style="height:60px; border-bottom:1px solid #000; margin-bottom:5px;"></div>

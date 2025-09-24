@@ -467,7 +467,7 @@ namespace HVAC.DAL
                     obj.EmployeeName = ds.Tables[0].Rows[i]["EmployeeName"].ToString();
                     obj.QuotationStatus = ds.Tables[0].Rows[i]["Status"].ToString();                    
                     obj.CreatedDate = Convert.ToDateTime(ds.Tables[0].Rows[i]["CreatedDate"].ToString());
-                    obj.QuoteClientDetail = "";
+                    obj.QuoteClientLocation = "";
                     string _quotationclient = "";
                     for (int j = 0; j < ds.Tables[1].Rows.Count; j++)
                     {

@@ -813,6 +813,7 @@
     <Content Include="assets\images\profile-img.png" />
     <Content Include="assets\images\CompanyLogo.png" />
     <Content Include="assets\images\QuotationFooter.jpg" />
+    <Content Include="assets\images\QuotationFooter1.jpg" />
     <Content Include="assets\images\QuotationHeader.jpg" />
     <Content Include="assets\images\small\img-1.jpg" />
     <Content Include="assets\images\small\img-2.jpg" />

@@ -2351,7 +2351,7 @@ namespace HVAC.Views
             string customSwitches = $"--header-html {headerUrl} " +
                                   $"--header-spacing 3 " +
                                   $"--footer-html {footerUrl} " +
-                                  $"--footer-spacing 30";
+                                  $"--footer-spacing 0";
             //ReportsDAO.QuotationReport(Id, ClientID);
             QuotationVM vm = new QuotationVM();
             vm = GetQuotationPrintData(Id, ClientID);
@@ -2361,7 +2361,7 @@ namespace HVAC.Views
                 FileName = "Quotation_" + vm.QuotationNo + ".pdf",
                 PageOrientation = Rotativa.Options.Orientation.Portrait,
                 PageSize = Rotativa.Options.Size.A4,
-                PageMargins = new Rotativa.Options.Margins(50, 20, 70, 20),
+                PageMargins = new Rotativa.Options.Margins(50, 20, 50, 30),
                 CustomSwitches = customSwitches
 
             };
@@ -2387,12 +2387,24 @@ namespace HVAC.Views
             var quotecontact = db.QuotationContacts.Where(cc => cc.ClientID == ClientID).FirstOrDefault();
             if (quotecontact != null)
             {
-                vm.ContactPerson = db.QuotationContacts.Where(cc => cc.ClientID == ClientID).FirstOrDefault().ContactName;
+                
+                vm.ContactPerson = quotecontact.ContactName;
+                vm.QuoteClientEmailId = quotecontact.EmailID;
+
                 string clientaddress = "";
                 var _clientcity = db.CityMasters.Find(_client.CityID).City;
+                if (_clientcity == "Unknown")
+                    _clientcity = "";
+
+
                 var _clientcountry = db.CountryMasters.Find(_client.CountryID).CountryName;
-                clientaddress = _clientcity + " " + _clientcountry;
-                vm.QuoteClientDetail = clientaddress;
+                if (_clientcountry == "Unknown")
+                    _clientcountry = "";
+
+                clientaddress = _clientcity + "," + _clientcountry;
+                vm.QuoteClientAddress = _client.Address1;
+                vm.QuoteClientLocation = clientaddress; 
+                
             }
             vm.Version = item.Version;
             vm.CurrencyId = item.CurrencyId;
