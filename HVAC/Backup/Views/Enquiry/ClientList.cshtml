@@ -1,0 +1,204 @@
+﻿@model HVAC.Models.EnquiryVM
+@{
+    Layout = null;
+    var i = 0;
+}
+<style>
+    ul.ui-front {
+        z-index: 1100;
+    }
+</style>
+<script type="text/javascript">
+    $(document).ready(function () {
+       $("#cCountryName").autocomplete({
+            source: function (request, response) {
+                $.ajax({
+                    url: '/LocationMaster/GetCountryName',
+                    datatype: "json",
+                    data: {
+                        term: request.term
+                    },
+                    success: function (data) {
+                        response($.map(data, function (val, item) {
+                            return {
+                                label: val.CountryName,
+                                value: val.Id
+                            }
+                        }))
+                    }
+                })
+            },
+            minLength: 1,
+            autoFocus: false,
+            focus: function (e, ui) {
+                e.preventDefault();
+                $('#cCountryID').val(ui.item.value);
+                $('#cCountryName').val(ui.item.label);
+                $('#cCountryName').attr('portname', ui.item.label);
+
+            },
+            select: function (e, ui) {
+
+                e.preventDefault();
+                $('#cCountryID').val(ui.item.value);
+                $('#cCountryName').val(ui.item.label);
+                $('#cCountryName').attr('portname', ui.item.label);
+
+            },
+
+        });
+
+        $('#cCityName').autocomplete({
+            source: function (request, response) {
+                $.ajax({
+                    url: "@Url.Action("GetCityName", "LocationMaster")",
+                    data: { term: request.term },
+                    dataType: "json",
+                    type: "GET",
+                    success: function (data) {
+                        response($.map(data, function (val, item) {
+                            return {
+                                label: val.CityName,
+                                value: val.Id,
+                                Country: val.CountryName
+                            }
+                        }))
+                    }
+                });
+            },
+            minLength: 1,
+            autoFocus: false,
+            select: function (event, ui) {
+                event.preventDefault();
+                $('#cCityID').val(ui.item.value);
+                $('#cCityName').val(ui.item.label);
+                $('#cCountryName').val(ui.item.Country);
+                return false;
+            },
+            focus: function (event, ui) {
+                $('#cCityID').val(ui.item.value);
+                $('#cCityName').val(ui.item.label);
+                $('#cCountryName').val(ui.item.Country);
+                return false;
+            }
+        });
+
+
+        @*$('#LocationName').autocomplete({
+            source: function (request, response) {
+                $.ajax({
+                    url: "@Url.Action("GetLocation", "LocationMaster")",
+                    data: { term: request.term },
+                    dataType: "json",
+                    type: "GET",
+                    success: function (data) {
+                        response($.map(data, function (val, item) {
+                            return {
+                                label: val.Location,
+                                value: val.Location,
+                                City: val.CityName,
+                                Country: val.CountryName
+                            }
+                        }))
+                    }
+                })
+            },
+            minLength: 1,
+            autoFocus: false,
+            select: function (e, ui) {
+                e.preventDefault();
+                $('#LocationName').val(ui.item.label);
+                $('#CityName').val(ui.item.City);
+                $('#CountryName').val(ui.item.Country);
+                return false;
+            },
+            focus: function (event, ui) {
+                $('#LocationName').val(ui.item.label);
+                $('#CityName').val(ui.item.City);
+                $('#CountryName').val(ui.item.Country);
+                return false;
+            }
+        });*@
+
+
+    });
+
+</script>
+<div class="card">
+    <div class="card-body">
+        <div class="row" style="border-bottom:1px solid #dedede">
+            <div class="col-md-6">
+                <h4 class="card-title mt-1 mb-0">Client List</h4>
+            </div>
+            <div class="col-md-6 text-md-end">
+                <a class="text-muted font-size-14 text-primary" href="#" role="button" onclick="ShowClientEntry()" aria-expanded="false">
+                    <i class="dripicons-plus mt-1 text-primary" style="font-size: 22px;"></i>
+                </a>
+                @*<button type="button" class="text-primary" id="btnaddclient" title="New Equipment" onclick="ShowEquipmentEntry()">
+                <i class="dripicons-plus mt-1" style="font-size: 18px;"></i>
+            </button>*@
+
+            </div>
+        </div>
+      
+        <div data-simplebar="init" style="max-height: 295px;" class="simplebar-scrollable-y">
+            <div class="simplebar-wrapper" style="margin: 0px;">
+                <div class="simplebar-height-auto-observer-wrapper"><div class="simplebar-height-auto-observer"></div></div><div class="simplebar-mask">
+                    <div class="simplebar-offset" style="right: 0px; bottom: 0px;">
+                        <div class="simplebar-content-wrapper" tabindex="0" role="region" aria-label="scrollable content" style="height: auto; overflow: hidden scroll;">
+                            <div class="simplebar-content" style="padding: 0px;">
+                                <!-- Tab panes -->
+
+                                <ul class="list-group list-group-flush">
+                                    @foreach (var item in Model.ClientDetails)
+                                    {
+                                        <li class="list-group-item py-3" id="trclient_@i">
+                                            <div class="d-flex">
+                                                <div class="align-self-center overflow-hidden me-auto">
+                                                    <div>
+                                                        @Html.HiddenFor(model => model.ClientDetails[i].ClientID, new { @Value = @item.ClientID, @id = "hdnClientId_" + @i })
+                                                        @Html.HiddenFor(model => model.ClientDetails[i].EnquiryClientID, new { @Value = @item.EnquiryClientID, @id = "hdnEnquiryClientID_" + @i })
+                                                        @Html.HiddenFor(model => model.ClientDetails[i].Deleted, new { @Value = @item.Deleted, @id = "hdnclientdeleted_" + @i })
+                                                        @Html.HiddenFor(model => model.ClientDetails[i].ClientType, new { @Value = @item.ClientType, @id = "hdnclienttype_" + @i })
+                                                        <h5 class="font-size-13 text-truncate"><a href="javascript: void(0);" class="text-dark">@item.ClientName</a></h5>
+                                                        <div class="input-group gap-3">
+                                                            @{
+                                                                if (@item.ClientType == "Client")
+                                                                {
+                                                                    <span class="badge rounded-pill bg-success font-size-11">Client</span>
+                                                                }
+                                                                else if (@item.ClientType == "Contractor")
+                                                                {
+                                                                    <span class="badge rounded-pill bg-pink font-size-11">@item.ClientType</span>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <span class="badge rounded-pill bg-warning font-size-11">@item.ClientType</span>
+                                                                }
+                                                            }
+                                                            <p class="text-muted mb-0 font-size-10">
+                                                                @item.CreatedDate
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="text-muted">
+                                                    <a class="text-muted font-size-14 text-danger" href="#"><a class="text-danger" onclick="DeleteEnquiryClient('@item.EnquiryClientID','@i')" href="javascript:void(0);" title="UnAssign Employee"><i class="mdi mdi-delete font-size-15"></i></a></a>
+                                                    @*<a class="text-muted font-size-14 text-danger" href="#"><a class="text-primary" href="javascript:void(0);" title="Show Quotation"><i class="mdi mdi-plus font-size-18"></i></a></a>*@
+                                                </div>
+                                            </div>
+                                        </li>
+                                    }
+                                </ul>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div><div class="simplebar-placeholder" style="width: 698px; height: 323px;"></div>
+        </div><div class="simplebar-track simplebar-horizontal" style="visibility: hidden;"><div class="simplebar-scrollbar" style="width: 0px; display: none;"></div></div><div class="simplebar-track simplebar-vertical" style="visibility: visible;"><div class="simplebar-scrollbar" style="height: 269px; transform: translate3d(0px, 0px, 0px); display: block;"></div></div>
+    </div>
+</div>
+
+ 

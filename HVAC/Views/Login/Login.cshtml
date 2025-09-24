@@ -63,6 +63,7 @@ Layout = null;
                 <h1>Freight Forwarding System</h1>
                 @using (@Html.BeginForm("Login", "Login", FormMethod.Post, new { @class = "", @role = "form" }))
                 {
+                    @Html.AntiForgeryToken()
             <div class="form-group">
                 @*@Html.TextBoxFor(model => model.UserName, new { @class = "form-control autoFiled", @placeholder = "User Name", @required = "true", @type = "email" })*@
                 <input type="email" id="UserName" name="UserName" class="form-control autoFiled" placeholder="Email" autocomplete="off" required />                

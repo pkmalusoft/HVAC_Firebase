@@ -1,0 +1,56 @@
+﻿
+@model string  <!--optional: pass JobNo or title -->
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <style>
+        body {
+            font-size: 11px;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        .header-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid #ccc;
+            padding: 4px 10px;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo {
+            height: 32px;
+        }
+
+        .company-name {
+            font-weight: bold;
+            font-size: 13px;
+        }
+
+        .header-right {
+            font-size: 11px;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+    <div class="header-container">
+        <div class="header-left">
+            <img src="@Url.Content("~/asset/images/airmechlogo.png")" class="logo" />
+            <div class="company-name">Your Company Name</div>
+        </div>
+        <div class="header-right">
+            Job: @Model
+        </div>
+    </div>
+</body>
+</html>

@@ -562,6 +562,7 @@
 
 @using (Html.BeginForm("Create", "SupplierPayment", FormMethod.Post, new { @class = "needs-validation ", @novalidate = "novalidate" }))
 {
+    @Html.AntiForgeryToken()
     @Html.ValidationSummary(true)
 
     @Html.HiddenFor(model => model.RecPayID)

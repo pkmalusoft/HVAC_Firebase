@@ -1,0 +1,495 @@
+﻿@model HVAC.Models.EmployeeVM
+@{
+    
+    ViewBag.pTitle = "Employee Master";
+    ViewBag.pageTitle = "Setup";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+
+      $('#CountryName').autocomplete({
+            source: function (request, response) {
+                $.ajax({
+                    url: "@Url.Action("GetCountryList", "CountryMaster")",
+                    data: { SearchText: request.term },
+                    dataType: "json",
+                    type: "GET",
+                    success: function (data) {
+                        response($.map(data, function (val, item) {
+                            return {
+                                label: val.CountryName,
+                                value: val.Id
+                            }
+                        }))
+                    }
+                });
+            },
+            minLength: 1,
+            autoFocus: false,
+            select: function (event, ui) {
+                event.preventDefault();
+                $('#CountryID').val(ui.item.value);
+                $('#CountryName').val(ui.item.label);
+                return false;
+            },
+          focus: function (event, ui) {
+              $('#CountryID').val(ui.item.value);
+                $('#CountryName').val(ui.item.label);
+
+                return false;
+            }
+        });
+        $('#CityName').autocomplete({
+            source: function (request, response) {
+                $.ajax({
+                    url: "@Url.Action("GetCityList", "CountryMaster")",
+                    data: { SearchText: request.term },
+                    dataType: "json",
+                    type: "GET",
+                    success: function (data) {
+                        response($.map(data, function (val, item) {
+                            return {
+                                label: val.City,
+                                value: val.CityID,
+                                Country: val.CountryName
+                            }
+                        }))
+                    }
+                });
+            },
+            minLength: 1,
+            autoFocus: false,
+            select: function (event, ui) {
+                event.preventDefault();
+                $('#CityID').val(ui.item.value);
+                $('#CityName').val(ui.item.label);
+                $('#CountryName').val(ui.item.Country);
+                return false;
+            },
+            focus: function (event, ui) {
+                $('#CityID').val(ui.item.value);
+                $('#CityName').val(ui.item.label);
+                $('#CountryName').val(ui.item.Country);
+                return false;
+            }
+        });
+
+        $(function () {
+            //var date = new Date("2016-09-01");
+            //var currentMonth = date.getMonth();
+            //var currentDate = date.getDate();
+            //var currentYear = date.getFullYear();
+
+            //$("#DOJ").datepicker({ dateFormat: 'dd-mm-yy', maxDate: '0',changeYear:true,changeMonth:true });
+
+            var monthArray = [8, 9, 10]
+
+            //$('#JoinDate').datepicker({
+            //    dateFormat: 'dd-M-yy',
+            //    changeYear: true, changeMonth: true,
+
+            //});
+
+
+
+
+            $(".dolclass").css({ "display": "none" });
+            $(".chkclass").css({ "display": "block" });
+
+
+            $("#StatusActive").click(function () {
+                if ($("#StatusActive").is(':checked')) {
+                    $(".dolclass").css({ "display": "none" });
+
+                }
+                else {
+                    $(".dolclass").css({ "display": "block" });
+
+                }
+            });
+
+        });
+
+        //$("#btnsave").click(function () {
+        //    console.log($('#Email').val());
+        //    if ($('#Email').val().trim() != "") {
+        //        $.ajax({
+        //            type: "Get",
+        //            url: "/EmployeeMaster/CheckUserEmailExist",
+        //            datatype: "Json",
+        //            data: { EmailId: $('#Email').val() },
+        //            success: function (data) {
+        //                debugger;
+        //                console.log(data);
+        //                if (data == "true") {
+        //                    $("#validations").html("User Emailid already exists!");
+        //                    $("#validations").show();
+        //                    return false;
+        //                }
+        //                else {
+        //                    $("#validations").hide();
+        //                    return true;
+        //                }
+
+
+
+        //            }
+        //        });
+        //    }
+        //    return;
+        //    $("#validations").html('* Please fill mandatory fields!');
+        //    var code = $("#EmployeeCode").val();
+        //    var name = $("#EmployeeName").val();
+        //    var add1 = $("#Address1").val();
+        //    var phone = $("#Phone").val();
+        //    var email = $("#Email").val();
+        //    var mob = $("#MobileNo").val();
+        //    //var cou = $("#CountryID option:selected").val();
+        //    var cou = $("#CountryName").val();
+        //    var des = $("#DesignationID option:selected").val();
+        //    var dep = $("#Depot option:selected").val();
+        //    var pass = $("#Password").val();
+        //    var mobdev = $("#MobileDeviceID").val();
+        //    var pwd = $("#MobileDevicePWD").val();
+
+        //    if (code == "") {
+        //        $("#validations").show();
+        //        return false;
+        //    }
+        //    else if (name == "") {
+        //        $("#validations").show();
+        //        return false;
+        //    }
+        //    else if (add1 == "") {
+        //        $("#validations").show();
+        //        return false;
+        //    }
+        //    else if (phone == "") {
+        //        $("#validations").show();
+        //        return false;
+        //    }
+        //    else if (email == "") {
+        //        $("#validations").show();
+        //        return false;
+        //    }
+        //    else if (ValidateEmail($('#Email').val()) == false) {
+        //        $('#Email').val('');
+        //        $('#Email').focus();
+        //        return false;
+        //    }
+        //    else if (mob == "") {
+        //        $("#validations").show();
+        //        return false;
+        //    }
+        //    else if (cou == "") {
+        //        $("#validations").show();
+        //        return false;
+        //    }
+        //    else if (des == "") {
+        //        $("#validations").show();
+        //        return false;
+        //    }
+        //    else if (dep == "") {
+        //        $("#validations").show();
+        //        return false;
+        //    }
+        //    else if (pass == "") {
+        //        $("#validations").show();
+        //        return false;
+        //    }
+        //    //else if (mobdev == "") {
+        //    //    $("#validations").show();
+        //    //    return false;
+        //    //}
+        //    //else if (pwd == "") {
+        //    //    $("#validations").show();
+        //    //    return false;
+        //    //}
+
+        //    else {
+        //        debugger;
+        //        if ($('#Email').val().trim() != "") {
+        //            $.ajax({
+        //                type: "Get",
+        //                url: "/EmployeeMaster/CheckUserEmailExist",
+        //                datatype: "Json",
+        //                data: { EmailId: $('#Email').val() },
+        //                success: function (data) {
+
+        //                    if (data == "true") {
+        //                        $("#validations").html("User Emailid already exists!");
+        //                        $("#validations").show();
+        //                        return false;
+        //                    }
+        //                    else {
+        //                        $("#validations").hide();
+        //                        return true;
+        //                    }
+
+
+
+        //                }
+        //            });
+        //        }
+        //        else {
+        //            return false;
+        //        }
+
+        //    }
+
+
+
+        //});
+
+        //$("#JoinDate").click(function () {
+        //    $.ajax({
+        //        type: "POST",
+        //        url: "/DRSReceipt/GetDate",
+        //        datatype: "Json",
+        //        data: { id: $("#JoinDate").val() },
+        //        success: function (data) {
+        //            alert("hii");
+        //            if (data.JoinDate != null) {
+        //              alert("hii");
+        //            }
+
+
+        //        }
+        //    });
+        //});
+
+        //    $("#JoinDate").datepicker({
+
+        //        onSelect: function (date, instance) {
+
+        //            $.ajax({
+        //                type: "POST",
+        //                url: "/DRSReceipt/GetDate",
+        //                datatype: "Json",
+        //                data: { id: $("#JoinDate").val() },
+        //                success: function (data) {
+        //                    alert("hii");
+        //                    if (data.JoinDate != null) {
+        //                        alert("hii");
+
+
+        //                    }
+        //                }
+        //            });
+
+        //        };
+        //});
+
+    });
+
+
+
+</script>
+
+<div class="card">
+    <div class="card-body">
+        @using (Html.BeginForm("Create", "EmployeeVM", FormMethod.Post, new { @class = "needs-validation ", @novalidate = "novalidate" }))
+        {
+            @Html.AntiForgeryToken()
+            @Html.ValidationSummary(true, "", new { @class = "needs-validation" })
+            <div class="row">
+                <div class="col-md-8">
+                    <h4 class="card-title mb-2 mt-3 text-danger" id="msg1">
+                    </h4>
+                </div>
+                <div class="col-md-4 text-md-end">
+
+                    <input type="submit" value="Save" class="btn btn-success" id="btnsave" />
+                    <a href='@Url.Action("Index", "EmployeeMaster")' class="btn btn-secondary">Cancel</a>
+                    <div id="divothermenu" class="btn-group">
+                        @*<button type="submit" class="btn btn-primary">Menu</button>*@
+                        <span class="btn btn-primary"><i class="bx bx-cog bx-spin me-2"></i>Sub Menu</span>
+                        <button type="button" class="btn btn-primary dropdown-toggle-split border_right" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="mdi mdi-chevron-down"></i>
+                        </button>
+                        <div class="dropdown-menu" id="divsubmenu">
+
+                            <a class="dropdown-item" href="/EmployeeMaster/Create?id=0">New Employee</a>
+                            <a class="dropdown-item" href="/EmployeeMaster/Index">Employee List</a>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="mb-3">
+                        <label class="col-form-label">Employee Code</label>
+                        @Html.HiddenFor(model => model.EmployeeID)
+                        @Html.HiddenFor(model => model.CityID)
+                        @Html.HiddenFor(model => model.CountryID)
+                        @Html.TextBoxFor(model => model.EmployeeCode, new { @class = "form-control", @tabindex = 1, @required = "true" })
+                        @Html.ValidationMessageFor(model => model.EmployeeCode)
+
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="mb-3">
+                        <label class="col-form-label"> First Name</label>
+                        @Html.TextBoxFor(model => model.FirstName, new { @class = "form-control txttarget", @tabindex = 2, @required = "true" })
+                        @Html.ValidationMessageFor(model => model.FirstName)
+
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="mb-3">
+                        <label class="col-form-label"> Last Name</label>
+                        @Html.TextBoxFor(model => model.LastName, new { @class = "form-control txttarget", @tabindex = 3, @required = "true" })
+                        @Html.ValidationMessageFor(model => model.LastName)
+
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="mb-2">
+                        <label for="FromDate" class="col-form-label">Joining Date</label>
+                        <div class="docs-datepicker">
+                            <div class="input-group">
+                                <input type="text" class="form-control docs-date" name="JoinDate" tabindex="4" id="JoinDate" value="@Model.JoinDate.ToShortDateString()"
+                                       placeholder="Pick a From Date" autocomplete="off">
+                                <button type="button"
+                                        class="btn btn-secondary docs-datepicker-trigger"
+                                        disabled>
+                                    <i class="mdi mdi-calendar" aria-hidden="true"></i>
+                                </button>
+                            </div>
+                            <div class="docs-datepicker-container"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="mb-3">
+                        <label class="col-form-label">Address</label>
+                        @Html.TextBoxFor(model => model.Address1, new { @class = "form-control txttarget", @tabindex = 5, @required = "true" })
+                        @Html.ValidationMessageFor(model => model.Address1)
+                    </div>
+                </div>
+
+
+                <div class="col-md-3">
+                    <div class="mb-3">
+                        <label class="col-form-label required">City</label>
+
+                        @Html.TextBoxFor(model => model.CityName, new { @class = "form-select", id = "CityName", @required = "true", @tabindex = 6 })
+                        @Html.ValidationMessageFor(model => model.CityID)
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="mb-3">
+                        <label class="col-form-label required">Country</label>
+
+                        @Html.TextBoxFor(model => model.CountryName, new { @class = "form-select", id = "CountryName", @required = "true", @tabindex = 7 })
+                        @Html.ValidationMessageFor(model => model.CountryID)
+                    </div>
+                </div>
+
+
+
+                <div class="col-md-3">
+                    <div class="mb-3">
+                        <label class="col-form-label">Employee Prefix</label>
+                        @Html.TextBoxFor(model => model.EmployeePrefix, new { @class = "form-control txttarget", @tabindex = 8, @required = "true", @maxlength = "3" })
+                        @Html.ValidationMessageFor(model => model.EmployeePrefix)
+                    </div>
+                </div>
+
+                @*<div class="col-md-2">
+            <div class="mb-3">
+                <label class="col-form-label required">Street</label>
+                @Html.TextBoxFor(model => model.Address2, new { @class = "form-control txttarget", @tabindex = 5, @required = "true" })
+                @Html.ValidationMessageFor(model => model.Address2)
+            </div>
+        </div>*@
+
+            </div>
+
+            <div class="row">
+
+                <div class="col-md-3">
+                    <div class="mb-3">
+                        <label class="col-form-label required">Phone No.</label>
+                        @Html.TextBoxFor(model => model.Phone, new { @class = "form-control", @tabindex = 9, @required = "true" })
+                        @Html.ValidationMessageFor(model => model.Phone)
+                    </div>
+
+                </div>
+
+                <div class="col-md-3">
+                    <div class="mb-3">
+                        <label class="col-form-label">Email</label>
+                        @Html.TextBoxFor(model => model.Email, new { @class = "form-control ", @tabindex = 10, @name = "fakeemail", @required = "true", @value = "", @autocomplete = "off", @type = "email" })
+                        <div class="invalid-feedback">
+                            Enter Validate Email Address
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="mb-3">                        
+                        <div id="divachead">
+                            <div class="flexTitle">
+                                <label class="col-form-label">Designation</label>
+                                <div class="checkboxdesign no-padding  text-right" style="float:right">
+                                    @Html.CheckBox("Approver", new { @name = "Approver", @tabindex = 13 }) &nbsp;&nbsp;
+                                    <label class="col-form-label" style="color:#07a7e3!important;padding-left: 0!important">Approver</label>
+                                </div>
+                            </div>
+                            @Html.DropDownListFor(model => model.DesignationID, new SelectList(@ViewBag.Designation, "DesignationID", "Designation1"), "Select", new { @class = "form-select", @required = "true", @tabindex = 11 })
+                            @Html.ValidationMessageFor(model => model.DesignationID)
+                        </div>
+                       
+                    </div>
+                </div>
+
+                <div class="col-md-2">
+                    <div class="mb-3">
+                        <label class="col-form-label">Department</label>
+                        @Html.DropDownListFor(model => model.DepartmentID, new SelectList(@ViewBag.Department, "DepartmentID", "Department1"), "Select", new { @class = "form-select", @tabindex = 12 })
+                        @Html.ValidationMessageFor(model => model.DepartmentID)
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="mb-3">
+                        <div id="divachead">
+                            <div class="flexTitle">
+                                <label class="col-form-label">Role</label>
+                                <div class="checkboxdesign no-padding  text-right" style="float:right">
+                                    @Html.CheckBox("StatusActive", new { @name = "StatusActive", @tabindex = 14 }) &nbsp;&nbsp;
+                                    <label class="col-form-label" style="color:#07a7e3!important;padding-left: 0!important">Active</label>
+                                </div>
+                            </div>
+                            @Html.DropDownListFor(model => model.RoleID, new SelectList(@ViewBag.roles, "RoleID", "RoleName"), "Select", new { @class = "form-select", @tabindex = 13 })
+                            @Html.ValidationMessageFor(model => model.RoleID)
+                        </div>
+                    </div>
+                  </div> 
+             </div>
+                
+
+
+            
+
+
+
+
+
+        }
+    </div>
+
+</div>
+@section scripts{
+
+    <script src="~/Scripts/JS/EmployeeCreate.js"></script>
+}

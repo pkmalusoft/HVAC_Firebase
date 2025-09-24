@@ -1,0 +1,161 @@
+﻿@model HVAC.Models.BriefScope
+@{
+
+    ViewBag.pTitle = "BriefScope - Create";
+    ViewBag.pageTitle = "BriefScope";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<script>
+
+    function SaveBriefScope() {
+        debugger;
+        var id = 0;
+        if ($('#BriefScopeID').val() > 0) {
+            id = $('#BriefScopeID').val();
+
+        }
+        var protypeobj = {
+            BriefScopeID: id,
+            BriefScope1: $('#BriefScope1').val()
+            
+
+        }
+        debugger;
+        $.ajax({
+            type: "POST",
+            url: '/BriefScope/SaveBriefScope/',
+            datatype: "html",
+            data: { ProType: protypeobj },
+            success: function (response) {
+                if (response.status == "OK") {
+                    Swal.fire("Save Status!", response.message, "success");
+                    setTimeout(function () {
+                        window.location.href = "/BriefScope/Index";
+                    }, 100)
+
+
+                }
+                else {
+                    Swal.fire("Save Status!", response.message, "warning");
+                }
+
+
+            }
+        });
+    }
+
+    function CheckBriefScopeExist(type, id, callback) {
+
+
+        $.ajax({
+            type: "Get",
+            url: '/BriefScope/BriefScopeExist',
+            datatype: "Json",
+            data: {
+                PType: type,
+                ID: id
+            },
+
+            success: function (data) {
+
+                if (data == "true") {
+
+                    callback(true);
+                }
+                else {
+                    callback(false);
+                }
+
+            }
+        });
+
+
+    }
+
+
+</script>
+
+<script>
+
+    $(document).on("submit", ".needs-validation", function (e) {
+
+        e.preventDefault();
+        var id = 0;
+                    if (@Model.BriefScopeID > 0) {
+
+                  $('#btnsave').html('Update');
+            id =@Model.BriefScopeID;
+}
+
+
+
+
+        var type = $('#BriefScope1').val();
+       
+
+
+        if (!type || type === ' ') {
+            Swal.fire("Validation Error", "Please Enter Brief Scope.", "error");
+            return;
+        }
+
+        //if (!describtion || describtion === ' ') {
+        //    Swal.fire("Validation Error", "Please Enter Describtion.", "error");
+        //    return;
+        //}
+
+
+        CheckBriefScopeExist(type, id, function (exists) {
+            if (exists) {
+                Swal.fire("Save Status!", "BriefScope Already Exist", "warning");
+            } else if (!exists) {
+
+                SaveBriefScope();
+            }
+        });
+    });
+
+</script>
+
+
+@using (Html.BeginForm("Create", "BriefScope", FormMethod.Post, new { enctype = "multipart/form-data", @class = "needs-validation ", @novalidate = "novalidate" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+
+    <fieldset>
+        <div id="alert" style="color:red;margin-left:7px;display:none">* Please fill mandatory fields</div>
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+
+                    <div class="col-md-3">
+                 
+                        <div class="mb-2">
+                            @Html.HiddenFor(model=>model.BriefScopeID)
+                            <label class="col-form-label">BriefScope</label>
+                            @Html.TextBoxFor(model => model.BriefScope1, new { @class = "form-control txttarget", @autocomplete = "off", @required = "required" })
+                            @Html.ValidationMessageFor(model => model.BriefScope1)
+
+                            <div class="invalid-feedback">
+                                Please enter BriefScope
+                            </div>
+                        </div>
+                    </div>
+                 
+
+
+                    <div class="col-md-12 text-md-end">
+                        <input type="submit" value="Save" class="btn btn-success" id="btnsave" />
+                        <a href='@Url.Action("Index", "BriefScope", new { id = 0 })' class="btn btn-secondary">Cancel</a>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+           
+    </fieldset>
+
+
+}

@@ -1,0 +1,48 @@
+﻿@model HVAC.Models.EnquiryVM
+    @{
+        var i = 0;
+        var _decimal = @Session["Decimal"].ToString();
+    }
+<div class="table-responsive">
+    <table class="table table-nowrap align-middle table-hover mb-0">
+        <tbody>
+            @foreach (var item in Model.DocumentDetails)
+            {
+                <tr>
+                    <td style="width:25px;">
+                        <div class="avatar-xs">
+                            <span class="avatar-title rounded-circle bg-primary-subtle  font-size-13" style="color:white">
+                                <a href="@item.FilePath" style="color:white" target="_blank"><i class="bx bxs-file-doc"></i></a>
+                            </span>
+                        </div>
+                    </td>
+                    <td>
+                        <h5 class="font-size-12 mb-1"><a href="javascript: void(0);" class="text-dark">@item.DocumentTitle</a></h5>
+                        <small>@item.UserName</small><br />
+                        <small>@item.CreatedDate</small>
+                    </td>
+                    <td>
+                        <div class="text-center">
+                            @{
+                                if (item.Filename != "")
+                                {
+                                    <a href="JavaScript:void(0)" onclick="Downloadfile('@item.FilePath')" ; title="Download Document"><i class="mdi mdi-download font-size-15 "></i></a>
+                                }
+                                else
+                                {
+                                    <a href="JavaScript:void(0)" class="text-dark"><i class="bx bx-download h3 m-0"></i></a>
+                                }
+                            }
+                            <a class="text-danger" onclick="DeleteDocument('@item.DocumentID','@i')" href="javascript:void(0);" title="Delete Document"><i class="mdi mdi-delete font-size-15"></i></a>
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <div class="mb-2">
+        <button type="button" class="btn btn-primary waves-effect waves-light filter btn_top" title="New Client" onclick="ShowDocumentEntry()">
+            <i class="bx bx-plus" style="font-size: 13px;"></i> New Document
+        </button>
+    </div>
+</div>

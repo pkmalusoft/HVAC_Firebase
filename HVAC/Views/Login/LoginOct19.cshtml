@@ -213,6 +213,7 @@ input[type="submit"]{
                     @*<h6>Log in </h6>*@
                     @using (@Html.BeginForm("", "", FormMethod.Post, new { @class = "login clearfix", @role = "form" }))
                     {
+                        @Html.AntiForgeryToken()
                         
                         @Html.HiddenFor(model => model.UserType)
                         <div class="input-group" style="padding-top:-90px">

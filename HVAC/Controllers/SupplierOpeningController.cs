@@ -105,6 +105,7 @@ namespace HVAC.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public JsonResult SaveOpeningInvoice(CustomerInvoiceOpeningVM model)
         {
             try
@@ -245,6 +246,7 @@ namespace HVAC.Controllers
 
         //DeleteDetailOpening
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult DeleteOpeningDetail(int id)
         {
             int yearid = Convert.ToInt32(Session["fyearid"].ToString());
@@ -277,6 +279,7 @@ namespace HVAC.Controllers
 
         //DeleteDetailOpening
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult DeleteOpeningMaster(int id)
         {
             int yearid = Convert.ToInt32(Session["fyearid"].ToString());

@@ -93,6 +93,7 @@ namespace HVAC.Controllers
 
         }
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult Index(EnquirySearch obj)
         {
             Session["EnquirySearch"] = obj;
@@ -215,6 +216,7 @@ namespace HVAC.Controllers
 
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public JsonResult SaveEnquiry(EnquiryVM ProType, string Details)
         {
             int _fyearid = Convert.ToInt32(Session["fyearid"].ToString());
@@ -366,6 +368,7 @@ namespace HVAC.Controllers
 
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public JsonResult GetDueDays(DateTime EnquiryDate, DateTime DueDate)
         {
             try
@@ -468,6 +471,7 @@ namespace HVAC.Controllers
 
         #region SaveEngineer
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public JsonResult SaveEnquiryEmployee(EnquiryEmployeeVM data)
         {
 
@@ -502,6 +506,7 @@ namespace HVAC.Controllers
 
         }
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public JsonResult DeleteEmployeeEnquiry(int ID)
         {
             int EnquiryID = 0;
@@ -549,6 +554,7 @@ namespace HVAC.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult ShowEngineer(int EnquiryID)
         {
             EnquiryVM vm = new EnquiryVM();
@@ -560,6 +566,7 @@ namespace HVAC.Controllers
         #endregion
         #region partialview
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public JsonResult SaveEnquiryClient(EnquiryClientVM data)
         {
 
@@ -596,12 +603,14 @@ namespace HVAC.Controllers
 
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult ShowClientList(string EnquiryID)
         {
             ClientVM vm = new ClientVM();
             return PartialView("ClientList", vm);
         }
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult ShowClientEntry(string FieldName)
         {
             ClientVM vm = new ClientVM();
@@ -624,6 +633,7 @@ namespace HVAC.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public JsonResult SaveClientEntry(ClientVM model)
         {
             int UserID = Convert.ToInt32(Session["UserID"].ToString());
@@ -821,6 +831,7 @@ namespace HVAC.Controllers
         #region "document"
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult ShowDocumentEntry(int id, int EnquiryID)
         {
             var enquiry = db.Enquiries.Find(EnquiryID);
@@ -893,6 +904,7 @@ namespace HVAC.Controllers
         //}
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult ListDocument(int id)
         {
             EnquiryVM vm = new EnquiryVM();
@@ -929,6 +941,7 @@ namespace HVAC.Controllers
             }
         }
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<ActionResult> UploadFiles()
         {
             string fname = "";
@@ -1020,6 +1033,7 @@ namespace HVAC.Controllers
 
         //}
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult DeleteDocument(int DocumentId, int EnquiryID)
         {
             int fyearid = Convert.ToInt32(Session["fyearid"].ToString());
@@ -1035,6 +1049,7 @@ namespace HVAC.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public JsonResult SaveDocument(int DocumentID, int EnquiryID, int DocumentTypeID, string DocumentTitle,string DocumentLink , string Filename)
         {
 
@@ -1086,6 +1101,7 @@ namespace HVAC.Controllers
 
         #region "equipment"
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult ShowEquipmentEntry(int id, int EnquiryID)
         {
             var enquiry = db.Enquiries.Find(EnquiryID);
@@ -1126,6 +1142,7 @@ namespace HVAC.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult ListEquipment(int id)
         {
             EnquiryVM vm = new EnquiryVM();
@@ -1136,6 +1153,7 @@ namespace HVAC.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public JsonResult SaveEquipment(EnquiryEquipmentVM data)
         {
 
@@ -1189,6 +1207,7 @@ namespace HVAC.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult DeleteEquipment(int EquipmentID, int EnquiryID)
         {
             int fyearid = Convert.ToInt32(Session["fyearid"].ToString());

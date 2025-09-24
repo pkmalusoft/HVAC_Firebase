@@ -99,6 +99,7 @@ Layout = null;
                         @*<h6>Log in </h6>*@
                         @using (@Html.BeginForm("", "", FormMethod.Post, new { @class = "login clearfix", @role = "form" }))
                         {
+                            @Html.AntiForgeryToken()
                         <div class="input-group" style="padding-top:-90px">
 							<label> Username</label>
                             @Html.TextBoxFor(model => model.UserName, new { @class = "form-control" }) @*@placeholder = "User Name:"*@

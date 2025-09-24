@@ -1,0 +1,328 @@
+﻿@model HVAC.Models.StockReportParam
+@{
+    ViewBag.Title = "Reports";
+    ViewBag.pTitle = "Stock Ledger";
+    ViewBag.pageTitle = "Inventory";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section styles{
+    <link href="~/assets/libs/select2/css/select2.min.css" rel="stylesheet" type="text/css" />
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <!-- Select2 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
+    <!-- Select2 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+}
+<script type="text/javascript">
+
+
+    $(document).ready(function () {
+         var startdate = '@Session["FyearFrom"].ToString()';
+        var enddate = '@Session["FyearTo"].ToString()';
+        var sd = new Date(startdate.split('-')[1] + '-' + startdate.split('-')[0] + '-' + startdate.split('-')[2]);
+        var ed = new Date(enddate.split('-')[1] + '-' + enddate.split('-')[0] + '-' + enddate.split('-')[2]);
+
+
+        var suppressOpenOnClear = false;
+        $('.equipment-select').each(function () {
+            var $select = $(this);
+
+            // Handle the clear event
+            $select.on('select2:select2-selection__arrow', function () {
+                suppressOpenOnClear = true;
+
+                // Remove focus from both the hidden <select> and visible Select2 box
+                setTimeout(() => {
+                    $select.blur();
+                    $select.next('.select2-container').find('.select2-selection').blur();
+                }, 0);
+            });
+
+            // Prevent dropdown from reopening immediately after clear
+            $select.on('select2:opening', function (e) {
+                if (suppressOpenOnClear) {
+                    e.preventDefault(); // Stop it from opening
+                    suppressOpenOnClear = false;
+                }
+            });
+            var defaultOption = new Option($select.attr('boxname'), $select.attr('boxid'), true, true);
+            $select.append(defaultOption);
+            //// Append it to the select
+            $select.append('<option id="" value=""></option>').trigger('change');
+            $select.select2({
+                width: 'resolve', // respects width set in the HTML
+                placeholder: 'Select a Equipment Type',
+                allowClear: false,
+                minLength: 1,
+                ajax: {
+                    url: '/Enquiry/GetEquipmentType',
+                    dataType: 'json',
+                    delay: 250,
+                    data: function (params) {
+                        // var category = $select.closest('tr').find('.category').val();
+                        return {
+                            term: params.term, BrandID:0
+                        };
+                    },
+                    processResults: function (data) {
+                        return {
+                            results: data.map(function (item) {
+                                return { id: item.ID, text: item.EquipmentType };
+                            })
+                        };
+                    },
+                    cache: true
+                }
+            });
+
+            $select.change(function () {
+                $.ajax({
+                    url: '/Enquiry/GetProductFamily',
+                    datatype: "json",
+                    data: {
+                        EquipmentTypeID: $('#eEquipmentType').val()
+                    },
+                    success: function (data) {
+
+                        if (data != null) {
+                            if (data.ProductFamilyID > 0) {
+                                $('#ProductFamilyID').val(data.ProductFamilyID);
+                                $('#eProductFamilyName').val(data.ProductFamilyName);
+                                $('#eBrandName').val(data.BrandName);
+                            }
+                            else {
+                                $('#ProductFamilyID').val(0);
+                                $('#eProductFamilyName').val('');
+                                $('#eBrandName').val(data.BrandName);
+                            }
+                        }
+                        else {
+                            $('#ProductFamilyID').val(0);
+                            $('#eProductFamilyName').val('');
+                            $('#eBrandName').val(data.BrandName);
+                        }
+
+                    }
+
+                })
+
+            });
+
+        });
+        $('#ReportType').change(function () {
+            if ($('#ReportType').val() == "OutStanding") {
+                $("#CustomerName").val('');
+                $("#CustomerName").attr('disabled', 'disabled');
+                $("#CustomerName").removeAttr('required');
+                $('#lblcustomername').removeClass('required');
+            }
+            else if ($('#ReportType').val() == "AWBOutStanding") {
+                $("#CustomerName").val('');
+                $("#CustomerName").removeAttr('disabled');
+                $("#CustomerName").removeAttr('required');
+                $('#lblcustomername').removeClass('required');
+            }
+            else {
+                $("#CustomerName").removeAttr('disabled');
+                $('#lblcustomername').addClass('required');
+            }
+        });
+        $("#AllBrand").change(function () {
+            if ($("#AllBrand").prop('checked')) {
+                $('#BrandID').attr('disabled', 'disabled');
+                $('#BrandID').val('').trigger('change');
+            }
+            else {
+                $('#BrandID').removeAttr('disabled');
+
+
+            }
+        });
+        $("#AllProduct").change(function () {
+            if ($("#AllProduct").prop('checked')) {
+                $('#eEquipmentType').attr('disabled', 'disabled');
+                $('#eEquipmentType').val('').trigger('change');
+            }
+            else {
+                $('#eEquipmentType').removeAttr('disabled');
+
+
+            }
+        });
+
+        $('#ReportType').trigger('change');
+
+        if ($('#EquipmentTypeID').val() > 0) {
+            $('#ProductName').removeAttr('disabled');
+            $('#ProductName').attr('required', 'required');
+            $("#AllProduct").prop('checked', false);
+        }
+        else  {
+            $('#ProductName').attr('disabled', 'disabled');
+            $('#ProductName').val('');
+            $('#ProductID').val(0);
+            $('#ProductName').removeAttr('required');
+            $("#AllProduct").prop('checked', true);
+        }
+
+        if ($('#BrandID').val() > 0) {
+            $('#BrandID').removeAttr('disabled');
+            $('#BrandID').attr('required', 'required');
+            $("#AllBrand").prop('checked', false);
+        }
+        else {
+            $('#BrandID').attr('disabled', 'disabled');
+            $('#BrandID').val('');
+            $('#BrandID').val(0);
+            $('#BrandID').removeAttr('required');
+            $("#AllBrand").prop('checked', true);
+        }
+    });
+</script>
+
+@using (Html.BeginForm("StockLedger", "Reports", FormMethod.Post, new { @id = "customerledger" }))
+{
+    @Html.AntiForgeryToken()
+
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    <div class="card">
+        <div class="card-body">
+
+            <div class="row align-items-end mb-3">
+                <!-- From Date -->
+                <div class="col-md-2">
+                    <label class="col-form-label">From Date</label>
+                    <div class="docs-datepicker">
+                        <div class="input-group">
+                            <input type="text" class="form-control docs-date" name="FromDate" id="FromDate"
+                                   value="@Model.FromDate.ToShortDateString()"
+                                   placeholder="Pick a From Date" autocomplete="off">
+                            <button type="button" class="btn btn-secondary docs-datepicker-trigger" disabled>
+                                <i class="mdi mdi-calendar" aria-hidden="true"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- To Date -->
+                <div class="col-md-2">
+                    <label class="col-form-label">To Date</label>
+                    <div class="docs-datepicker">
+                        <div class="input-group">
+                            <input type="text" class="form-control docs-date" name="ToDate" id="ToDate"
+                                   data-date-format="dd/MM/yyyy" data-date-autoclose="true" data-provide="datepicker"
+                                   value="@Model.ToDate.ToShortDateString()" placeholder="Pick a date" autocomplete="off">
+                            <button type="button" class="btn btn-secondary docs-datepicker-trigger" disabled>
+                                <i class="mdi mdi-calendar" aria-hidden="true"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-2 text-start">
+
+                    <button type="submit" class="btn btn-success waves-effect waves-light filter btn_top reload" id="btnreport">
+                        <i class="bx bx-revision mt-1" style="font-size: 21px;"></i>
+                    </button>
+                </div>
+                <!-- Download Buttons -->
+                <div class="col-md-6 text-end">
+                    <a href="@Url.Action("StockLedgerExcel","Reports",new { fromDate = Model.FromDate, toDate = Model.ToDate })"
+                       class="btn btn-success me-1">
+                        <i class="fa fa-file-excel" style="font-size:18px"></i> Download Excel
+                    </a>
+                    <a href="@Url.Action("StockLedgerPrint","Reports",new { fromDate = Model.FromDate, toDate = Model.ToDate })"
+                       class="btn btn-warning" target="_blank">
+                        <i class="fa fa-file-pdf" style="font-size:18px"></i> Download PDF
+                    </a>
+                </div>
+            </div>
+
+            <!-- Row 2 -->
+            <div class="row align-items-end">
+                <!-- Brand -->
+                <div class="col-md-2">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <label class="col-form-label required mb-0">Brand</label>
+                        <div class="form-check">
+                            @Html.CheckBox("AllBrand", new { @name = "AllBrand", @checked = "checked", @class = "form-check-input" })
+                            <label class="form-check-label" style="color:#07a7e3!important;">All</label>
+                        </div>
+                    </div>
+                    @Html.DropDownListFor(model => model.BrandID,
+                        new SelectList(ViewBag.Brand, "BrandID", "BrandName"),
+                        "Select",
+                        new { @class = "form-select", @required = "required" })
+                </div>
+
+                <!-- Product -->
+                <div class="col-md-2">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <label class="col-form-label required mb-0">Product</label>
+                        <div class="form-check">
+                            @Html.CheckBox("AllProduct", new { @name = "AllProduct", @checked = "checked", @class = "form-check-input" })
+                            <label class="form-check-label" style="color:#07a7e3!important;">All</label>
+                        </div>
+                    </div>
+                    <select id="eEquipmentType" class="form-select form-control equipment-select" style="width:100%"></select>
+                </div>
+
+
+
+            </div>
+            <div class="row">
+                <div class="my-2 text-center">
+                    <h3 id="reporttitle">Stock Ledger From @Model.FromDate.ToShortDateString() To @Model.ToDate.ToShortDateString()</h3>
+                </div>
+            </div>
+            <table style="width:100%; border:1px solid #ddd; border-collapse:collapse; font-family:Arial, sans-serif; font-size:14px;">
+                <thead>
+                    <tr style="background:#808080;color:white; border-bottom:2px solid #fff;">
+                        
+                        @foreach (System.Data.DataColumn col in Model.data.Columns)
+                        {
+                            <th style="padding:8px; text-align:left;">@col.ColumnName</th>
+                        }
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model != null && Model.data.Rows.Count > 0)
+                    {
+                        int i = 1;
+                        foreach (System.Data.DataRow row in Model.data.Rows)
+                        {
+                            <tr style="border-bottom:1px solid #eee;">
+
+                                @foreach (System.Data.DataColumn col in Model.data.Columns)
+                                {
+                                    <td style="padding:8px;">@row[col.ColumnName]</td>
+                                }
+                            </tr>
+                            i++;
+                        }
+                        <tr style="background:#a9a5a5; font-weight:bold; font-size:15px;">
+                            <td colspan="@Model.data.Columns.Count" style="padding:8px; text-align:right;">
+                                TOTAL ROWS: @Model.data.Rows.Count
+                            </td>
+                        </tr>
+                        
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="@(Model.data.Columns.Count + 1)" style="padding:8px; text-align:center; color:gray;">No data found</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+
+    }
+    @section scripts{
+        <script src="~/assets/libs/select2/js/select2.min.js"></script>
+
+    }

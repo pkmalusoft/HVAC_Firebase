@@ -1,0 +1,204 @@
+﻿@model HVAC.Models.ClientMasterSearch
+@{
+    ViewBag.Title = "List";
+    ViewBag.pTitle = "Client";
+    ViewBag.pageTitle = "Setup";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+
+
+
+
+
+        $('#dataTables-example tfoot th').each(function () {
+            var title = $(this).text();
+            $(this).html('<input type="text" />');
+        });
+
+
+        var table = $('#dataTables-example').DataTable();
+
+        table.columns().every(function () {
+            var that = this;
+
+            $('input', this.footer()).on('keyup change', function () {
+                if (that.search() !== this.value) {
+                    that
+                        .search(this.value)
+                        .draw();
+                }
+            });
+        });
+
+        $('#ClientType').val($('#ClientType').attr('svalue')).trigger('change');
+
+    });
+
+
+
+</script>
+
+@using (@Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+
+
+    <div class="card">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-2">
+                    <label class="col-form-label required">Type</label>
+                    @Html.DropDownList("ClientType", new List<SelectListItem>
+                {
+                   new SelectListItem{ Text="All", Value = "All" },
+                    new SelectListItem{ Text="Client", Value = "Client" },
+                    new SelectListItem{ Text="Contractor", Value = "Contractor" },
+                    new SelectListItem{ Text="Consultant", Value = "Consultant" },
+                 }, new { @class = "form-select", @svalue = Model.ClientType })
+
+                </div>
+                <div class="col-md-1">
+                    <div class="mb-2">
+                        <button type="submit" class="btn btn-sm btn-success" style="margin-top:35px">
+                            <i class="mdi mdi-refresh" style="font-size: 18px;"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="col-md-9 text-md-end">
+                    <a class="btn btn-primary waves-effect waves-light btn_top " href="/ClientMaster/Create"><i class="mdi mdi-plus me-1"></i> New Client</a>
+                </div>
+            </div>
+                <table class="table table-bordered mb-0" id="datatable" style="width:100%">
+                    <thead class="table-light">
+                        <tr>
+
+
+                            <th class="form-100">
+                                Client Name
+                            </th>
+                            <th>
+                                Address
+                            </th>
+                            <th>Contact Name</th>
+                            <th>Email</th>
+                            <th>
+                                Phone
+                            </th>
+
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+
+
+
+
+
+
+                    @foreach (var item in Model.Details)
+                    {
+                        <tr>
+                            <td>
+                                <span class="text-over colorblue">@item.ClientName</span>
+
+                                @{
+                                    if (!string.IsNullOrEmpty(item.ClientType))
+                                    {
+                                        var clientTypes = item.ClientType
+                                .Split(',')
+                                .Select(x => x.Trim())
+                                .Distinct(StringComparer.OrdinalIgnoreCase); 
+
+                                        foreach (var type in clientTypes)
+                                        {
+                                            var trimmedType = type.Trim();
+
+                                            if (trimmedType.Equals("Client", StringComparison.OrdinalIgnoreCase))
+                                            {
+                                                <span class="badge bg-success">@trimmedType</span>
+                                            }
+                                            else if (trimmedType.Equals("Consultant", StringComparison.OrdinalIgnoreCase))
+                                            {
+                                                <span class="badge bg-primary">@trimmedType</span>
+                                            }
+                                            else 
+                                            {
+                                                <span class="badge bg-warning">@trimmedType</span>
+                                            }
+                                        }
+                                    }
+                                }
+                            </td>
+                            <td>
+                                @item.CityName,@item.CountryName
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.ContactName)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Email)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.ContactNo)
+                            </td>
+                            @*<td>
+                            @Html.DisplayFor(modelItem => item.Phone)
+                        </td>*@
+
+                            <td>
+                                <div class="d-flex gap-3">
+                                    <a href="@Url.Action("Create", new { id = item.ClientID })" class="text-success"><i class="mdi mdi-pencil font-size-18"></i></a>
+
+                                    <a href="#" onclick="Delete(ID=@item.ClientID)" class="text-danger"><i class="mdi mdi-delete font-size-18"></i></a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+
+                </table>
+            </div>
+        </div>
+                                
+    
+    }
+    <script type="text/javascript">
+        // function Delete(ID) {
+        //     if (confirm("Are you sure, You want to Delete Employee?")) {
+        //         window.location.href = "/EmployeeMaster/DeleteConfirmed/?id=" + ID;
+        //     }
+        // }
+
+        function Delete(ID) {
+            Swal.fire({ title: "Are you sure?", text: "Do you want to delete this?", icon: "warning", showCancelButton: !0, confirmButtonColor: "#34c38f", cancelButtonColor: "#f46a6a", confirmButtonText: "Yes, delete it!" }).then(
+                function (t) {
+                    if (t.value) {
+
+                        $.ajax({
+                            type: "POST",
+                            url: '/ClientMaster/DeleteConfirmed/',
+                            data: {
+                                'id': ID
+                            },
+                            success: function (response) {
+                                if (response.status == "OK") {
+                                    Swal.fire("Delete Status!", response.message, "success");
+                                    window.location.reload();
+                                }
+                                else {
+                                    Swal.fire("Delete Status!", response.message, "error");
+                                }
+                            }
+                        });
+
+                    }
+                });
+
+        }
+
+    </script>

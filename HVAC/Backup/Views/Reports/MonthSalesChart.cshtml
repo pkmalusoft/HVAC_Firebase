@@ -1,0 +1,108 @@
+﻿
+@{
+    ViewBag.Title = "Engineer Booking";
+    ViewBag.pTitle = "Reports";
+    ViewBag.pageTitle = "HVAC";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section scripts{
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/highcharts-3d.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
+    <script src="https://code.highcharts.com/modules/export-data.js"></script>
+
+}
+<script>
+    function printChart() {
+        var chartContainer = document.getElementById('pieChartContainer');
+        var printWindow = window.open('', '', 'height=600,width=800');
+
+        printWindow.document.write('<html><head><title>Print Chart</title>');
+        printWindow.document.write('<link rel="stylesheet" href="https://code.highcharts.com/css/highcharts.css" />');
+        printWindow.document.write('</head><body>');
+        printWindow.document.write(chartContainer.innerHTML);
+        printWindow.document.write('</body></html>');
+
+        printWindow.document.close();
+        printWindow.focus();
+
+        // Delay to allow rendering
+        setTimeout(function () {
+            printWindow.print();
+            printWindow.close();
+        }, 500);
+    }
+    document.addEventListener('DOMContentLoaded', function () {
+        Highcharts.chart('salesChart', {
+            chart: {
+                type: 'column',
+                options3d: {
+                    enabled: true,
+                    alpha: 15,
+                    beta: 15,
+                    depth: 50,
+                    viewDistance: 25
+                },
+                backgroundColor: {
+                    linearGradient: [0, 0, 0, 500],
+                    stops: [
+                        [0, '#6dd5ed'],
+                        [1, '#2193b0']
+                    ]
+                }
+            },
+            title: {
+                text: 'Monthly wise sales',
+                style: {
+                    fontSize: '20px',
+                    fontWeight: 'bold',
+                    color: '#001f4d'
+                }
+            },
+            subtitle: {
+                text: 'OMR 1,055,392.745',
+                align: 'right',
+                style: {
+                    fontSize: '18px',
+                    color: '#fff',
+                    fontWeight: 'bold'
+                }
+            },
+            xAxis: {
+                categories: ['Jan', 'Feb', 'Mar'],
+                labels: {
+                    style: { fontWeight: 'bold' }
+                }
+            },
+            yAxis: {
+                min: 0,
+                visible: false // hide if not needed
+            },
+            plotOptions: {
+                column: {
+                    depth: 25,
+                    colorByPoint: true,
+                    dataLabels: {
+                        enabled: true,
+                        format: '{point.name}<br>{point.y:,.0f}',
+                        style: {
+                            fontWeight: 'bold',
+                            color: '#fff'
+                        }
+                    }
+                }
+            },
+            series: [{
+                name: 'Sales',
+                data: [
+                    { name: 'Jan', y: 361172, color: '#1e3c72' },
+                    { name: 'Feb', y: 256746, color: '#a0522d' },
+                    { name: 'Mar', y: 437474, color: '#555555' }
+                ],
+                showInLegend: false
+            }]
+        });
+    });
+</script>
+<button onclick="printChart()"> Print Chart</button>
+<div id="salesChart" style="height: 500px; width: 100%;"></div>

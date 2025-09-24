@@ -61,6 +61,7 @@
 </div>
 @using (Html.BeginForm("UploadFile", "Home", FormMethod.Post, new { enctype = "multipart/form-data" }))
 {
+    @Html.AntiForgeryToken()
     <div id="wrapper">
         <div class="content-page">
             <div class="content">

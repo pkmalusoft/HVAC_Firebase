@@ -1,0 +1,16 @@
+# Set default behavior to automatically normalize line endings
+* text=auto
+
+# Force Windows line endings for these file types
+*.cs text eol=crlf
+*.cshtml text eol=crlf
+*.aspx text eol=crlf
+*.ascx text eol=crlf
+*.master text eol=crlf
+*.config text eol=crlf
+*.xml text eol=crlf
+*.json text eol=crlf
+
+# Force Unix line endings for these file types
+*.sh text eol=lf
+*.bash text eol=lf

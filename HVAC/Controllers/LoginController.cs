@@ -133,8 +133,8 @@ namespace HVAC.Controllers
                             int? branchid = custdetail.BranchID;
                             Session["CurrentBranchID"] = branchid;
                             
-                            var branch = db.BranchMasters.Where(cc => cc.BranchID == branchid).FirstOrDefault();
-                            Session["CurrentDepot"] = branch.BranchName;
+                            var customerBranch = db.BranchMasters.Where(cc => cc.BranchID == branchid).FirstOrDefault();
+                            Session["CurrentDepot"] = customerBranch.BranchName;
 
                         }
 
@@ -147,8 +147,8 @@ namespace HVAC.Controllers
                         int? branchid = 1; 
                         Session["CurrentBranchID"] = branchid;
                         
-                        var branch = db.BranchMasters.Where(cc => cc.BranchID == branchid).FirstOrDefault();
-                        Session["CurrentDepot"] = branch.BranchName;
+                        var employeeBranch = db.BranchMasters.Where(cc => cc.BranchID == branchid).FirstOrDefault();
+                        Session["CurrentDepot"] = employeeBranch.BranchName;
 
                     }
 
@@ -190,7 +190,7 @@ namespace HVAC.Controllers
 
                 //var alldepot = db.tblDepots.Where(cc=>cc.BranchID!=null).OrderBy(cc => cc.Depot).ToList();
                 var alldepot = (from c in db.BranchMasters join e in db.UserInBranches on c.BranchID equals e.BranchID where e.UserID == u1.UserID select c).ToList(); // db.tblDepots.Where(cc => cc.BranchID != null).OrderBy(cc => cc.Depot).ToList();
-                if (alldepot == null)
+                if (alldepot == null || alldepot.Count == 0)
                 {
                     //if (Session["CurrentBranchID"] != null)
                     //{
@@ -199,9 +199,9 @@ namespace HVAC.Controllers
                     //    Session["CurrentBranchID"] = currentbranchid1;
                     //}
 
-
+                    // Debug: Log the issue
                     Session["LoginStatus"] = "Login";
-                    Session["StatusMessage"] = "Branch is not valid!";
+                    Session["StatusMessage"] = "Branch is not valid! User ID: " + u1.UserID + " - No branches assigned to user.";
                     //TempData["ErrorMsg"] = "Financial Year Selection not valid!";
                     return RedirectToAction("Home", "Home");
                 }
@@ -232,11 +232,18 @@ namespace HVAC.Controllers
                 ///
 
                 int currentbranchid = Convert.ToInt32(Session["CurrentBranchID"].ToString());
-                int startyearid = Convert.ToInt32(db.BranchMasters.Find(currentbranchid).AcFinancialYearID);
+                var branch = db.BranchMasters.Find(currentbranchid);
+                if (branch == null || branch.AcFinancialYearID == null)
+                {
+                    Session["LoginStatus"] = "Login";
+                    Session["StatusMessage"] = "Branch configuration not valid!";
+                    return RedirectToAction("Home", "Home");
+                }
+                int startyearid = Convert.ToInt32(branch.AcFinancialYearID);
                 if (startyearid == 0)
                 {
                     Session["LoginStatus"] = "Login";
-                    Session["StatusMessage"] = "Financial Year Selection not valid!";
+                    Session["StatusMessage"] = "Financial Year Selection not valid! Branch ID: " + currentbranchid + " - No financial year configured.";
                     //TempData["ErrorMsg"] = "Financial Year Selection not valid!";
                     return RedirectToAction("Home", "Home");
 
@@ -271,7 +278,7 @@ namespace HVAC.Controllers
                 else
                 {
                     Session["LoginStatus"] = "Login";
-                    Session["StatusMessage"] = "Financial Year Selection not valid!";
+                    Session["StatusMessage"] = "Financial Year Selection not valid! Branch ID: " + currentbranchid + " - No current financial year found.";
                     //TempData["ErrorMsg"] = "Financial Year Selection not valid!";
                     return RedirectToAction("Home", "Home");
                 }
@@ -297,13 +304,13 @@ namespace HVAC.Controllers
                 else
                 {
                     Session["LoginStatus"] = "Login";
-                    Session["StatusMessage"] = "Login Failed,Contact Admin!";
+                    Session["StatusMessage"] = "Login Failed,Contact Admin! Role Type: " + roletype + " - Unrecognized role type.";
                     return RedirectToAction("Home", "Home");
                 }
             }
             catch(Exception ex)
             {
-                Session["StatusMessage"] = "Financial Year Selection not valid!";
+                Session["StatusMessage"] = "Login Error: " + ex.Message;
                 return RedirectToAction("Home", "Home");
             }
         }
@@ -315,6 +322,141 @@ namespace HVAC.Controllers
             // @ViewBag.SignOut = "You have successfully signout.";
             FormsAuthentication.SignOut();
             return RedirectToAction("Home","Home");
+        }
+
+        /// <summary>
+        /// Diagnostic method to check database setup
+        /// </summary>
+        public ActionResult CheckDatabaseSetup()
+        {
+            var diagnostics = new
+            {
+                CompanyCount = db.AcCompanies.Count(),
+                BranchCount = db.BranchMasters.Count(),
+                UserCount = db.UserRegistrations.Count(),
+                UserInBranchCount = db.UserInBranches.Count(),
+                FinancialYearCount = db.AcFinancialYears.Count(),
+                CurrencyCount = db.CurrencyMasters.Count(),
+                BranchesWithFinancialYear = db.BranchMasters.Count(b => b.AcFinancialYearID != null),
+                CurrentFinancialYears = db.AcFinancialYears.Count(f => f.CurrentFinancialYear == true),
+                SampleUsers = db.UserRegistrations.Take(5).Select(u => new { u.UserID, u.UserName, u.RoleID }).ToList(),
+                SampleBranches = db.BranchMasters.Take(5).Select(b => new { b.BranchID, b.BranchName, b.AcFinancialYearID }).ToList()
+            };
+
+            return Json(diagnostics, JsonRequestBehavior.AllowGet);
+        }
+
+        /// <summary>
+        /// Create test data for login testing
+        /// </summary>
+        public ActionResult CreateTestData()
+        {
+            try
+            {
+                // Check if we already have data
+                if (db.AcCompanies.Any() && db.BranchMasters.Any() && db.UserRegistrations.Any())
+                {
+                    return Json(new { status = "info", message = "Test data already exists" }, JsonRequestBehavior.AllowGet);
+                }
+
+                // Create company if not exists
+                if (!db.AcCompanies.Any())
+                {
+                    var company = new AcCompany
+                    {
+                        AcCompany1 = "Test HVAC Company",
+                        KeyPerson = "Admin",
+                        Phone = "1234567890",
+                        EMail = "admin@test.com",
+                        Address1 = "Test Address",
+                        CityName = "Test City",
+                        CountryName = "Test Country",
+                        AcceptSystem = true,
+                        EnableCashCustomerInvoice = true,
+                        EnableAPI = true,
+                        AWBAlphaNumeric = true
+                    };
+                    db.AcCompanies.Add(company);
+                    db.SaveChanges();
+                }
+
+                // Create currency if not exists
+                if (!db.CurrencyMasters.Any())
+                {
+                    var currency = new CurrencyMaster
+                    {
+                        CurrencyName = "US Dollar",
+                        CurrencyCode = "USD",
+                        NoOfDecimals = 2,
+                        MonetaryUnit = "Dollar",
+                        NumberFormat = 1
+                    };
+                    db.CurrencyMasters.Add(currency);
+                    db.SaveChanges();
+                }
+
+                // Create branch if not exists
+                if (!db.BranchMasters.Any())
+                {
+                    var currency = db.CurrencyMasters.FirstOrDefault();
+                    var branch = new BranchMaster
+                    {
+                        BranchName = "Main Branch",
+                        CurrencyID = currency?.CurrencyID,
+                        AcFinancialYearID = null // Will be set after creating financial year
+                    };
+                    db.BranchMasters.Add(branch);
+                    db.SaveChanges();
+
+                    // Create financial year
+                    var financialYear = new AcFinancialYear
+                    {
+                        BranchID = branch.BranchID,
+                        AcFYearFrom = DateTime.Now.Date,
+                        AcFYearTo = DateTime.Now.AddYears(1).Date,
+                        CurrentFinancialYear = true
+                    };
+                    db.AcFinancialYears.Add(financialYear);
+                    db.SaveChanges();
+
+                    // Update branch with financial year
+                    branch.AcFinancialYearID = financialYear.AcFinancialYearID;
+                    db.SaveChanges();
+                }
+
+                // Create test user if not exists
+                if (!db.UserRegistrations.Any())
+                {
+                    var user = new UserRegistration
+                    {
+                        UserName = "admin@test.com",
+                        Password = HashPassword("admin123"),
+                        RoleID = 1, // Assuming role 1 is admin/employee
+                        IsActive = true
+                    };
+                    db.UserRegistrations.Add(user);
+                    db.SaveChanges();
+
+                    // Create user-branch relationship
+                    var branch = db.BranchMasters.FirstOrDefault();
+                    if (branch != null)
+                    {
+                        var userBranch = new UserInBranch
+                        {
+                            UserID = user.UserID,
+                            BranchID = branch.BranchID
+                        };
+                        db.UserInBranches.Add(userBranch);
+                        db.SaveChanges();
+                    }
+                }
+
+                return Json(new { status = "success", message = "Test data created successfully" }, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return Json(new { status = "error", message = "Error creating test data: " + ex.Message }, JsonRequestBehavior.AllowGet);
+            }
         }
 
         
@@ -334,6 +476,7 @@ namespace HVAC.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult ForgotPassword(UserLoginVM vm)
           {
             string emailid = vm.UserName;
@@ -364,6 +507,7 @@ namespace HVAC.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult ChangePassword(UserLoginVM vm)
         {
             string emailid = vm.UserName;

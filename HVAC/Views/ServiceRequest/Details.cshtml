@@ -1,0 +1,246 @@
+@model HVAC.Models.ServiceRequest
+
+@{
+    ViewBag.Title = "Details";
+    ViewBag.pTitle = "Service Request";
+    ViewBag.pageTitle = "HVAC";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="card">
+    <div class="card-header">
+        <div class="d-flex justify-content-between align-items-center">
+            <h4 class="card-title mb-0">Service Request Details - @Model.ServiceRequestNo</h4>
+            <div>
+                <a href="@Url.Action("Edit", new { id = Model.ServiceRequestID })" class="btn btn-primary me-2">
+                    <i class="mdi mdi-pencil me-1"></i> Edit
+                </a>
+                <a href="@Url.Action("Index")" class="btn btn-secondary">
+                    <i class="mdi mdi-arrow-left me-1"></i> Back to List
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="mb-4">
+                    <h5 class="text-primary">Basic Information</h5>
+                    <hr>
+                    <div class="row">
+                        <div class="col-sm-4"><strong>Service Request No:</strong></div>
+                        <div class="col-sm-8">@Model.ServiceRequestNo</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-4"><strong>Customer:</strong></div>
+                        <div class="col-sm-8">@Model.CustomerMaster?.CustomerName</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-4"><strong>Equipment:</strong></div>
+                        <div class="col-sm-8">@Model.Equipment?.EquipmentName (@Model.Equipment?.Brand - @Model.Equipment?.Model)</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-4"><strong>Service Type:</strong></div>
+                        <div class="col-sm-8">
+                            <span class="badge bg-info">@Model.ServiceType?.ServiceTypeName</span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-4"><strong>Priority:</strong></div>
+                        <div class="col-sm-8">
+                            @{
+                                string priorityClass = "";
+                                switch (Model.Priority?.PriorityName)
+                                {
+                                    case "High":
+                                        priorityClass = "bg-danger";
+                                        break;
+                                    case "Medium":
+                                        priorityClass = "bg-warning";
+                                        break;
+                                    case "Low":
+                                        priorityClass = "bg-success";
+                                        break;
+                                    default:
+                                        priorityClass = "bg-secondary";
+                                        break;
+                                }
+                            }
+                            <span class="badge @priorityClass">@Model.Priority?.PriorityName</span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-4"><strong>Status:</strong></div>
+                        <div class="col-sm-8">
+                            @{
+                                string statusClass = "";
+                                switch (Model.ServiceStatus?.ServiceStatusName)
+                                {
+                                    case "Pending":
+                                        statusClass = "bg-warning";
+                                        break;
+                                    case "Work In Progress":
+                                        statusClass = "bg-primary";
+                                        break;
+                                    case "Waiting for parts":
+                                        statusClass = "bg-info";
+                                        break;
+                                    case "Closed":
+                                        statusClass = "bg-success";
+                                        break;
+                                    default:
+                                        statusClass = "bg-secondary";
+                                        break;
+                                }
+                            }
+                            <span class="badge @statusClass">@Model.ServiceStatus?.ServiceStatusName</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-6">
+                <div class="mb-4">
+                    <h5 class="text-primary">Service Details</h5>
+                    <hr>
+                    <div class="row">
+                        <div class="col-sm-4"><strong>Creation Date:</strong></div>
+                        <div class="col-sm-8">@Model.CreationDate.ToString("dd/MM/yyyy HH:mm")</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-4"><strong>Scheduled Date:</strong></div>
+                        <div class="col-sm-8">
+                            @if (Model.ScheduledDate.HasValue)
+                            {
+                                @Model.ScheduledDate.Value.ToString("dd/MM/yyyy")
+                            }
+                            else
+                            {
+                                <span class="text-muted">Not Scheduled</span>
+                            }
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-4"><strong>Completed Date:</strong></div>
+                        <div class="col-sm-8">
+                            @if (Model.CompletedDate.HasValue)
+                            {
+                                @Model.CompletedDate.Value.ToString("dd/MM/yyyy")
+                            }
+                            else
+                            {
+                                <span class="text-muted">Not Completed</span>
+                            }
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-4"><strong>Assigned To:</strong></div>
+                        <div class="col-sm-8">
+                            @if (!string.IsNullOrEmpty(Model.AssignedTo))
+                            {
+                                @Model.AssignedTo
+                            }
+                            else
+                            {
+                                <span class="text-muted">Unassigned</span>
+                            }
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-4"><strong>Estimated Cost:</strong></div>
+                        <div class="col-sm-8">
+                            @if (Model.EstimatedCost.HasValue)
+                            {
+                                @Model.EstimatedCost.Value.ToString("C")
+                            }
+                            else
+                            {
+                                <span class="text-muted">Not Set</span>
+                            }
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-4"><strong>Actual Cost:</strong></div>
+                        <div class="col-sm-8">
+                            @if (Model.ActualCost.HasValue)
+                            {
+                                @Model.ActualCost.Value.ToString("C")
+                            }
+                            else
+                            {
+                                <span class="text-muted">Not Set</span>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="mb-4">
+                    <h5 class="text-primary">Service Description</h5>
+                    <hr>
+                    <div class="bg-light p-3 rounded">
+                        @if (!string.IsNullOrEmpty(Model.ServiceDescription))
+                        {
+                            @Html.Raw(Model.ServiceDescription.Replace("\n", "<br/>"))
+                        }
+                        else
+                        {
+                            <span class="text-muted">No description provided</span>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        @if (!string.IsNullOrEmpty(Model.ResolutionNotes))
+        {
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="mb-4">
+                        <h5 class="text-primary">Resolution Notes</h5>
+                        <hr>
+                        <div class="bg-light p-3 rounded">
+                            @Html.Raw(Model.ResolutionNotes.Replace("\n", "<br/>"))
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+
+        @if (!string.IsNullOrEmpty(Model.Remarks))
+        {
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="mb-4">
+                        <h5 class="text-primary">Remarks</h5>
+                        <hr>
+                        <div class="bg-light p-3 rounded">
+                            @Html.Raw(Model.Remarks.Replace("\n", "<br/>"))
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+@if (TempData["SuccessMsg"] != null)
+{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $.notify("@TempData["SuccessMsg"]", "success");
+        });
+    </script>
+}
+
+@if (TempData["ErrorMsg"] != null)
+{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $.notify("@TempData["ErrorMsg"]", "error");
+        });
+    </script>
+}

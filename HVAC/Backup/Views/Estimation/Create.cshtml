@@ -1,0 +1,467 @@
+﻿@model HVAC.Models.EstimationVM
+@{
+
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+    ul.ui-front {
+        z-index: 1100;
+    }
+
+    .disabled-link {
+        pointer-events: none;
+        background-color: #dedede;
+    }
+
+    .table thead th {
+        min-height: 60px !important;
+        vertical-align: middle !important;
+    }
+
+    .table tbody th {
+        min-height: 40px !important;
+        vertical-align: middle !important;
+    }
+    /* Increase footer height */
+    .table-condensed-custom tfoot th,
+    .table-condensed-custom tfoot td {
+        padding-top: 0.6rem !important;
+        padding-bottom: 0.6rem !important;
+    }
+
+    /* Match Bootstrap form-select-sm size */
+    .select2-container .select2-selection--single {
+        height: 30px !important;
+        line-height: 30px !important;
+        padding: 2px 6px !important;
+        font-size: 0.8rem !important; /* smaller font */
+        border-radius: 0.2rem !important;
+    }
+
+    /* Text inside the select */
+    .select2-container--default .select2-selection--single .select2-selection__rendered {
+        line-height: 26px !important;
+        font-size: 0.8rem !important; /* smaller font */
+        padding-left: 2px !important;
+    }
+
+    /* Dropdown arrow alignment */
+    .select2-container--default .select2-selection--single .select2-selection__arrow {
+        height: 28px !important;
+    }
+
+</style>
+@section styles{
+    <link href="~/assets/libs/select2/css/select2.min.css" rel="stylesheet" type="text/css" />
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <!-- Select2 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
+    <!-- Select2 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+}
+
+
+
+
+@{
+
+    ViewBag.pTitle = "Estimation";
+    ViewBag.pageTitle = "HVAC";
+    var quotationList = new List<string> { "QTN001", "QTN002", "QTN003", "QTN004" };
+}
+<style>
+    .quotation-links {
+        display: flex;
+        gap: 15px; /* spacing between links */
+        flex-wrap: wrap; /* allows wrapping if too many links */
+    }
+
+    .quotation-link {
+        text-decoration: none;
+        padding: 5px 10px;
+        background: #ffd800;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        transition: background 0.3s ease;
+        color: black;
+    }
+
+        .quotation-link:hover {
+            background: #e9ecef;
+        }
+
+    .hr {
+        margin: 0px !important;
+    }
+</style>
+<script>
+
+
+    $(document).ready(function () {
+
+        if ($('#hdnQuotationMode').val() == 'Revision') {
+            var _enquiryid = $('#EnquiryID').attr('svalue');
+            //$('#EnquiryID').val(_enquiryid).trigger('change');
+            $('#EstimationID').val(0);
+        }
+
+    });
+
+</script>
+
+@using (Html.BeginForm("Create", "Estimation", FormMethod.Post, new { @class = "needs-validation ", @novalidate = "novalidate" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true, "", new { @class = "needs-validation" })
+
+
+
+    <div class="card">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-2">
+                    <button type="button" data-bs-toggle="modal" data-bs-target="#marginpopup" class="btn btn-primary btn-rounded waves-effect waves-light mb-2 me-2 addCustomers-modal"><i class="mdi mdi-calculator-variant-outline me-1"></i> Apply Margin</button>
+                </div>
+                <div class="col-md-6">
+                    @*<span class="btn btn-primary waves-effect waves-light" style="background-color: #ff6a00; border-color:#ff6a00;color:white">Quotation No. @ViewBag.QuotationNo</span>*@
+                    @{
+                        if (Model.QuotationDetails != null)
+                        {
+                            <div class="quotation-links">
+                                @foreach (var q in Model.QuotationDetails)
+                                {
+                                    <a href="@Url.Action("Create", "Quotation", new { id = q.QuotationID })" title="Click to Go Quotation Page" target="_blank" class="quotation-link">
+                                        @q.QuotationNo
+                                    </a>
+                                }
+                            </div>
+                        }
+                    }
+                </div>
+                <div class="col-md-4">
+
+
+                    <div class="text-right ">
+                      
+                          <input type="submit" value="Save" class="btn btn-success" id="btnSaveQuotation" />
+
+                       
+                        <a href='@Url.Action("Index", "Estimation", new { id = 0 })' class="btn btn-secondary" data-placement="right">Cancel</a>
+                        <div id="divothermenu2" class="btn-group">
+                            @*<button type="submit" class="btn btn-primary">Menu</button>*@
+                            <span class="btn btn-primary"><i class="bx bx-cog bx-spin me-2"></i>Sub Menu</span>
+                            <button type="button" class="btn btn-primary dropdown-toggle-split border_right" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="mdi mdi-chevron-down"></i>
+                            </button>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item" target="_blank" href="/Enquiry/Create?id=@Model.EnquiryID">Goto Enquiry</a>
+                                <a class="dropdown-item" target="_blank" href="/Enquiry/GotoQuotation?EnquiryNo=@Model.EnquiryNo">Goto Quotation</a>
+                            </div>
+                        </div>
+
+
+                    </div><!-- /btn-group -->
+                </div>
+
+
+
+            </div>
+
+
+            <div class="row">
+                <div class="col-md-2">
+                    <div class="mb-2">
+                        <label class="col-form-label required">Estimation No.</label>
+                        @Html.TextBoxFor(mode => mode.EstimationNo, new { @class = "form-control", @required = "required", @readonly = "readonly" })
+                        @Html.HiddenFor(mode => mode.TotalLCValue, new { @class = "form-select", @required = "required" })
+                        @Html.HiddenFor(mode => mode.TotalFCValue, new { @class = "form-select", @required = "required" })
+                    </div>
+                </div>
+                <div class="col-md-5">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label class="col-form-label required">Enquiry No.</label>
+                            <input type="hidden" id="hdnQuotationMode" value="@ViewBag.QuotationMode" />
+                            <input type="hidden" id="DefaultCurrencyID" value="@Model.DefaultCurrencyID" />
+                            @Html.HiddenFor(mode => mode.EstimationID, new { @class = "form-control" })
+                            @Html.HiddenFor(mode => mode.CurrencyID, new { @class = "form-control" })
+                            @Html.HiddenFor(mode => mode.ExchangeRate, new { @class = "form-control" })
+                            @Html.HiddenFor(mode => mode.Margin, new { @class = "form-control" })
+                            @Html.HiddenFor(mode => mode.SellingValue, new { @class = "form-control" })
+                            @Html.HiddenFor(mode => mode.EnquiryNo, new { @class = "form-control" })
+
+                            @Html.DropDownListFor(model => model.EnquiryID, new SelectList(ViewBag.Enquiry, "EnquiryID", "EnquiryNo"), "Select", new { @class = "form-control", @required = "required", @id = "EnquiryID", @svalue = Model.EnquiryID, @disabled = "disabled" })
+                        </div>
+                        <div class="col-md-2">
+                            <div class="mb-2">
+                                <label class="col-form-label required">Version</label>
+                                @Html.TextBoxFor(mode => mode.VarNo, new { @id = "VarNo", @class = "form-control", @required = "required", @readonly = "readonly" })
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="mb-2">
+                                <label class="col-form-label">Estimation Date</label>
+                                <div class="docs-datepicker">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control docs-date" name="EstimationDate" id="EstimationDate" required value="@Convert.ToDateTime(@Model.EstimationDate).ToShortDateString()"
+                                               placeholder="Pick a From Date" autocomplete="off">
+                                        <button type="button"
+                                                class="btn btn-secondary docs-datepicker-trigger"
+                                                disabled>
+                                            <i class="mdi mdi-calendar" aria-hidden="true"></i>
+                                        </button>
+                                    </div>
+                                    <div class="docs-datepicker-container"></div>
+                                </div>
+                                <div class="invalid-feedback">
+                                    Please enter Estimation date
+                                </div>
+
+
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
+
+
+                <div class="col-md-2">
+                    <div class="mb-2">
+                        <label class="col-form-label required">Engineer</label>
+                        @{
+                            if (Model.EstimationID > 0)
+                            {
+                                @Html.DropDownListFor(mode => mode.EmployeeID, new SelectList(ViewBag.EmployeeMaster, "EmployeeID", "EmployeeName"), "Select Engineer", new { @class = "form-control", @required = "required", @disabled = "disabled" })
+                            }
+                            else
+                            {
+                                @Html.DropDownListFor(mode => mode.EmployeeID, new SelectList(ViewBag.EmployeeMaster, "EmployeeID", "EmployeeName"), "Select Engineer", new { @class = "form-select", @required = "required" })
+                            }
+
+                        }
+                        @*@Html.DropDownList("QCurrencyId", new SelectList(ViewBag.Curency, "CurrencyID", "CurrencyName"), "Select Currency", new { @class = "form-control", @id = "QCurrencyId" })*@
+
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="mb-2">
+                        <div class="flexTitle">
+                            <label class="col-form-label required">Notes</label>
+                            <div class="checkboxdesign no-padding  text-right" style="float:right">
+                                <label class="col-form-label text-danger" style="padding-left: 0!important">@Model.CurrencyCode</label>
+                            </div>
+                        </div>
+                        @Html.TextBoxFor(mode => mode.Notes, new { @class = "form-control" })
+                    </div>
+                </div>
+
+            </div>
+            <hr />
+            <div class="row">
+                <div class="col-md-12">
+                    <h4 class="card-title mb-1 mt-3">Add Equipment Item</h4>
+                    <div class="row mb-3">
+                        <div class="col-md-2">
+                            <label class="col-form-label">Category</label>
+                            @Html.DropDownList("QEstimationCategoryID", new SelectList(ViewBag.EstimationCategory, "ID", "CategoryName"), "Select", new { @class = "form-select form-select-sm", @id = "QEstimationCategoryID" })
+                            @*<select id="QEstimationCategoryID" class="form-select form-select-sm"></select>*@
+                        </div>
+                        <div class="col-md-2">
+                            <label class="col-form-label required">Equipment/Description</label>
+                            <select id="drpEquipment" class="form-select form-select-sm equipment-select"></select>
+                            <input type="hidden" id="QEquipmentTypeID" />
+                        </div>
+                        <div class="col-md-2">
+                            <label class="col-form-label required">Model/Unit</label>
+                            <input type="text" class="form-control form-control-sm" id="QtxtModel" placeholder="Select Model" />
+                            <input type="text" class="form-control form-control-sm d-xl-none" id="QtxtModel1" value="" placeholder="Select Model" />
+                        </div>
+                        <div class="col-md-1">
+                            <label class="col-form-label">Qty</label>
+                            <input type="number" id="QtxtQty" value="1" class="form-control form-control-sm textright" onchange="calculatevalue1()" />
+                        </div>
+                        <div class="col-md-1">
+                            <label class="col-form-label">Unit Type</label>
+                            @Html.DropDownList("QUnitID", new SelectList(ViewBag.Unit, "ItemUnitID", "ItemUnit1"), "Select", new { @class = "form-select form-select-sm", @id = "QUnitID" })
+                        </div>
+                        <div class="col-md-1">
+                            <label class="col-form-label">Currency</label>
+                            @Html.DropDownList("QCurrencyID", new SelectList(ViewBag.Currency, "CurrencyID", "CurrencyCode"), "Select", new { @class = "form-select form-select-sm", @id = "QCurrencyID" })
+                        </div>
+                        <div class="col-md-3">
+                            <div class="row">
+                                <div class="col-md-5">
+                                    <label class="col-form-label">Rate</label>
+                                    <input type="text" id="QtxtRate" class="form-control form-control-sm textrightamount" onchange="calculatevalue1()" />
+                                </div>
+                                <div class="col-md-5">
+                                    <label class="col-form-label">Value</label>
+                                    <input type="hidden" id="QtxtExRate" value="" readonly class="textrightamount form-control" placeholder="Value" />
+                                    <input type="text" id="QtxtValue" readonly class="form-control form-control-sm textrightamount" />
+                                    
+                                    <input type="hidden" id="QtxtFValue" value="" readonly class="textrightamount form-control form-control-sm" placeholder="Value" />
+                                    <input type="hidden" id="QtxtLValue" value="" readonly class="textright form-control form-control-sm" placeholder="Value" />
+                                </div>
+                                <div class="col-md-2">
+                                    <button type="button" class="btn btn-success btn-sm waves-effect waves-light filter" style="margin-top:32px;" id="btnaddclient" title="Insert into Grid" onclick="AddDetail(this)">
+                                        <i class="dripicons-enter"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+
+
+
+            <div class="col-md-12" id="EstimationDetailContainer">
+                @{Html.RenderPartial("DetailList", Model);}
+
+            </div>
+        </div>
+
+
+    </div>
+
+
+    <div class="modal fade" id="marginpopup" role="dialog" aria-labelledby="marginLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-sm">
+            <div class="modal-content" style="border-radius:8px;">
+                <div class="modal-header py-2">
+                    <h5 class="modal-title" id="marginLabel">Margin Calculate</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <div class="modal-body p-3">
+                    <div class="mb-2">
+                        <label class="col-form-label required">Margin %</label>
+                        @Html.TextBoxFor(model => model.MarginPercent, new { @class = "form-control form-control-sm", @placeholder = "Enter margin %" })
+                    </div>
+                    <span class="error small text-danger" id="spanmarginerror"></span>
+                </div>
+
+                <div class="modal-footer py-2">
+                    <button type="button" class="btn btn-primary btn-sm" data-bs-dismiss="modal" onclick="ApplyMargin()">Apply</button>
+                    <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+}
+
+@*<div class="modal fade" id="financechargepopup" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content" style="border-radius:5px;width:700px">
+                <div class="modal-header">
+                    <h4 class="modal-title">
+                        Finance Charges Calculation
+                    </h4>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <div class="modal-body">
+                    <div class="container-fluid" id="financeContainer">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <div class="mb-2">
+                                    <label class="col-form-label required">Equipments Total</label>
+                                    @Html.TextBoxFor(mode => mode.EquipmentsTotal, new { @class = "form-control textrightamount ", @readonly = "readonly" })
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="mb-2">
+                                    <label class="col-form-label required">Accessories Total</label>
+                                    @Html.TextBoxFor(mode => mode.AccessoriesTotal, new { @class = "form-control textrightamount ", @readonly = "readonly" })
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="mb-2">
+                                    <label class="col-form-label required">Freight Total</label>
+                                    @Html.TextBoxFor(mode => mode.FreightTotal, new { @class = "form-control textrightamount ", @readonly = "readonly" })
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="mb-2">
+                                    <label class="col-form-label required">Total</label>
+                                    @Html.TextBoxFor(mode => mode.EquipmentAccessTotal, new { @class = "form-control textrightamount ", @readonly = "readonly" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <h4 class="card-title">Payment Terms</h4>
+                            <div class="col-md-4">
+                                <div class="mb-2">
+                                    <label class="col-form-label required">Days</label>
+                                    @Html.TextBoxFor(mode => mode.PaymentDays, new { @class = "form-control textright0", @onchange = "calculationchargeable()" })
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="mb-2">
+                                    <label class="col-form-label required">Free Days</label>
+                                    @Html.TextBoxFor(mode => mode.FreeServiceDays, new { @class = "form-control textright0", @onchange = "calculationchargeable()" })
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="mb-2">
+                                    <label class="col-form-label required">Chargeable Month</label>
+                                    @Html.TextBoxFor(mode => mode.ChargeableMonth, new { @class = "form-control textright0", @readonly = "readonly" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="mb-2">
+                                    <label class="col-form-label required">Finance Charge Percent</label>
+                                    @Html.TextBoxFor(mode => mode.FinChargePercent, new { @class = "form-control", @onchange = "calculationchargeable()" })
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="mb-2">
+                                    <label class="col-form-label required">Finance Charge</label>
+                                    @Html.TextBoxFor(mode => mode.FinCharge, new { @class = "form-control textrightamount", @title = "(Total of Equipment+Accessories+Freight) * Finance Percent" })
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="mb-2">
+                                    <label class="col-form-label required">Finance Per Month %</label>
+                                    @Html.TextBoxFor(mode => mode.FinPerMonthPercent, new { @class = "form-control" })
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="mb-2">
+                                    <label class="col-form-label required">Finance Per Month %</label>
+                                    @Html.TextBoxFor(mode => mode.FinPerMonth, new { @class = "form-control textright" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer" style="padding-top: 5px">
+                    <span class="error text-left" id="spanfianceerror"></span>
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="ApplyFinanceCharge()">Apply Finance</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>*@
+
+
+@section scripts{
+    <script src="~/assets/libs/select2/js/select2.min.js"></script>
+    <script src="~/Scripts/JS/Estimation.js?v=4"></script>
+}
+<script>
+
+
+</script>
+
+

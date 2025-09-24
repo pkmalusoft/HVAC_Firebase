@@ -1,0 +1,430 @@
+﻿@model HVAC.Models.QuotationVM
+@{
+
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+    ul.ui-front {
+        z-index: 1100;
+    }
+
+    .disabled-link {
+        pointer-events: none;
+        background-color: #dedede;
+    }
+</style>
+
+@{
+
+    ViewBag.pTitle = "Quotation";
+    ViewBag.pageTitle = "Enquiry";
+}
+@section styles{
+    <link href="~/assets/libs/select2/css/select2.min.css" rel="stylesheet" type="text/css" />
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <!-- Select2 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
+    <!-- Select2 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+    <style>
+        .select2-container .select2-selection--multiple .select2-selection__choice {
+            padding: 0 10px;
+    </style>
+    }
+}
+
+<script>
+
+
+    $(document).ready(function () {
+
+        if ($('#hdnQuotationMode').val() == 'Revision') {
+            var _enquiryid = $('#EnquiryID').attr('svalue');
+            $('#EnquiryID').val(_enquiryid).trigger('change');
+            $('#QuotationID').val(0);
+        }
+
+    });
+
+</script>
+
+@using (Html.BeginForm("Create", "Quotation", FormMethod.Post, new { @class = "needs-validation ", @novalidate = "novalidate" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true, "", new { @class = "needs-validation" })
+
+
+
+    <div class="card">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-9 d-flex">
+                    <b>Quotation No.</b>
+                    <span type="button" class="text-primary mb-2 me-2 font-size-13" style="font-weight:bold; padding-left: 6px">@Model.QuotationNo</span>
+
+                    <b>Enquiry No.</b>
+                    <span type="button" class="text-primary mb-2 me-2 font-size-13" style="font-weight: bold;padding-left: 6px ">@Model.EnquiryNo</span>
+                    <b>Project</b>
+                    <span type="button" class="text-primary mb-2 me-2 font-size-13 text_over " style="font-weight: bold;padding-left: 6px ">@Model.ProjectName</span>
+                </div>
+                <div class="col-md-3">
+
+
+                    <div class="text-right ">
+                        <a href='@Url.Action("Index", "Quotation", new { id = 0 })' class="btn btn-secondary" data-placement="right">Cancel</a>
+                        <div id="divothermenu2" class="btn-group">
+                            @*<button type="submit" class="btn btn-primary">Menu</button>*@
+                            <span class="btn btn-primary"><i class="bx bx-cog bx-spin me-2"></i>Sub Menu</span>
+                            <button type="button" class="btn btn-primary dropdown-toggle-split border_right" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="mdi mdi-chevron-down"></i>
+                            </button>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item" target="_blank" href="/Quotation/Print?Id=@Model.QuotationID">Quotation Print</a>
+                                <a class="dropdown-item" target="_blank" href="/Enquiry/Create?id=@Model.EnquiryID">Goto Enquiry</a>
+                                <a class="dropdown-item" target="_blank" href="/Enquiry/GotoQuotation?EnquiryNo=@Model.EnquiryNo">Goto Quotation</a>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+
+
+            </div>
+
+
+            <div class="row">
+                <div class="col-md-2">
+                    <div class="mb-2">
+                        <label class="col-form-label">Quotation Date</label>
+                        <div class="docs-datepicker">
+                            <div class="input-group">
+                                <input type="text" class="form-control docs-date" name="QuotationDate" id="QuotationDate" tabindex="1" required value="@Convert.ToDateTime(@Model.QuotationDate).ToShortDateString()"
+                                       placeholder="Pick a From Date" autocomplete="off">
+                                <button type="button"
+                                        class="btn btn-secondary docs-datepicker-trigger"
+                                        disabled>
+                                    <i class="mdi mdi-calendar" aria-hidden="true"></i>
+                                </button>
+                            </div>
+                            <div class="docs-datepicker-container"></div>
+                        </div>
+                        <div class="invalid-feedback">
+                            Please enter quoation date
+                        </div>
+
+                        @*<input type="text" name="" class="form-control" id="QuotationDate" />*@
+
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="mb-2">
+
+                        <input type="hidden" id="hdnQuotationMode" value="@ViewBag.QuotationMode" />
+                        @Html.HiddenFor(mode => mode.QuotationID, new { @class = "form-control" })
+                        @Html.HiddenFor(mode => mode.EnquiryID, new { @class = "form-control" })
+                        @Html.HiddenFor(mode => mode.ClientID, new { @class = "form-control" })
+                        @Html.HiddenFor(mode => mode.QuotationTo, new { @class = "form-control" })
+                        @Html.HiddenFor(mode => mode.QuotationValue, new { @id = "QuotationValue" })
+                        @Html.HiddenFor(mode => mode.GrossAmount, new { @id = "QuotationGross" })
+                        @Html.HiddenFor(mode => mode.VATAmount, new { @id = "VATAmount" })
+
+
+                        <label class="col-form-label required">Engineer</label>
+                        @Html.DropDownListFor(mode => mode.EngineerID, new SelectList(ViewBag.EmployeeMaster, "EmployeeID", "EmployeeName"), "Select Engineer", new { @class = "form-select", @id = "QEngineerID", @disabled = "disabled", @tabindex = "2" })
+
+                        @Html.HiddenFor(mode => mode.QuotationNo, new { @class = "form-select", @Readonly = true })
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="mb-2">
+                        <label class="col-form-label required">Project Reference</label>
+                        @Html.TextBoxFor(mode => mode.ProjectRef, new { @class = "form-control", @readonly = "readonly", @tabindex = "3" })
+
+                    </div>
+                </div>
+                <div class="col-md-1">
+                    <div class="mb-2">
+                        <label class="col-form-label required">Version</label>
+                        @Html.TextBoxFor(mode => mode.Version, new { @id = "Version", @class = "form-control", @readonly = "readonly" })
+                    </div>
+                </div>
+                <div class="col-md-1">
+                    <div class="mb-2">
+                        <label class="col-form-label required">Currency</label>
+                        @Html.HiddenFor(mode => mode.Salutation, new { @id = "QtxtSalutation", @class = "form-control", @rows = "1" })
+                        @Html.DropDownListFor(mode => mode.CurrencyId, new SelectList(ViewBag.Currency, "CurrencyID", "CurrencyName"), "Select Currency", new { @class = "form-select", @id = "QCurrencyId", @disabled = "disabled", @tabindex = "4" })
+
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="mb-2">
+                        <label class="col-form-label required">Status</label>
+
+                        @Html.DropDownListFor(model => model.QuotationStatusID, new SelectList(@ViewBag.QuotationStatus, "ID", "Status"), "Select", new { @class = "form-select", @tabindex = "5", @disabled = "disabled" })
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <div class="row">
+                <ul class="nav nav-tabs nav-tabs-custom nav-justified" role="tablist">
+
+                    @{
+                        if (Model.QuotationID > 0)
+                        {
+                            <li class="nav-item" role="presentation">
+                                <a class="nav-link" data-bs-toggle="tab" href="#profile1" role="tab" aria-selected="false" tabindex="-1">
+                                    <span class="d-block d-sm-none"><i class="far fa-user"></i></span>
+                                    <span class="d-none d-sm-block">Scope of Work</span>
+                                </a>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <a class="nav-link" data-bs-toggle="tab" href="#messages1" role="tab" aria-selected="false" tabindex="-1">
+                                    <span class="d-block d-sm-none"><i class="far fa-envelope"></i></span>
+                                    <span class="d-none d-sm-block">Warranty</span>
+                                </a>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <a class="nav-link" data-bs-toggle="tab" href="#settings1" role="tab" aria-selected="false" tabindex="-1">
+                                    <span class="d-block d-sm-none"><i class="fas fa-cog"></i></span>
+                                    <span class="d-none d-sm-block">Exclusions</span>
+                                </a>
+                            </li>
+                        }
+                    }
+                </ul>
+                @*Tab pane*@
+                @if (Model.QuotationID > 0)
+                {
+                    <div class="tab-content p-3 text-muted">
+                        <div class="tab-pane active" id="profile1" role="tabpanel">
+                            <div class="row">
+                                <div class="col-md-12 text-md-end">
+
+                                    <input type="button" value="Add Scope of Work" class="btn btn-sm btn-primary" style="margin-top:30px" onclick="AddScopePopup(0)" />
+                                </div>
+
+                            </div>
+                            <div class="row" id="DetailContainer1">
+                                @{Html.RenderPartial("ScopeDetailList", Model);}
+                            </div>
+                        </div>
+
+                        <div class="tab-pane" id="messages1" role="tabpanel">
+                            <div class="row">
+                                <div class="col-md-12 text-md-end">
+
+                                    <input type="button" value="Add Warranty" class="btn btn-sm btn-primary" style="margin-top:30px" onclick="AddWarranty(0)" />
+                                </div>
+
+                            </div>
+
+                            <div class="row" id="DetailContainer2">
+                                @{Html.RenderPartial("WarrantyDetailList", Model);}
+                            </div>
+
+                        </div>
+                        <div class="tab-pane" id="settings1" role="tabpanel">
+                            <div class="row">
+                                <div class="col-md-12 text-md-end">
+
+                                    <input type="button" value="Add Exclusion" class="btn btn-sm btn-primary" style="margin-top:30px" onclick="AddExclusion(0)" />
+                                </div>
+
+                            </div>
+
+                            <div class="row" id="DetailContainer3">
+                                @{Html.RenderPartial("ExclusionDetailList", Model);}
+                            </div>
+                        </div>
+                    </div>
+                }
+
+            </div>
+        </div>
+    </div>
+}
+
+<div class="modal fade bs-example-modal-xl" id="estimationdetailpopup" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="divEstimationNo">
+                    Estimation Detail
+                </h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body">
+                <div class="container-fluid" id="estimationdetailContainer">
+
+                </div>
+            </div>
+            <div class="modal-footer" style="padding-top: 5px">
+                <span class="error text-left" id="spanequiperror"></span>
+                <button type="button" class="btn btn-primary" id="btnAddEstimationDetail" onclick="SaveEstimationDetailEntry()">Add Items</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="marginpopup" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content" style="border-radius:5px;width:300px">
+            <div class="modal-header">
+                <h4 class="modal-title">
+                    Margin Calculate
+                </h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body">
+                <div class="container-fluid" id="financeContainer">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="mb-2">
+                                <label class="col-form-label required">Quotation To</label>
+
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+            <div class="modal-footer" style="padding-top: 5px">
+                <span class="error text-left" id="spanmarginerror"></span>
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="ApplyMargin()">Apply Margin</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade bs-example-modal-xl" id="contactpopup" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">
+                    Quotation Contact
+                </h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body">
+                <div class="container-fluid" id="quotationcontactContainer">
+
+                </div>
+            </div>
+            <div class="modal-footer" style="padding-top: 5px">
+                <span class="error text-left" id="spancontacterror"></span>
+                <button type="button" class="btn btn-primary" id="btnSaveContactDetail" onclick="SaveContacts()">Save Contacts</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade bs-example-modal-xl" id="scopepopup" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">
+                    Manage Scope of Work
+                </h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body">
+                <div class="container-fluid" id="scopeContainer">
+
+                </div>
+            </div>
+            <div class="modal-footer" style="padding-top: 5px">
+                <span class="error text-left" id="spancontacterror"></span>
+                <button type="button" class="btn btn-primary" id="btnSaveContactDetail" onclick="SaveSCopePopup()">Save Scope of Work</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade bs-example-modal-xl" id="warrantypopup" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">
+                    Manage Warranty
+                </h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body">
+                <div class="container-fluid" id="warrantyContainer">
+
+                </div>
+            </div>
+            <div class="modal-footer" style="padding-top: 5px">
+                <span class="error text-left" id="spanwarrantyerror"></span>
+                <button type="button" class="btn btn-success" onclick="SaveWarrantyPopup()">Save Warranty</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade bs-example-modal-xl" id="exclusionpopup" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">
+                    Manage Exclusion
+                </h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body">
+                <div class="container-fluid" id="exclusionContainer">
+
+                </div>
+            </div>
+            <div class="modal-footer" style="padding-top: 5px">
+                <span class="error text-left" id="spanexclusionerror"></span>
+                <button type="button" class="btn btn-success" onclick="SaveExclusionPopup()">Save Exclusion</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+
+</script>
+@section scripts{
+    @*<script src="~/assets/js/app.js"></script>*@
+    <!--tinymce js-->
+    @*<script src="~/assets/libs/tinymce/tinymce.min.js"></script>*@
+    <script src="~/assets/libs/select2/js/select2.min.js"></script>
+    <!-- init js -->
+    @*<script src="~/assets/js/pages/form-editor.init.js"></script>*@
+    <script src="~/Scripts/JS/Quotation.js?v=2"></script>
+    <script src="~/Scripts/JS/QuotationDetails.js"></script>
+    @*<script src="~/assets/libs/parsleyjs/parsley.min.js"></script>
+        <script src="~/assets/js/pages/form-validation.init.js"></script>*@
+
+
+
+
+
+}
+@*<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>*@
+
+

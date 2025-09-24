@@ -60,7 +60,7 @@ namespace HVAC.Controllers
         // POST: /LocationMaster/Create
 
         [HttpPost]
-
+        [ValidateAntiForgeryToken]
         public ActionResult Create(LocationVM v)
         {
             if (ModelState.IsValid)
@@ -125,7 +125,7 @@ namespace HVAC.Controllers
 
 
         [HttpPost]
-
+        [ValidateAntiForgeryToken]
         public ActionResult Edit(LocationVM l)
         {
             LocationMaster a = new LocationMaster();
@@ -258,22 +258,27 @@ namespace HVAC.Controllers
         }
     }
 }
-public class RootObject
-{
-    public List<Prediction> predictions { get; set; }
-    public string status { get; set; }
-}
-public class CityM
-{
-    public int CityID { get; set; }
-    public String City { get; set; }
-}
 
-public class Prediction
+namespace HVAC.Models
 {
-    public string description { get; set; }
-    public string id { get; set; }
-    public string place_id { get; set; }
-    public string reference { get; set; }
-    public List<string> types { get; set; }
+    public class RootObject
+    {
+        public List<Prediction> predictions { get; set; }
+        public string status { get; set; }
+    }
+    
+    public class CityM
+    {
+        public int CityID { get; set; }
+        public String City { get; set; }
+    }
+
+    public class Prediction
+    {
+        public string description { get; set; }
+        public string id { get; set; }
+        public string place_id { get; set; }
+        public string reference { get; set; }
+        public List<string> types { get; set; }
+    }
 }

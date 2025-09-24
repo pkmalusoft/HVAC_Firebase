@@ -59,7 +59,7 @@ namespace HVAC.Controllers
         // POST: /State/Create
 
         [HttpPost]
-       
+        [ValidateAntiForgeryToken]
         public ActionResult Create(StateVMcs c)
         {
             if (ModelState.IsValid)
@@ -109,7 +109,7 @@ namespace HVAC.Controllers
         // POST: /State/Edit/5
 
         [HttpPost]
-     
+        [ValidateAntiForgeryToken]
         public ActionResult Edit(State state)
         {
             if (ModelState.IsValid)

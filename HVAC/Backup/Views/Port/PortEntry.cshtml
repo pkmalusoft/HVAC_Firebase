@@ -1,0 +1,135 @@
+﻿@model HVAC.Models.PortCountryVM
+@{
+    Layout = null;
+}
+<style>
+    ul.ui-front {
+        z-index: 1100;
+    }
+</style>
+<script type="text/javascript">
+    $(document).ready(function () {
+         $('#LCountryName').autocomplete({
+            source: function (request, response) {
+                $.ajax({
+                    url: "@Url.Action("GetCountryName", "LocationMaster")",
+                    data: { term: request.term },
+                    dataType: "json",
+                    type: "GET",
+                    success: function (data) {
+                        response($.map(data, function (val, item) {
+                            return {
+                                label: val.CountryName,
+                                value: val.CountryName,
+                                Id: val.Id,
+                                CountryCode:val.CountryCode
+                            }
+                        }))
+                    }
+                });
+            },
+            minLength: 1,
+            autoFocus: false,
+            select: function (event, ui) {
+                event.preventDefault();
+                $('#LCountryName').val(ui.item.label);
+                $('#LCountryID').val(ui.item.Id);
+               
+               
+            },
+             focus: function (event, ui) {
+                 event.preventDefault();
+                $('#LCountryName').val(ui.item.label);
+                $('#LCountryID').val(ui.item.Id);
+              
+            }
+        });
+        setTimeout(function () {
+            $('#LOriginCity').autocomplete({
+                source: function (request, response) {
+                    $.ajax({
+                        url: "/LocationMaster/GetCityName",
+                        data: { term: request.term },
+                        dataType: "json",
+                        type: "GET",
+                        success: function (data) {
+                            response($.map(data, function (val, item) {
+                                return {
+                                    label: val.CityName,
+                                    value: val.Id,
+                                    Country: val.CountryName,
+                                    CountryId: val.CountryID
+                                }
+                            }))
+                        }
+                    });
+                },
+                minLength: 1,
+                autoFocus: false,
+                select: function (event, ui) {
+                    event.preventDefault();
+                    $('#LOriginCity').val(ui.item.label);
+                    $('#LCityID').val(ui.item.value);
+                    $('#LCountryName').val(ui.item.Country);
+                    $('#LCountryID').val(ui.item.CountryId);
+
+                },
+                focus: function (event, ui) {
+                    event.preventDefault();
+                    $('#LOriginCity').val(ui.item.label);
+                    $('#LCityID').val(ui.item.value);
+                    $('#LCountryName').val(ui.item.Country);
+                    $('#LCountryID').val(ui.item.CountryId);
+                }
+            });
+           
+        }, 300)
+
+
+        $('#PortType').change(function () {
+            $('#LPortType').val($('#PortType').val());
+        })
+        
+    });
+
+</script>
+<div class="row no-margin" style="margin-top:10px!important">
+
+    <div class="col-md-12">
+        <label class="headinglabel">Air Port-Sea Port-Border</label>
+        @Html.TextBoxFor(model => model.Port, new { @class = "form-control", @id = "LPort" })
+        @Html.HiddenFor(model => model.PortID, new { @id = "LPortId" })
+        @Html.HiddenFor(model => model.CountryID, new { @id = "LCountryID" })
+    </div>      
+
+</div>
+<div class="row no-margin" style="margin-top:10px!important">
+
+    <div class="col-md-6">
+        <label class="headinglabel">Port Code</label>
+        @Html.TextBoxFor(model => model.PortCode, new { @class = "form-control", @id = "LPortCode" })
+    </div>
+    <div class="col-md-6">
+        <label class="headinglabel">Port Type</label>
+        <select class="form-select" selected="@Model.PortType" id="PortType" name="PortType" required svalue="@Model.PortType">
+            <option value="1">AirPort</option>
+            <option value="2">SeaPort</option>
+            <option value="3">Border</option>
+        </select>
+        @Html.HiddenFor(model => model.PortType, new { @id = "LPortType",value="1" })
+    </div>
+</div>
+<div class="row no-margin" style="margin-top:10px!important">
+    <div class="col-md-6">
+        <label class="required headinglabel">Port City</label>        
+        @Html.TextBoxFor(model => model.OriginCity, new { @class = "form-select", @id = "LOriginCity" })
+        @Html.HiddenFor(model => model.CityID, new { @class = "form-control", @id = "LCityID" })
+        @Html.ValidationMessageFor(model => model.OriginCity)
+
+    </div>
+    <div class="col-md-6">
+        <label class="headinglabel required">Country</label>        
+        @Html.TextBoxFor(model => model.CountryName, new { @class = "form-select", @id = "LCountryName", @readonly = "readonly" })
+        @Html.ValidationMessageFor(model => model.CountryName)
+    </div>
+</div>

@@ -1,0 +1,164 @@
+﻿@model HVAC.Models.QuotationStatu
+
+@{
+
+    ViewBag.pTitle = "QuotationStatus - Create";
+    ViewBag.pageTitle = "Setup";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<script>
+
+    function SaveQuotationStatus() {
+        debugger;
+        var id = 0;
+        if ($('#ID').val() > 0) {
+            id = $('#ID').val();
+
+        }
+        var protypeobj = {
+            ID: id,
+            Status: $('#Status').val()
+
+
+        }
+        debugger;
+        $.ajax({
+            type: "POST",
+            url: '/QuotationStatus/SaveQuotationStatus/',
+            datatype: "html",
+            data: { ProType: protypeobj },
+            success: function (response) {
+                if (response.status == "OK") {
+                    Swal.fire("Save Status!", response.message, "success");
+                    setTimeout(function () {
+                        window.location.href = "/QuotationStatus/Index";
+                    }, 100)
+
+
+                }
+                else {
+                    Swal.fire("Save Status!", response.message, "warning");
+                }
+
+
+            }
+        });
+    }
+
+    function CheckQuotationStatusExist(type, id, callback) {
+
+
+        $.ajax({
+            type: "Get",
+            url: '/QuotationStatus/CheckQuotationStatusExist',
+            datatype: "Json",
+            data: {
+                PType: type,
+                ID: id
+            },
+
+            success: function (data) {
+
+                if (data == "true") {
+
+                    callback(true);
+                }
+                else {
+                    callback(false);
+                }
+
+            }
+        });
+
+
+    }
+
+
+</script>
+
+<script>
+
+    $(document).on("submit", ".needs-validation", function (e) {
+
+        e.preventDefault();
+        var id = 0;
+                    if (@Model.ID > 0) {
+
+                  $('#btnsave').html('Update');
+            id =@Model.ID;
+}
+
+
+
+
+        var type = $('#Status').val();
+
+
+
+        if (!type || type === ' ') {
+            Swal.fire("Validation Error", "Please Enter QuotationStatus", "error");
+            return;
+        }
+
+        //if (!describtion || describtion === ' ') {
+        //    Swal.fire("Validation Error", "Please Enter Describtion.", "error");
+        //    return;
+        //}
+
+
+        CheckQuotationStatusExist(type, id, function (exists) {
+            if (exists) {
+                Swal.fire("Save Status!", "QuotationStatus Already Exist", "warning");
+            } else if (!exists) {
+
+                SaveQuotationStatus();
+            }
+        });
+    });
+
+</script>
+
+
+
+@using (Html.BeginForm("Create", "QuotationStatus", FormMethod.Post, new { @class = "needs-validation ", @novalidate = "novalidate" }))
+{
+    @Html.ValidationSummary(true)
+    @Html.ValidationSummary(true)
+    <div id="validations" style="color:red;margin-left:7px;display:none">* Please fill mandatory fields</div>
+    <fieldset>
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+
+                    <div class="col-md-4">
+                        <div class="mb-2">
+                            @Html.HiddenFor(mode => Model.ID)
+                            <label class="col-form-label required">QuotationStatus</label>
+                            @Html.TextBoxFor(model => model.Status, new { @class = "form-control txttarget", @required = "required" })
+                            @Html.ValidationMessageFor(model => model.Status)
+
+                        </div>
+                    </div>
+
+                    <div class="col-md-12 text-md-end">
+                        <input type="submit" value="Save" class="btn btn-success" id="btnsave" />
+
+                        <a href='@Url.Action("Index", "QuotationStatus", new { id = 0 })' class="btn btn-secondary" data-toggle="tooltip" data-placement="right" title="Click here">Cancel</a>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </fieldset>
+}
+
+
+
+
+@*@section Scripts {
+        @Scripts.Render("~/bundles/jqueryval")
+    }*@

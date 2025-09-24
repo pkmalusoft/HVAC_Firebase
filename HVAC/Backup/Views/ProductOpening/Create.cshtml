@@ -1,0 +1,422 @@
+﻿@model HVAC.Models.StockOpeningVM
+@{
+
+    ViewBag.pTitle = "Product Opening";
+    ViewBag.pageTitle = "Setup";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+    .searchdiv {
+        background-color: #fff;
+        width: 100%;
+        margin: 0 auto;
+        max-width: 865px;
+        padding: 20px;
+        margin-top: 50px;
+        border-radius: 10px;
+        box-shadow: 0 9px 23px rgba(0, 0, 0, 0.09), 0 5px 5px rgba(0, 0, 0, 0.06) !important;
+    }
+</style>
+@section styles{
+    <link href="~/assets/libs/select2/css/select2.min.css" rel="stylesheet" type="text/css" />
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <!-- Select2 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
+    <!-- Select2 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+}
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $(":text").css({ "border-radius": "5px" });
+        $("select").css({ "border-radius": "5px" });
+
+        $("#AsonDate").focus();
+
+        $("#Model").autocomplete({
+            source: function (request, response) {
+                $.ajax({
+                    url: '/Enquiry/GetModel',
+                    datatype: "json",
+                    data: {
+                        term: request.term
+                    },
+                    success: function (data) {
+                        response($.map(data, function (val, item) {
+                            return {
+                                label: val.ModelName,
+                                value: val.ID
+
+
+                            }
+                        }))
+                    }
+                })
+            },
+            minLength: 1,
+            autoFocus: false,
+            focus: function (e, ui) {
+                e.preventDefault();
+                $('#Model').val(ui.item.label);
+
+
+            },
+            select: function (e, ui) {
+                e.preventDefault();
+                $('#Model').val(ui.item.label);
+
+            },
+
+        });
+
+
+        var suppressOpenOnClear = false;
+        $('.equipment-select').each(function () {
+            var $select = $(this);
+
+            // Handle the clear event
+            $select.on('select2:select2-selection__arrow', function () {
+                suppressOpenOnClear = true;
+
+                // Remove focus from both the hidden <select> and visible Select2 box
+                setTimeout(() => {
+                    $select.blur();
+                    $select.next('.select2-container').find('.select2-selection').blur();
+                }, 0);
+            });
+
+            // Prevent dropdown from reopening immediately after clear
+            $select.on('select2:opening', function (e) {
+                if (suppressOpenOnClear) {
+                    e.preventDefault(); // Stop it from opening
+                    suppressOpenOnClear = false;
+                }
+            });
+            var defaultOption = new Option($select.attr('boxname'), $select.attr('boxid'), true, true);
+            $select.append(defaultOption);
+            //// Append it to the select
+            $select.append('<option id="" value=""></option>').trigger('change');
+            $select.select2({                
+                width: 'resolve', // respects width set in the HTML
+                placeholder: 'Select a Equipment Type',
+                allowClear: false,
+                minLength: 1,
+                ajax: {
+                    url: '/Enquiry/GetEquipmentType',
+                    dataType: 'json',
+                    delay: 250,
+                    data: function (params) {
+                        // var category = $select.closest('tr').find('.category').val();
+                        return {
+                            term: params.term, BrandID:0
+                        };
+                    },
+                    processResults: function (data) {
+                        return {
+                            results: data.map(function (item) {
+                                return { id: item.ID, text: item.EquipmentType };
+                            })
+                        };
+                    },
+                    cache: true
+                }
+            });
+
+            $select.change(function () {
+
+
+
+
+                $.ajax({
+                    url: '/Enquiry/GetProductFamily',
+                    datatype: "json",
+                    data: {
+                        EquipmentTypeID: $('#eEquipmentType').val()
+                    },
+                    success: function (data) {
+
+                        if (data != null) {
+                            if (data.ProductFamilyID > 0) {
+                                $('#ProductFamilyID').val(data.ProductFamilyID);
+                                $('#eProductFamilyName').val(data.ProductFamilyName);
+                                $('#eBrandName').val(data.BrandName);
+                            }
+                            else {
+                                $('#ProductFamilyID').val(0);
+                                $('#eProductFamilyName').val('');
+                                $('#eBrandName').val(data.BrandName);
+                            }
+                        }
+                        else {
+                            $('#ProductFamilyID').val(0);
+                            $('#eProductFamilyName').val('');
+                            $('#eBrandName').val(data.BrandName);
+                        }
+
+                    }
+
+                })
+
+            });
+
+        });
+
+        if ($('#OpeningID').val()>0) {
+            let equipmenttype = new Option($('#EquipmentType').val(), $('#EquipmentTypeID').val(), true, true);
+            $('#eEquipmentType').append(equipmenttype).trigger('change');
+        }
+    });
+</script>
+<script type="text/javascript">
+    function addCommas(nStr) {
+
+        nStr += '';
+        var x = nStr.split('.');
+        var x1 = x[0];
+        var x2 = x.length > 1 ? '.' + x[1] : '';
+        var rgx = /(\d+)(\d{3})/;
+        while (rgx.test(x1)) {
+            x1 = x1.replace(rgx, '$1' + ',' + '$2');
+        }
+        return x1 + x2;
+    }
+
+    function getnumberformatLakhs(nStr) {
+        var x = nStr.split('.');
+        var x1 = x[0];
+        var x2 = x.length > 1 ? '.' + x[1] : '';
+        var lastThree = x1.substring(x1.length - 3);
+        var otherNumbers = x1.substring(0, x1.length - 3);
+        if (otherNumbers != '')
+            lastThree = ',' + lastThree;
+        var res = otherNumbers.replace(/\B(?=(\d{2})+(?!\d))/g, ",") + lastThree + x2;
+        return res;
+    }
+    function ShowPopup() {
+
+        $('#ProductTypeModal').modal('show');
+    }
+
+    function ShowGroupPopup() {
+        $('#ProductCategoryName2').val($('#ProductCategoryName').val());
+        $('#ProductCategoryID1').val($('#ProductCategoryId').val());
+        $('#ProductGroupModal').modal('show');
+    }
+
+
+
+
+    function calculationvalue() {
+        var qty = $('#Quantity').val();
+        var rate = $('#Rate').val();
+        if (rate == null || rate== '')
+        rate = 0;
+
+        if (qty == null || qty== '')
+        qty = 0;
+        var value = parseFloat(qty) * parseFloat(rate);
+        $('#Value').val(parseFloat(value).toFixed(2));
+
+    }
+    $(document).ready(function () {
+
+        if (@Model.OpeningID> 0) {
+            var _decimal1 = $('#hdncompanydecimal').val();
+            var _numberformat1 = $('#hdnnumberformat').val();
+            var str = $('#SalesRate').attr('ovalue');
+            if (str == '')
+                str = 0;
+            if (_numberformat1 == "Lakhs")
+                resultstr = getnumberformatLakhs(parseFloat(str).toFixed(_decimal1));
+            else
+                resultstr = addCommas(parseFloat(str).toFixed(_decimal1));
+
+            $('#SalesRate').val(resultstr);
+
+            str = $('#CostRate').attr('ovalue');
+            if (str == '')
+                str = 0;
+            if (_numberformat1 == "Lakhs")
+                resultstr = getnumberformatLakhs(parseFloat(str).toFixed(_decimal1));
+            else
+                resultstr = addCommas(parseFloat(str).toFixed(_decimal1));
+
+            $('#CostRate').val(resultstr);
+        }
+    });
+</script>
+
+@using (Html.BeginForm("Create", "ProductOpening", FormMethod.Post, new { @class = "needs-validation ", @novalidate = "novalidate" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true, "", new { @class = "needs-validation" })
+    <div id="validations" style="color:red;margin-left:7px;display:none">* Please fill mandatory fields</div>
+    <fieldset>
+
+        <div class="searchdiv">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="mb-2">
+                                <label class="col-form-label required">As on Date</label>
+                                <div class="docs-datepicker">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control docs-date" name="AsonDate" id="AsonDate"
+                                               placeholder="Pick a Opening Date" autocomplete="off" value="@Model.AsonDate.ToShortDateString()" />
+                                        <button type="button"
+                                                class="btn btn-secondary docs-datepicker-trigger" )
+                                                disabled>
+                                            <i class="mdi mdi-calendar" aria-hidden="true"></i>
+                                        </button>
+                                    </div>
+                                    <div class="docs-datepicker-container"></div>
+                                </div>
+                                @Html.HiddenFor(model => model.OpeningID)
+
+                            </div>
+                        </div>
+                        <div class="col-md-9">
+                            <div class="mb-2">
+
+                                <label class="col-form-label required">Product Type</label>
+                                <select id="eEquipmentType" class="form-select form-control equipment-select" style="width:100%"></select>
+                                @Html.HiddenFor(model => model.EquipmentTypeID, new { @class = "form-control txttarget", @id = "EquipmentTypeID" })
+                                @Html.HiddenFor(model => model.EquipmentType, new { @class = "form-control txttarget", @id = "EquipmentType" })
+                                @Html.ValidationMessageFor(model => model.EquipmentType)
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-2">
+                                <label class="col-form-label">Brand</label>
+                                @Html.TextBoxFor(model => model.BrandName, new { @class = "form-control txttarget", @autocomplete = "off", @id = "eBrandName", @readonly = "readonly",@tabindex=-1 })
+
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-2">
+                                <label class="col-form-label">Product Family</label>
+                                @Html.TextBoxFor(model => model.ProductFamilyName, new { @class = "form-control txttarget", @autocomplete = "off", @required = "required", @id = "eProductFamilyName", @readonly = "readonly",@tabindex=-1 })
+
+                            </div>
+                        </div>
+                    </div>
+                        <div class="row">
+                            <div class="col-md-3">
+                                <div class="mb-2">
+
+                                    <label class="col-form-label required">Model</label>
+                                    @Html.TextBoxFor(model => model.Model, new { @class = "form-control", autocomplete = "off" })
+                                </div>
+
+                            </div>
+                            <div class="col-md-3">
+                                <div class="mb-2">
+
+                                    <label class="col-form-label required">Opening Qty</label>
+                                    @Html.TextBoxFor(model => model.Quantity, new { @class = "form-control textright", @onchange = "calculationvalue()", autocomplete = "off" })
+                                </div>
+
+                            </div>
+                            <div class="col-md-3">
+                                <div class="mb-2">
+                                    <div class="flexTitle">
+                                        <label class="col-form-label required"> Rate</label>
+                                        <div class="no-padding  text-right" style="float:right">
+
+                                            <label class="col-form-label" style="color:#07a7e3!important;padding-left: 0!important">@ViewBag.Currency</label>
+                                        </div>
+                                    </div>
+
+                                    @Html.TextBoxFor(model => model.Rate, new { @class = "form-control textrightamount", @onchange = "calculationvalue()", @ovalue = Model.Rate, @value = HVAC.Models.CommonFunctions.GetBranchFormatNumber(Model.Rate) })
+                                    @Html.ValidationMessageFor(model => model.Rate)
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="mb-2">
+
+                                    <label class="col-form-label required">Value</label>
+                                    @Html.TextBoxFor(model => model.Value, new { @class = "form-control textright", autocomplete = "off",@readonly="readonly" })
+                                </div>
+
+                            </div>
+                        </div>
+
+
+
+                    </div>
+
+
+
+                    <div class="col-md-12 text-md-end btn_top">
+                        <input type="submit" value="Save" class="btn btn-success" id="btnsave" />
+                        <a href='@Url.Action("Index", "ProductOpening", new { id = 0 })' class="btn btn-secondary" data-toggle="tooltip" data-placement="right" title="">Cancel</a>
+
+                    </div>
+                </div>
+        </div>
+
+    </fieldset>
+}
+
+
+<div class="modal fade" id="ProductGroupModal" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content" style="border-radius:5px;min-width:600px">
+            <div class="modal-header">
+
+                <h4 class="modal-title">
+                    New Product Group
+                </h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body">
+                <div class="container-fluid">
+                    <div class="row" style="padding-top: 5px">
+
+
+
+                        <div class="col-xs-5 col-sm-3">
+                            Product Category
+                        </div>
+                        <div class="col-xs-7 col-sm-9">
+
+                            <input type="text" id="ProductCategoryName2" class="form-select" value="" width="100%" />
+                        </div>
+
+                    </div>
+                    <div class="row" style="padding-top: 5px">
+
+                        <div class="col-xs-5 col-sm-3">
+                            Product Group
+                        </div>
+                        <div class="col-xs-7 col-sm-9">
+                            <input type="text" id="ProductGroupName1" class="form-control" value="" width="100%" />
+                            <input type="hidden" id="ProductCategoryID1" class="form-control" value="" width="100%" />
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer" style="padding-top: 5px">
+                <button type="button" class="btn btn-primary" id="btnsavegroup" onclick="SaveProductGroup()">Save</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts{
+    <script src="~/assets/libs/select2/js/select2.min.js"></script>
+
+    <script src="~/Scripts/JS/ProductOpeningCreate.js"></script>
+}
+

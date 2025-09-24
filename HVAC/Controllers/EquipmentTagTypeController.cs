@@ -48,6 +48,7 @@ namespace HVAC.Controllers
         // POST: /TypeOfGood/Create
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult Create(EquipmentTagType v)
         {
 

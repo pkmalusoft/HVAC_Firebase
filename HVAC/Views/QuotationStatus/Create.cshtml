@@ -124,6 +124,7 @@
 
 @using (Html.BeginForm("Create", "QuotationStatus", FormMethod.Post, new { @class = "needs-validation ", @novalidate = "novalidate" }))
 {
+    @Html.AntiForgeryToken()
     @Html.ValidationSummary(true)
     @Html.ValidationSummary(true)
     <div id="validations" style="color:red;margin-left:7px;display:none">* Please fill mandatory fields</div>

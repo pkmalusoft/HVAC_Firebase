@@ -527,7 +527,6 @@ F:\MalusoftIndia\Projects\HVACFirebase\HVAC\bin\Newtonsoft.Json.xml
 F:\MalusoftIndia\Projects\HVACFirebase\HVAC\bin\WebActivator.pdb
 F:\MalusoftIndia\Projects\HVACFirebase\HVAC\bin\Antlr3.Runtime.pdb
 F:\MalusoftIndia\Projects\HVACFirebase\HVAC\obj\Debug\HVAC.csproj.CopyComplete
-C:\Users\Administrator\HVAC_Cursor\HVAC_Optimised\HVAC\bin\HVAC.dll.config
 C:\Users\Administrator\HVAC_Cursor\HVAC_Optimised\HVAC\bin\HVAC.dll
 C:\Users\Administrator\HVAC_Cursor\HVAC_Optimised\HVAC\bin\HVAC.pdb
 C:\Users\Administrator\HVAC_Cursor\HVAC_Optimised\HVAC\bin\AngleSharp.Css.dll
@@ -578,7 +577,6 @@ C:\Users\Administrator\HVAC_Cursor\HVAC_Optimised\HVAC\bin\System.Web.WebPages.d
 C:\Users\Administrator\HVAC_Cursor\HVAC_Optimised\HVAC\bin\System.Web.WebPages.Razor.dll
 C:\Users\Administrator\HVAC_Cursor\HVAC_Optimised\HVAC\bin\WebActivator.dll
 C:\Users\Administrator\HVAC_Cursor\HVAC_Optimised\HVAC\bin\WebGrease.dll
-C:\Users\Administrator\HVAC_Cursor\HVAC_Optimised\HVAC\bin\stdole.dll
 C:\Users\Administrator\HVAC_Cursor\HVAC_Optimised\HVAC\bin\AngleSharp.xml
 C:\Users\Administrator\HVAC_Cursor\HVAC_Optimised\HVAC\bin\AngleSharp.Css.xml
 C:\Users\Administrator\HVAC_Cursor\HVAC_Optimised\HVAC\bin\AttributeRouting.xml
@@ -625,3 +623,4 @@ C:\Users\Administrator\HVAC_Cursor\HVAC_Optimised\HVAC\obj\Debug\HVAC.csproj.Cor
 C:\Users\Administrator\HVAC_Cursor\HVAC_Optimised\HVAC\obj\Debug\HVAC.csproj.Up2Date
 C:\Users\Administrator\HVAC_Cursor\HVAC_Optimised\HVAC\obj\Debug\HVAC.dll
 C:\Users\Administrator\HVAC_Cursor\HVAC_Optimised\HVAC\obj\Debug\HVAC.pdb
+C:\Users\Administrator\HVAC_Cursor\HVAC_Optimised\HVAC\bin\stdole.dll

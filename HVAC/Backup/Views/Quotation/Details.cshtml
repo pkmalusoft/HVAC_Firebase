@@ -1,0 +1,237 @@
+﻿
+@model HVAC.Models.QuotationVM
+@{
+    var i = 0;
+    var j = 0;
+    var k = 0;
+    ViewBag.pTitle = "Quotation Terms Details";
+    ViewBag.pageTitle = "Quotation";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section styles{
+    <link href="~/assets/libs/select2/css/select2.min.css" rel="stylesheet" type="text/css" />
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <!-- Select2 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
+    <!-- Select2 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+}
+
+
+@using (Html.BeginForm("Details", "Quotation", FormMethod.Post, new { enctype = "multipart/form-data", @class = "needs-validation ", @novalidate = "novalidate" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+
+    <fieldset>
+        <div id="alert" style="color:red;margin-left:7px;display:none">* Please fill mandatory fields</div>
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+
+                    <div class="col-md-2">
+                        <div class="mb-2">
+                            @Html.HiddenFor(model => model.QuotationID, new { @id = "QuotationID" })
+                            @Html.HiddenFor(model => model.EnquiryID, new { @id = "EnquiryID" })
+                            <label class="col-form-label">Quotation No.</label> <br />
+                            <span style="color:blue">@Model.QuotationNo</span>
+                            <div class="invalid-feedback">
+                                Please select Brand
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="mb-2">
+
+                            <label class="col-form-label">QuotationDate</label> <br />
+                            <span style="color:blue">@Model.QuotationDate.Value.ToString("dd-MM-yyyy")</span>
+
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="mb-2">
+
+                            <label class="col-form-label">Enquiry No</label> <br />
+                            <span style="color:blue">@Model.EnquiryNo</span>
+
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="mb-2">
+
+                            <label class="col-form-label">Client Name</label> <br />
+                            <span style="color:blue">@Model.ClientDetail</span>
+                        </div>
+                    </div>
+
+
+                    <div class="col-md-3 text-md-end">
+
+
+
+
+                        <a href='@Url.Action("Index", "Quotation")' class="btn btn-secondary">Cancel</a>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <ul class="nav nav-tabs nav-tabs-custom nav-justified" role="tablist">
+
+                        <li class="nav-item" role="presentation">
+                            <a class="nav-link active" data-bs-toggle="tab" href="#profile1" role="tab" aria-selected="false" tabindex="-1">
+                                <span class="d-block d-sm-none"><i class="far fa-user"></i></span>
+                                <span class="d-none d-sm-block">Scope of Work</span>
+                            </a>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <a class="nav-link" data-bs-toggle="tab" href="#messages1" role="tab" aria-selected="false" tabindex="-1">
+                                <span class="d-block d-sm-none"><i class="far fa-envelope"></i></span>
+                                <span class="d-none d-sm-block">Warranty</span>
+                            </a>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <a class="nav-link" data-bs-toggle="tab" href="#settings1" role="tab" aria-selected="false" tabindex="-1">
+                                <span class="d-block d-sm-none"><i class="fas fa-cog"></i></span>
+                                <span class="d-none d-sm-block">Exclusions</span>
+                            </a>
+                        </li>
+                    </ul>
+                    @*Tab pane*@
+                    <div class="tab-content p-3 text-muted">
+
+
+                        <div class="tab-pane active" id="profile1" role="tabpanel">
+                            <div class="row">
+
+
+                                <div class="col-md-2">
+                                    <label class="col-form-label required">Equipment/Description</label>
+                                    <select id="drpEquipment1" class="equipment-select" style="width:200px" class="form-select equipment-select"></select>
+
+                                </div>
+                                <div class="col-md-2">
+                                    <label class="col-form-label">Model</label>
+                                    <div class="input-group">
+
+                                        <input type="text" id="txtModel" class="form-control" placeholder="Enter Model" />
+                                        <button type="button" class="btn btn-primary waves-effect waves-light filter" style="" id="btnaddmasteritem1" title="Insert into Grid" onclick="AddMasterDetail1(this)">
+                                            <i class="dripicons-enter" style="font-size: 18px;"></i>
+                                        </button>
+                                    </div>
+                                    
+                                </div>                                
+                                <div class="col-md-5">
+                                    <label class="col-form-label required">Enter Scope of Work Description</label>
+                                    <textarea rows="1" cols="50" class="form-control" id="txtDescription1" placeholder="Enter Description"></textarea>
+                                </div>
+                                <div class="col-md-1">
+
+                                    <button type="button" class="btn btn-success waves-effect waves-light filter" style="margin-top:37px;" id="btnadditem1" title="Insert into Grid" onclick="AddDetail1(this)">
+                                        <i class="dripicons-enter" style="font-size: 18px;"></i>
+                                    </button>
+                                </div>
+                                <div class="col-md-1">
+                                    <input type="button" value="Save Scope of Work" class="btn btn-sm btn-success" style="margin-top:30px" id="btnsave1" onclick="SaveScopeItem(this)" />
+
+                                </div>
+
+                            </div>
+
+                            <div class="row" id="DetailContainer1">
+
+                                @{Html.RenderPartial("ScopeDetailList", Model);}
+                            </div>
+                        </div>
+                        <div class="tab-pane" id="messages1" role="tabpanel">
+                            <div class="row">
+
+
+                                <div class="col-md-2">
+                                    <label class="col-form-label required">Equipment/Description</label>
+                                    <select id="drpEquipment2" class="equipment-select" style="width:200px" class="form-select equipment-select"></select>
+
+                                </div>
+                                <div class="col-md-2">
+                                    <label class="col-form-label">Model</label>
+                                    <div class="input-group">
+                                        <select id="drpwarrantytype" class="form-select">
+                                            <option value="Unit Warranty">Unit Warranty</option>
+                                            <option value="Compressor Warranty">Compressor Warranty</option>
+                                        </select>
+                                        <button type="button" class="btn btn-primary waves-effect waves-light filter" id="btnadditem2" title="Insert into Grid" onclick="AddDetail2(this)">
+                                            <i class="dripicons-enter" style="font-size: 18px;"></i>
+                                        </button>
+                                    </div>
+                                </div>                                
+                                <div class="col-md-5">
+                                    <label class="col-form-label required">Enter Warranty Description</label>
+                                    <textarea rows="1" cols="50" type="text" class="form-control" id="txtDescription2" value="" placeholder="Enter Description"></textarea>
+                                </div>
+                                <div class="col-md-1">
+                                    <button type="button" class="btn btn-success waves-effect waves-light filter" style="margin-top:37px;" id="btnadditem2" title="Insert into Grid" onclick="AddDetail2(this)">
+                                        <i class="dripicons-enter" style="font-size: 18px;"></i>
+                                    </button>
+                                </div>
+                                <div class="col-md-2">
+                                    <input type="button" value="Save Warranty" class="btn btn-success" style="margin-top:30px" id="btnsave2" onclick="SaveWarrantyItem(this)" />
+                                </div>
+
+                            </div>
+                            <div class="row" id="DetailContainer2">
+                                @{Html.RenderPartial("WarrantyDetailList", Model);}
+                            </div>
+                        </div>
+                        <div class="tab-pane" id="settings1" role="tabpanel">
+                            <div class="row">
+
+                                <div class="col-md-2">
+                                    <label class="col-form-label required">Equipment/Description</label>
+                                    <select id="drpEquipment3" class="equipment-select" style="width:200px" class="form-select equipment-select"></select>
+
+                                </div>
+
+                                <div class="col-md-3">
+                                    <label class="col-form-label required">Enter Exclusions Description</label>
+                                    <textarea type="text" rows="3" cols="50" class="form-control" id="txtDescription3" value="" placeholder="Enter Description"></textarea>
+                                </div>
+                                <div class="col-md-1">
+
+                                    <button type="button" class="btn btn-success waves-effect waves-light filter" style="margin-top:37px;" id="btnadditem3" title="Insert into Grid" onclick="AddDetail3(this)">
+                                        <i class="dripicons-enter" style="font-size: 18px;"></i>
+                                    </button>
+                                </div>
+                                <div class="col-md-2">
+                                    <input type="button" value="Save Exclusions" class="btn btn-success" style="margin-top:30px" id="btnsave3" onclick="SaveExclusionItem(this)" />
+
+                                </div>
+
+                            </div>
+                            <div class="row" id="DetailContainer3">
+                                @{Html.RenderPartial("ExclusionDetailList", Model);}
+                            </div>
+
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+    </fieldset>
+
+
+}
+@section scripts{
+
+    <script src="~/assets/libs/select2/js/select2.min.js"></script>
+    <!-- init js -->
+    <script src="~/Scripts/JS/QuotationDetails.js"></script>
+}

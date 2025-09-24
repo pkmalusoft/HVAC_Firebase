@@ -1,0 +1,113 @@
+﻿@model HVAC.Models.AnalysisReportModel
+@{
+    ViewBag.Title = "Engineer Booking";
+    ViewBag.pTitle = "Reports";
+    ViewBag.pageTitle = "HVAC";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section scripts{
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/highcharts-3d.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
+    <script src="https://code.highcharts.com/modules/export-data.js"></script>
+
+}
+<script>
+    function printChart() {
+        var chartContainer = document.getElementById('pieChartContainer');
+        var printWindow = window.open('', '', 'height=600,width=800');
+
+        printWindow.document.write('<html><head><title>Print Chart</title>');
+        printWindow.document.write('<link rel="stylesheet" href="https://code.highcharts.com/css/highcharts.css" />');
+        printWindow.document.write('</head><body>');
+        printWindow.document.write(chartContainer.innerHTML);
+        printWindow.document.write('</body></html>');
+
+        printWindow.document.close();
+        printWindow.focus();
+
+        // Delay to allow rendering
+        setTimeout(function () {
+            printWindow.print();
+            printWindow.close();
+        }, 500);
+    }
+     var chartData = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.chartdata));
+    document.addEventListener('DOMContentLoaded', function () {
+
+
+
+        Highcharts.chart('pieChartContainer', {
+            chart: {
+                type: 'pie',
+                options3d: {
+                    enabled: true,
+                    alpha: 45
+                }
+            },
+            title: {
+                text: 'Total: OMR @Model.ProjectValue.ToString("N3")'
+            },
+            plotOptions: {
+                pie: {
+                    innerSize: 0,
+                    depth: 45,
+                    dataLabels: {
+                        enabled: true,
+                        format: '{point.name}: {point.y:,.0f}'
+                    }
+                }
+            },
+            series: [{
+                name: 'Enquiry Count',
+                data: [
+                    @foreach (var item in @Model.chartdata)
+                    {
+                        @: ['@item.Name', @item.Y],
+                    }
+                ]
+            }]
+        });
+    });
+</script>
+
+@using (Html.BeginForm("EngineerBooking", "Reports", FormMethod.Post, new { @id = "customerledger" }))
+{
+    @Html.AntiForgeryToken()
+
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    <div class="card">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-2">
+                    <lable class="col-form-label">Select Year</lable>
+                    @Html.DropDownListFor(m => m.SelectedYear, new SelectList(@Model.Years, @Model.SelectedYear),
+                           "Select Year", new { @class = "form-select", onchange = "this.form.submit();" })
+                </div>
+                <div class="col-md-2">
+                    <lable class="col-form-label">Select Month</lable>
+                    @Html.DropDownListFor(m => m.SelectedMonth, Model.Months, "-- Select Month --", new { @class = "form-control", onchange = "this.form.submit();" })
+
+                </div>
+
+                <div class="col-md-8   text-md-end">
+
+                    @*<a href="/Reports/EnquiryQuotedAnalysisPrintPdf?year=@Model.SelectedYear"  class="btn btn-warning btn_top">Download PDF</a>*@
+                    <input type="button" class="btn btn-warning btn_top" onclick="printChart()" value="Print Chart" />
+
+                </div>
+            </div>
+            <div class="row">
+                <div class="mt-2">
+                    <h3 id="reporttitle">Engineer Wise Booking  @Model.SelectedYear</h3>
+                </div>
+            </div>
+            <div class="row">
+                <div class="mt-2">
+                    <div id="pieChartContainer" style="height: 500px; width: 100%;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+}

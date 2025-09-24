@@ -1,0 +1,43 @@
+﻿@model HVAC.Models.Warranty
+@{
+    Layout = null;
+}
+<style>
+    ul.ui-front {
+        z-index: 1100;
+    }
+</style>
+
+@using (Html.BeginForm("WarrantyEntry", "JobHandover", FormMethod.Post, new { @class = "clientneeds-validation", @novalidate = "novalidate", @id = "formwarrantyentry" }))
+{
+    
+    <div class="row">
+        <div class="col-md-4">
+            <div class="mb-2">
+                @Html.HiddenFor(model => model.WarrantyID)
+            
+                <label class="col-form-label required">Type</label>
+                @Html.DropDownList("CustomerType1", new List<SelectListItem>
+            {
+                new SelectListItem{ Text="Client", Value = "Client" },
+                new SelectListItem{ Text="Contractor", Value = "Contractor" },
+                new SelectListItem{ Text="Consultant", Value = "Consultant" },
+             }, new { @class = "form-select" })
+
+            
+            </div>
+        </div>
+
+        <div class="col-md-8">
+            <div class="mb-2">
+                <input type="hidden" id="TargetCustomerName" />
+                <input type="hidden" id="TargetCustomerId" />
+                <label class="col-form-label required">Name</label>
+                @Html.TextBoxFor(model => model.WarrantyType, new { @class = "form-control txttarget", @autocomplete = "off",@required="required",@id="cClientName" })
+               
+            </div>
+        </div>
+        </div>
+        
+
+}

@@ -9,7 +9,8 @@ using Newtonsoft.Json;
 using System.Data;
 using System.Data.Entity;
 namespace HVAC.Controllers
-{ [SessionExpire]
+{
+    [SessionExpire]
     public class SupplierInvoiceController : Controller
     {
         HVACEntities db = new HVACEntities();
@@ -55,6 +56,7 @@ namespace HVAC.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult Index(SupplierInvoiceSearch obj)
         {
             Session["SupplierInvoiceSearch"] = obj;
@@ -120,6 +122,7 @@ namespace HVAC.Controllers
 
         }
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public JsonResult SetSupplierInvDetails(int acheadid, string achead, string invno, string Particulars, decimal Rate, int Qty, decimal amount, int currency, decimal Taxpercent, decimal netvalue)
         {
             Random rnd = new Random();

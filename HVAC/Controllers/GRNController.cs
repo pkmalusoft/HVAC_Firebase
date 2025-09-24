@@ -67,6 +67,7 @@ namespace HVAC.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult Index(GRNSearch obj)
         {
             Session["GRNSearch"] = obj;
@@ -221,6 +222,7 @@ namespace HVAC.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public JsonResult SaveGRN(GRNSaveRequest request)
         {
             try
@@ -510,6 +512,7 @@ namespace HVAC.Controllers
         //}
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult GetPurchaseOrderEquipment(int purchaseOrderId,int GRNID)
         {
             var equipmentList = EnquiryDAO.PurchaseOrderDetailforGRN(purchaseOrderId,GRNID);

@@ -82,8 +82,9 @@
         <div class="card-body">
     @using (Html.BeginForm())
     {
+        @Html.AntiForgeryToken()
         @Html.ValidationSummary(true)
-          <div id="alert" style="color:red;display:none;margin-left:10px;">*Please fill mandatory fields</div>
+        <div id="alert" style="color:red;display:none;margin-left:10px;">*Please fill mandatory fields</div>
         <fieldset>
          
             <div class="row no-margin"> 

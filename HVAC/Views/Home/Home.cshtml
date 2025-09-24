@@ -668,6 +668,7 @@
                             <h5>Login </h5>
                             @using (@Html.BeginForm("Login", "Login", FormMethod.Post, new { @class = "", @role = "form" }))
                             {
+                                @Html.AntiForgeryToken()
                                 <div class="form-group">
                                     @*@Html.TextBoxFor(model => model.UserName, new { @class = "form-control autoFiled", @placeholder = "User Name", @required = "true", @type = "email" })*@
                                     <input type="email" id="UserName" name="UserName" class="form-control autoFiled" placeholder="Email" autocomplete="off" required />
@@ -720,6 +721,7 @@
                             @*<h2 class="titleScreen"> Forgot Password</h2>*@
                             @using (@Html.BeginForm("ForgotPassword", "Login", FormMethod.Post, new { @class = "", @role = "form" }))
                             {
+                                @Html.AntiForgeryToken()
                                 <div class="form-group">
 
                                     <input type="email" id="txtforgotemail" name="UserName" value="" placeholder="Enter Registered Email Id to recover Password" class="form-control" autocomplete="off" required />
@@ -764,6 +766,7 @@
                             <h5>Reset Password</h5>
                             @using (@Html.BeginForm("ChangePassword", "Login", FormMethod.Post, new { @class = "", @role = "form" }))
                             {
+                                @Html.AntiForgeryToken()
                                 <div class="form-group">
                                     <input type="email" name="UserName" value="" id="txtresetemail" class="form-control" autocomplete="off" required />
                                 </div>
@@ -819,6 +822,7 @@
                             </div>
                             @using (@Html.BeginForm("TrialExpire", "Home", FormMethod.Post, new { @class = "", @role = "form" }))
                             {
+                                @Html.AntiForgeryToken()
                                 <div class="form-group hide">
 
                                     Dear Customer, <br />

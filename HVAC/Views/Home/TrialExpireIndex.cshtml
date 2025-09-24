@@ -643,6 +643,7 @@
                             <h5 style="color:red">TRIAL EXPIRED ! </h5>
                             @using (@Html.BeginForm("TrialExpire", "Home", FormMethod.Post, new { @class = "", @role = "form" }))
                             {
+                                @Html.AntiForgeryToken()
                                 <div class="form-group">
 
                                     Dear Customer,
@@ -737,6 +738,7 @@
                             @*<h2 class="titleScreen"> Forgot Password</h2>*@
                             @using (@Html.BeginForm("ForgotPassword", "Login", FormMethod.Post, new { @class = "", @role = "form" }))
                             {
+                                @Html.AntiForgeryToken()
                                 <div class="form-group">
 
                                     <input type="email" id="txtforgotemail" name="UserName" value="" placeholder="Enter Registered Email Id to recover Password" class="form-control" autocomplete="off" required />
@@ -781,6 +783,7 @@
                             <h5>Reset Password</h5>
                             @using (@Html.BeginForm("ChangePassword", "Login", FormMethod.Post, new { @class = "", @role = "form" }))
                             {
+                                @Html.AntiForgeryToken()
                                 <div class="form-group">
                                     <input type="email" name="UserName" value="" id="txtresetemail" class="form-control" autocomplete="off" required />
                                 </div>
@@ -832,6 +835,7 @@
                             <h5>Trial Expired</h5>
                             @using (@Html.BeginForm("Login", "Login", FormMethod.Post, new { @class = "", @role = "form" }))
                             {
+                                @Html.AntiForgeryToken()
                         <div class="form-group">
                          
 

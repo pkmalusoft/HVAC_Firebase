@@ -1,0 +1,288 @@
+﻿ 
+@model HVAC.Models.PurchaseOrderViewModel
+@{
+    Layout = null; // Print-friendly, no layout
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Purchase Order - @Model.OrderNo</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-size: 14px;
+        }
+
+        .table th, .table td {
+            padding: 6px;
+            vertical-align: middle;
+        }
+
+        .bordered {
+            border: 1px solid #000;
+            padding: 5px;
+        }
+
+        .highlight {
+            background: #f8f9fa;
+            font-weight: bold;
+        }
+
+        .important-notes {
+            font-size: 13px;
+            color: #d9534f;
+            font-weight: bold;
+        }
+
+        .po-header {
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .footer {
+            margin-top: 20px;
+            font-size: 12px;
+            text-align: center;
+        }
+        /* Force two columns side by side in PDF */
+            .pdf-two-col {
+                width: 100%;
+                white-space: nowrap;
+            }
+
+            .pdf-col {
+                display: inline-block;
+                vertical-align: top;
+                width: 49%; /* Half width with slight margin */
+                white-space: normal;
+            }
+
+            @*/* Prevent Bootstrap flex issues in PDF */
+            @media print {
+                .row {
+                    display: block !important;
+                }
+            }*@
+
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- Header with Logo & Addresses -->
+        <div style="border-bottom:2px solid #000; padding-bottom:10px; margin-bottom:20px; white-space:nowrap;">
+
+            <!-- Left: Logo + Company Address -->
+            <div style="display:inline-block; vertical-align:top; width:49%; white-space:normal;">
+                <img src="@Url.Content("~/assets/images/airmechlogo.png")" style="height:60px; margin-bottom:5px;" alt="Company Logo" /><br />
+                <strong>Mechanical Electrical Engineers and Contractors,</strong><br />
+                Aluminium and Steel Fabiracation,<br />
+                P.O.Box 2033,Postal Code-112,<br />
+                Ruwi,Sultanate of Oman<br />
+                Telephone:24447060,Fax:24447061<br />
+                C.R. No.:1/31710/5
+                Email: airmech@airmechoman.com                
+            </div>
+
+            <!-- Right: Supplier Details -->
+            <div style="display:inline-block; vertical-align:top; width:49%; text-align:right; white-space:normal;">
+                <strong>SUPPLIER:</strong><br />
+                @Model.SupplierName<br />
+                @Model.SupplierAddress<br />
+                @*@Model.SupplierCityName @Model.Supplier.CountryName<br />*@
+                Phone: +86-123-456-789<br />
+                Contact Person: Mr. John Doe<br />
+                Email: johndoe@supplier.com
+            </div>
+
+        </div>
+
+        <div class="pdf-two-col mt-3">
+            <h2 style="margin:0; font-weight:bold; text-transform:uppercase;text-align:center">PURCHASE ORDER</h2>
+            <div class="pdf-col">
+
+                <p>
+                    <strong>Change Order No:</strong> @Model.OrderNo<br />
+                    <strong>Revision:</strong> @Model.Revision<br />
+                    <strong>Project No:</strong> @Model.ProjectNo<br />
+                    <strong>Project Name:</strong> @Model.ProjectName<br />
+                    <strong>SO No:</strong> @Model.SONo<br />
+                    <strong>Payment Terms:</strong> @Model.PaymentTerms<br />
+                    <strong>Product Family:</strong> @Model.ProductFamily<br />
+                    <strong>Product:</strong> @Model.Product
+                </p>
+            </div>
+            <div class="pdf-col" style="text-align:right">
+                <p>
+                    <strong>Order Date:</strong> @Model.OrderDate.ToString("dd-MMM-yyyy")<br />
+                    <strong>Port of Import:</strong> @Model.PortOfImport<br />
+                    <strong>Country of Origin:</strong> @Model.CountryOfOrigin<br />
+                    <strong>INCO Terms:</strong> @Model.IncoTerms<br />
+                    <strong>Delivery (ExF):</strong> @Model.DeliveryWeeks<br />
+                    <strong>PO Currency:</strong> @Model.Currency
+                </p>
+            </div>
+        </div>
+
+        <!-- Items Table -->
+        <table class="table table-bordered">
+            <thead class="table-light">
+                <tr>
+                    <th>Sq No.</th>
+                    <th>Description</th>
+                    <th>Qty</th>
+                    <th>Job No</th>
+                    <th>Rate</th>
+                    <th>Amount</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Items)
+                {
+                <tr>
+                    <td>@item.SqNo</td>
+                    <td>@item.Description</td>
+                    <td>@item.Quantity</td>
+                    <td>@item.JobNo</td>
+                    <td>@item.UnitRate.ToString("N2")</td>
+                    <td>@item.Amount.ToString("N2")</td>
+                    <td>@item.TotalPrice.ToString("N2")</td>
+                </tr>
+                }
+            </tbody>
+        </table>
+
+        <div class="pdf-two-col">
+
+            <!-- LEFT SIDE: Important Notes -->
+            <div class="pdf-col">
+                <p class="important-notes">IMPORTANT NOTES:</p>
+                <ul>
+                    @foreach (var note in Model.ImportantNotes)
+                    {
+                        <li>@note</li>
+                    }
+                </ul>
+            </div>
+
+            <!-- RIGHT SIDE: Totals -->
+            <div class="pdf-col">
+                <table class="table table-borderless">
+                    <tr>
+                        <td>Total Value</td>
+                        <td class="text-end">@Model.TotalValue.ToString("N2")</td>
+                    </tr>
+                    <tr>
+                        <td>Freight Charges</td>
+                        <td class="text-end">@Model.FreightCharges.ToString("N2")</td>
+                    </tr>
+                    <tr>
+                        <td>Origin Charges</td>
+                        <td class="text-end">@Model.OriginCharges.ToString("N2")</td>
+                    </tr>
+                    <tr class="highlight">
+                        <td>Sub Total</td>
+                        <td class="text-end">@Model.SubTotal.ToString("N2")</td>
+                    </tr>
+                    <tr>
+                        <td>Finance Charges</td>
+                        <td class="text-end">@Model.FinanceCharges.ToString("N2")</td>
+                    </tr>
+                    <tr>
+                        <td>VAT Amount</td>
+                        <td class="text-end">@Model.VATAmount.ToString("N2")</td>
+                    </tr>
+                    <tr class="highlight">
+                        <td>Total PO Value</td>
+                        <td class="text-end"><strong>@Model.TotalPOValue.ToString("N2")</strong></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+
+        <!-- Project Breakup -->
+        <h6>Project Breakup</h6>
+        <table class="table table-sm table-bordered">
+            <thead class="table-light">
+                <tr>
+                    <th>Project</th>
+                    <th>Amount (USD)</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var pb in Model.ProjectBreakup)
+                {
+                    <tr>
+                        <td>@pb.ProjectCode</td>
+                        <td>@pb.Amount.ToString("N2")</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        <div class="pdf-two-col mt-3">
+
+            <div class="pdf-col bordered">
+                <strong>CONSIGNEE</strong><br />
+                @Model.ConsigneeName<br />
+                @Model.ConsigneeAddress
+            </div>
+
+            <div class="pdf-col bordered">
+                <strong>Bank Details</strong><br />
+                @Model.BankName<br />
+                @Model.BankAccount<br />
+                Swift Code: @Model.SwiftCode
+            </div>
+
+        </div>
+
+
+        <!-- Change Order Details -->
+        <div class="mt-3">
+            <strong>Change Order Details:</strong>
+            <p>@Model.ChangeOrderDetails</p>
+            <p>Previous Rev PO Value: <strong>@Model.PreviousPOValue.ToString("N2")</strong></p>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <hr style="margin:30px 0; border-top:2px solid #000;" />
+
+            <!-- Signatory Section -->
+            <div style="width:100%; text-align:center; margin-top:50px; white-space:nowrap;">
+
+                <!-- Received By -->
+                <div style="display:inline-block; width:32%; text-align:center; vertical-align:top;">
+                    <div style="height:60px; border-bottom:1px solid #000; margin-bottom:5px;"></div>
+                    <strong>Received By</strong><br />
+                    (Name & Signature)
+                </div>
+
+                <!-- Approved By -->
+                <div style="display:inline-block; width:32%; text-align:center; vertical-align:top;">
+                    <div style="height:60px; border-bottom:1px solid #000; margin-bottom:5px;"></div>
+                    <strong>Approved By</strong><br />
+                    (Name & Signature)
+                </div>
+
+                <!-- Authorized By -->
+                <div style="display:inline-block; width:32%; text-align:center; vertical-align:top;">
+                    <div style="height:60px; border-bottom:1px solid #000; margin-bottom:5px;"></div>
+                    <strong>Authorized By</strong><br />
+                    (Name & Signature)
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</body>
+</html>
+
